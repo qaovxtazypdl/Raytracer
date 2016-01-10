@@ -1,0 +1,13 @@
+To compile the program (no changes to default):
+==============================================
+cd A0
+cs488$ premake4 gmake
+cs488$ make
+
+Compiled and tested on personal computer (in lieu of lab access)
+
+
+
+Manual:
+===============================================
+I assumed that scaling by a constant factor meant adding or subtracting a factor, instead of multiplication of the current scaling factor.
