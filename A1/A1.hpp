@@ -6,6 +6,8 @@
 #include "cs488-framework/OpenGLImport.hpp"
 #include "cs488-framework/ShaderProgram.hpp"
 
+#include <utility>
+
 #include "grid.hpp"
 
 class A1 : public CS488Window {
@@ -33,8 +35,18 @@ private:
 
 	void drawCubes();
 	void drawCubeOutlines();
-	void writeUnitCubeVerticesIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z);
-	void writeUnitCubeOutlineIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z);
+	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
+	void writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
+
+	// manipulation of data and logic
+	void growCurrentSelectedCubeStack();
+	void shrinkCurrentSelectedCubeStack();
+
+	// Fields related to the current state of the grid
+	static const size_t DIM = 16;
+	unsigned heightMap[DIM][DIM];
+	unsigned totalCubes;
+	std::pair<unsigned, unsigned> focusLocation;
 
 	// Fields related to the shader and uniforms.
 	ShaderProgram m_shader;
