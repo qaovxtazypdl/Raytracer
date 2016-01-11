@@ -258,6 +258,9 @@ void A1::draw()
 
 		// Draw the cubes and outline
 		drawCubes();
+
+		// draw focused stack
+		glDisable( GL_DEPTH_TEST );
 		drawCubeOutlines();
 
 	m_shader.disable();
@@ -343,6 +346,22 @@ void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t 
 	indices[idxStart++] = startIdx + 3; indices[idxStart++] = startIdx + 7;
 }
 
+void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, int x, int z) {
+	size_t start = 0, idxStart = 0;
+
+	// base vertices
+	verts[start++] = x + 0; verts[start++] = 0; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = 0; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = 0; verts[start++] = z + 1;
+	verts[start++] = x + 0; verts[start++] = 0; verts[start++] = z + 1;
+
+  // base edges
+	indices[idxStart++] = 0; indices[idxStart++] = 1;
+	indices[idxStart++] = 1; indices[idxStart++] = 2;
+	indices[idxStart++] = 2; indices[idxStart++] = 3;
+	indices[idxStart++] = 3; indices[idxStart++] = 0;
+}
+
 void A1::drawCubes()
 {
 	size_t sz = totalCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
@@ -368,6 +387,8 @@ void A1::drawCubes()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
+	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
+	glUniform3f(uniformLocation_colour, 1.0f, 1.0f, 1.0f);
 	glDrawElements(	GL_TRIANGLES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
@@ -377,19 +398,21 @@ void A1::drawCubes()
 
 void A1::drawCubeOutlines()
 {
-	size_t sz = totalCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
-	size_t indexSz = totalCubes * 12 * 2;  // 12 edges / square, 2 points per edge
+	unsigned i = focusLocation.first, j = focusLocation.second;
+	unsigned cubesToDraw = heightMap[i][j];
+	size_t sz = cubesToDraw > 0 ? cubesToDraw * 8 * 3 : 4 * 3;  //8 vertices / square, 3 dimensions / vertex or 4 base vertices
+	size_t indexSz = cubesToDraw > 0 ? cubesToDraw * 12 * 2 : 4 * 2;  // 12 edges / square, 2 points per edge or 4 base edges
 
 	float *verts = new float[ sz ];
 	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
 	size_t vertStart = 0, idxStart = 0;
 
-	for (int i = 0; i < DIM; i++) {
-		for (int j = 0; j < DIM; j++) {
-			for (int height = 0; height < heightMap[i][j]; height++) {
-				writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, i, height, j);
-			}
+	if (cubesToDraw > 0) {
+		for (int height = 0; height < cubesToDraw; height++) {
+			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, i, height, j);
 		}
+	} else {
+		writeBaseOutlineIntoBuffer(verts, indices, i, j);
 	}
 
 	glBindVertexArray( m_cube_edges_vao );
@@ -401,9 +424,8 @@ void A1::drawCubeOutlines()
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
 	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	glUniform3f(uniformLocation_colour, 0.0f, 0.0f, 0.0f);
+	glUniform3f(uniformLocation_colour, 1.0f, 0.75f, 0.0f);
 	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
-	glUniform3f(uniformLocation_colour, 1.0f, 1.0f, 1.0f);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
@@ -429,27 +451,51 @@ void A1::shrinkCurrentSelectedCubeStack() {
 	}
 }
 
-void A1::moveFocusRight() {
+void A1::moveFocusRight(bool shiftHeld) {
 	if (focusLocation.first < DIM - 1) {
+		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
 		focusLocation.first++;
+		if (shiftHeld) {
+			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
+			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
+			totalCubes = totalCubes - currentHeight + prevHeight;
+		}
 	}
 }
 
-void A1::moveFocusLeft() {
+void A1::moveFocusLeft(bool shiftHeld) {
 	if (focusLocation.first > 0) {
+		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
 		focusLocation.first--;
+		if (shiftHeld) {
+			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
+			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
+			totalCubes = totalCubes - currentHeight + prevHeight;
+		}
 	}
 }
 
-void A1::moveFocusDown() {
+void A1::moveFocusDown(bool shiftHeld) {
 	if (focusLocation.second < DIM - 1) {
+		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
 		focusLocation.second++;
+		if (shiftHeld) {
+			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
+			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
+			totalCubes = totalCubes - currentHeight + prevHeight;
+		}
 	}
 }
 
-void A1::moveFocusUp() {
+void A1::moveFocusUp(bool shiftHeld) {
 	if (focusLocation.second > 0) {
+		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
 		focusLocation.second--;
+		if (shiftHeld) {
+			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
+			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
+			totalCubes = totalCubes - currentHeight + prevHeight;
+		}
 	}
 }
 
@@ -531,6 +577,7 @@ bool A1::windowResizeEvent(int width, int height) {
  */
 bool A1::keyInputEvent(int key, int action, int mods) {
 	bool eventHandled(false);
+	bool shiftHeld = mods & 0x1;
 
 	if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_SPACE) {
@@ -542,19 +589,19 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_LEFT) {
-			moveFocusLeft();
+			moveFocusLeft(shiftHeld);
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_RIGHT) {
-			moveFocusRight();
+			moveFocusRight(shiftHeld);
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_UP) {
-			moveFocusUp();
+			moveFocusUp(shiftHeld);
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_DOWN) {
-			moveFocusDown();
+			moveFocusDown(shiftHeld);
 			eventHandled = true;
 		}
 		if (key == GLFW_KEY_Q) {

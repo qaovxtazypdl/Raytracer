@@ -37,14 +37,15 @@ private:
 	void drawCubeOutlines();
 	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
 	void writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
+	void writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, int x, int z);
 
 	// manipulation of data and logic
 	void growCurrentSelectedCubeStack();
 	void shrinkCurrentSelectedCubeStack();
-	void moveFocusLeft();
-	void moveFocusRight();
-	void moveFocusUp();
-	void moveFocusDown();
+	void moveFocusLeft(bool shiftHeld);
+	void moveFocusRight(bool shiftHeld);
+	void moveFocusUp(bool shiftHeld);
+	void moveFocusDown(bool shiftHeld);
 
 	// Fields related to the current state of the grid
 	static const size_t DIM = 16;
