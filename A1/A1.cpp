@@ -52,17 +52,45 @@ void A1::init()
 	col_uni = m_shader.getUniformLocation( "colour" );
 
 	initGrid();
+	initCubes();
 
 	// Set up initial view and projection matrices (need to do this here,
 	// since it depends on the GLFW window being set up correctly).
-	view = glm::lookAt( 
+	view = glm::lookAt(
 		glm::vec3( 0.0f, float(DIM)*2.0*M_SQRT1_2, float(DIM)*2.0*M_SQRT1_2 ),
 		glm::vec3( 0.0f, 0.0f, 0.0f ),
 		glm::vec3( 0.0f, 1.0f, 0.0f ) );
-	proj = glm::perspective( 
+	proj = glm::perspective(
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
+}
+
+void A1::initCubes() {
+		// Create the vertex array to record buffer assignments.
+	glGenVertexArrays( 1, &m_cubes_vao );
+	glBindVertexArray( m_cubes_vao );
+
+	// Create the cube vertex buffer
+	glGenBuffers( 1, &m_cubes_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
+
+		// Create the cube vertex element buffer
+	glGenBuffers( 1, &m_cubes_element_vbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
+
+		// Specify the means of extracting the position values properly.
+	GLint posAttrib = m_shader.getAttribLocation( "position" );
+	glEnableVertexAttribArray( posAttrib );
+	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+	// Reset state to prevent rogue code from messing with *my*
+	// stuff!
+	glBindVertexArray( 0 );
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+
+	CHECK_GL_ERRORS;
 }
 
 void A1::initGrid()
@@ -104,7 +132,7 @@ void A1::initGrid()
 	glEnableVertexAttribArray( posAttrib );
 	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
-	// Reset state to prevent rogue code from messing with *my* 
+	// Reset state to prevent rogue code from messing with *my*
 	// stuff!
 	glBindVertexArray( 0 );
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
@@ -131,7 +159,7 @@ void A1::appLogic()
  */
 void A1::guiLogic()
 {
-	// We already know there's only going to be one window, so for 
+	// We already know there's only going to be one window, so for
 	// simplicity we'll store button states in static local variables.
 	// If there was ever a possibility of having multiple instances of
 	// A1 running simultaneously, this would break; you'd want to make
@@ -167,7 +195,7 @@ void A1::guiLogic()
 /*
 		// For convenience, you can uncomment this to show ImGui's massive
 		// demonstration window right in your application.  Very handy for
-		// browsing around to get the widget you want.  Then look in 
+		// browsing around to get the widget you want.  Then look in
 		// shared/imgui/imgui_demo.cpp to see how it's done.
 		if( ImGui::Button( "Test Window" ) ) {
 			showTestWindow = !showTestWindow;
@@ -206,6 +234,8 @@ void A1::draw()
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
+		drawCubes();
+
 		// Highlight the active square.
 	m_shader.disable();
 
@@ -213,6 +243,74 @@ void A1::draw()
 	glBindVertexArray( 0 );
 
 	CHECK_GL_ERRORS;
+}
+
+// x, y, z are the bottom left front corner.
+size_t A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *indices, size_t start, size_t idxStart, int x, int y, int z) {
+	size_t nextVertIdx = start;
+
+	// "front" vertices
+	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0;
+	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0;
+	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1;
+	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1;
+
+	// "back" vertices
+	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0;
+	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0;
+	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1;
+	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1;
+
+  // front face
+	indices[idxStart++] = start + 0; indices[idxStart++] = start + 1; indices[idxStart++] = start + 2;
+	indices[idxStart++] = start + 0; indices[idxStart++] = start + 2; indices[idxStart++] = start + 3;
+
+	// right face
+	indices[idxStart++] = start + 1; indices[idxStart++] = start + 5; indices[idxStart++] = start + 6;
+	indices[idxStart++] = start + 1; indices[idxStart++] = start + 6; indices[idxStart++] = start + 2;
+
+	// left face
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 0; indices[idxStart++] = start + 3;
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 3; indices[idxStart++] = start + 7;
+
+	// top face
+	indices[idxStart++] = start + 3; indices[idxStart++] = start + 2; indices[idxStart++] = start + 6;
+	indices[idxStart++] = start + 3; indices[idxStart++] = start + 6; indices[idxStart++] = start + 7;
+
+	// bottom face
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 5; indices[idxStart++] = start + 1;
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 1; indices[idxStart++] = start + 0;
+
+	// back face
+	indices[idxStart++] = start + 5; indices[idxStart++] = start + 4; indices[idxStart++] = start + 7;
+	indices[idxStart++] = start + 5; indices[idxStart++] = start + 7; indices[idxStart++] = start + 6;
+
+	return idxStart;
+}
+
+void A1::drawCubes()
+{
+	size_t numSquares = 1;
+	size_t sz = numSquares * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+
+	float *verts = new float[ sz ];
+	float *indices = new float[ numSquares * 6 * 2 * 3 ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
+	writeUnitCubeVerticesIntoBuffer(verts, indices, 0, 0, 0, 0, 0);
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
+	glBufferData( GL_ARRAY_BUFFER, sz*sizeof(float), verts, GL_STATIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 3, indices, GL_STATIC_DRAW );
+
+	glBindVertexArray( m_cubes_vao );
+
+	//glDrawArrays( GL_TRIANGLES, 0, 3*1 );
+	glDrawElements(	GL_TRIANGLES, 3*2, GL_UNSIGNED_INT, 0);
+
+	// OpenGL has the buffer now, there's no need for us to keep a copy.
+	delete [] verts;
+	delete [] indices;
 }
 
 //----------------------------------------------------------------------------------------
@@ -240,7 +338,7 @@ bool A1::cursorEnterWindowEvent (
 /*
  * Event handler.  Handles mouse cursor movement events.
  */
-bool A1::mouseMoveEvent(double xPos, double yPos) 
+bool A1::mouseMoveEvent(double xPos, double yPos)
 {
 	bool eventHandled(false);
 
@@ -248,7 +346,7 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// Put some code here to handle rotations.  Probably need to
 		// check whether we're *dragging*, not just moving the mouse.
 		// Probably need some instance variables to track the current
-		// rotation amount, and maybe the previous X position (so 
+		// rotation amount, and maybe the previous X position (so
 		// that you can rotate relative to the *change* in X.
 	}
 
