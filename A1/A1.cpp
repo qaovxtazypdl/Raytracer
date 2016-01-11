@@ -14,17 +14,11 @@ using namespace std;
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
-	: current_col(0), totalCubes(0)
+	: current_col(0), grid(DIM)
 {
 	colour[0] = 0.0f;
 	colour[1] = 0.0f;
 	colour[2] = 0.0f;
-
-	for (int i = 0; i < DIM; i++) {
-		for (int j = 0; j < DIM; j++) {
-			heightMap[i][j] = 0;
-		}
-	}
 }
 
 //----------------------------------------------------------------------------------------
@@ -258,10 +252,11 @@ void A1::draw()
 
 		// Draw the cubes and outline
 		drawCubes();
+		drawCubeOutlines();
 
 		// draw focused stack
 		glDisable( GL_DEPTH_TEST );
-		drawCubeOutlines();
+		drawActiveCubeStack();
 
 	m_shader.disable();
 
@@ -364,8 +359,8 @@ void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, int x, int 
 
 void A1::drawCubes()
 {
-	size_t sz = totalCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
-	size_t indexSz = totalCubes * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
+	size_t sz = grid.getTotalCubes() * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+	size_t indexSz = grid.getTotalCubes() * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
 
 	float *verts = new float[ sz ];
 	unsigned *indices = new unsigned[ indexSz ];
@@ -373,7 +368,7 @@ void A1::drawCubes()
 
 	for (int i = 0; i < DIM; i++) {
 		for (int j = 0; j < DIM; j++) {
-			for (int height = 0; height < heightMap[i][j]; height++) {
+			for (int height = 0; height < grid.getHeight(i, j); height++) {
 				writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, i, height, j);
 			}
 		}
@@ -398,8 +393,42 @@ void A1::drawCubes()
 
 void A1::drawCubeOutlines()
 {
+	size_t sz = grid.getTotalCubes() * 8 * 3;  //8 vertices / square, 3 dimensions / vertex or 4 base vertices
+	size_t indexSz = grid.getTotalCubes() * 12 * 2;  // 12 edges / square, 2 points per edge or 4 base edges
+
+	float *verts = new float[ sz ];
+	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
+	size_t vertStart = 0, idxStart = 0;
+
+	for (int i = 0; i < DIM; i++) {
+		for (int j = 0; j < DIM; j++) {
+			for (int height = 0; height < grid.getHeight(i, j); height++) {
+				writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart,i , height, j);
+			}
+		}
+	}
+
+	glBindVertexArray( m_cube_edges_vao );
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
+	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
+
+	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
+	glUniform3f(uniformLocation_colour, 0.0f, 0.0f, 0.0f);
+	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
+
+	// OpenGL has the buffer now, there's no need for us to keep a copy.
+	delete [] verts;
+	delete [] indices;
+}
+
+void A1::drawActiveCubeStack()
+{
 	unsigned i = focusLocation.first, j = focusLocation.second;
-	unsigned cubesToDraw = heightMap[i][j];
+	unsigned cubesToDraw = grid.getHeight(i, j);
 	size_t sz = cubesToDraw > 0 ? cubesToDraw * 8 * 3 : 4 * 3;  //8 vertices / square, 3 dimensions / vertex or 4 base vertices
 	size_t indexSz = cubesToDraw > 0 ? cubesToDraw * 12 * 2 : 4 * 2;  // 12 edges / square, 2 points per edge or 4 base edges
 
@@ -440,61 +469,55 @@ void A1::cleanup()
 {}
 
 void A1::growCurrentSelectedCubeStack() {
-	heightMap[focusLocation.first][focusLocation.second]++;
-	totalCubes++;
+	grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) + 1);
 }
 
 void A1::shrinkCurrentSelectedCubeStack() {
-	if (heightMap[focusLocation.first][focusLocation.second] > 0) {
-		heightMap[focusLocation.first][focusLocation.second]--;
-		totalCubes--;
+	if (grid.getHeight(focusLocation.first, focusLocation.second) > 0) {
+	  grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) - 1);
 	}
 }
 
 void A1::moveFocusRight(bool shiftHeld) {
 	if (focusLocation.first < DIM - 1) {
-		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
+		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.first++;
 		if (shiftHeld) {
-			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
-			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
-			totalCubes = totalCubes - currentHeight + prevHeight;
+			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
+			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
 		}
 	}
 }
 
 void A1::moveFocusLeft(bool shiftHeld) {
 	if (focusLocation.first > 0) {
-		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
+		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.first--;
 		if (shiftHeld) {
-			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
-			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
-			totalCubes = totalCubes - currentHeight + prevHeight;
+			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
+			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
 		}
 	}
 }
 
 void A1::moveFocusDown(bool shiftHeld) {
 	if (focusLocation.second < DIM - 1) {
-		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
+		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.second++;
 		if (shiftHeld) {
-			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
-			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
-			totalCubes = totalCubes - currentHeight + prevHeight;
+			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
+			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
 		}
 	}
 }
 
 void A1::moveFocusUp(bool shiftHeld) {
 	if (focusLocation.second > 0) {
-		unsigned prevHeight = heightMap[focusLocation.first][focusLocation.second];
+		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.second--;
 		if (shiftHeld) {
-			unsigned currentHeight = heightMap[focusLocation.first][focusLocation.second];
-			heightMap[focusLocation.first][focusLocation.second] = prevHeight;
-			totalCubes = totalCubes - currentHeight + prevHeight;
+			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
+			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
 		}
 	}
 }

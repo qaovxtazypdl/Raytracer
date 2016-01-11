@@ -3,7 +3,7 @@
 #include "grid.hpp"
 
 Grid::Grid( size_t d )
-	: m_dim( d )
+	: m_dim( d ), m_totalCubes(0)
 {
 	m_heights = new int[ d * d ];
 	m_cols = new int[ d * d ];
@@ -39,12 +39,20 @@ int Grid::getColour( int x, int y ) const
 	return m_cols[ y * m_dim + x ];
 }
 
+unsigned Grid::getTotalCubes() const
+{
+	return m_totalCubes;
+}
+
 void Grid::setHeight( int x, int y, int h )
 {
+	unsigned prevHeight = m_heights[ y * m_dim + x ];
 	m_heights[ y * m_dim + x ] = h;
+	m_totalCubes = m_totalCubes + h - prevHeight;
 }
 
 void Grid::setColour( int x, int y, int c )
 {
 	m_cols[ y * m_dim + x ] = c;
 }
+

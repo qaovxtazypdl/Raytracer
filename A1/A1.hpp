@@ -35,6 +35,7 @@ private:
 
 	void drawCubes();
 	void drawCubeOutlines();
+	void drawActiveCubeStack();
 	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
 	void writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
 	void writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, int x, int z);
@@ -49,8 +50,7 @@ private:
 
 	// Fields related to the current state of the grid
 	static const size_t DIM = 16;
-	unsigned heightMap[DIM][DIM];
-	unsigned totalCubes;
+	Grid grid;
 	std::pair<unsigned, unsigned> focusLocation;
 
 	// Fields related to the shader and uniforms.
