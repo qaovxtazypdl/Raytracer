@@ -36,9 +36,9 @@ private:
 	void drawCubes();
 	void drawCubeOutlines();
 	void drawActiveCubeStack();
-	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
-	void writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z);
-	void writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, int x, int z);
+	void writeUnitCubeVerticesIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int y, int z);
+	void writeUnitCubeOutlineIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int y, int z, bool isActiveOutline);
+	void writeBaseOutlineIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int z);
 
 	// manipulation of data and logic
 	void growCurrentSelectedCubeStack();
@@ -58,7 +58,6 @@ private:
 	GLint P_uni; // Uniform location for Projection matrix.
 	GLint V_uni; // Uniform location for View matrix.
 	GLint M_uni; // Uniform location for Model matrix.
-	GLint col_uni;   // Uniform location for cube colour.
 
 	// Fields related to grid geometry.
 	GLuint m_grid_vao; // Vertex Array Object
@@ -67,10 +66,12 @@ private:
 	// Fields related to cube geometries.
 	GLuint m_cubes_vao; // Vertex Array Object
 	GLuint m_cubes_vbo; // Vertex Buffer Object
+	GLuint m_cube_colors_vbo; // Vertex Buffer Object
 	GLuint m_cubes_element_vbo; // Vertex Buffer Object for element array
 
 	GLuint m_cube_edges_vao; // Vertex Array Object
 	GLuint m_cube_edges_vbo; // Vertex Buffer Object
+	GLuint m_cube_edge_colors_vbo; // Vertex Buffer Object
 	GLuint m_cube_edges_element_vbo; // Vertex Buffer Object for element array
 	// Matrices controlling the camera and projection.
 	glm::mat4 proj;
