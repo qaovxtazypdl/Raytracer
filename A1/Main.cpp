@@ -1,7 +1,7 @@
 #include "A1.hpp"
 
-int main( int argc, char **argv ) 
+int main( int argc, char **argv )
 {
-	CS488Window::launch( argc, argv, new A1(), 1024, 768, "Assignment 0" );
+	CS488Window::launch( argc, argv, new A1(), A1::DEFAULT_WIDTH, A1::DEFAULT_HEIGHT, "Assignment 0" );
 	return 0;
 }

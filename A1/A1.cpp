@@ -14,7 +14,7 @@ using namespace std;
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
-	: current_col(0), grid(DIM), prevMouseX(0), current_rotation(0), scaling_factor(1.0f)
+	: current_col(0), grid(DIM), prevMouseX(0), current_rotation(0), scaling_factor(1.0f), width(DEFAULT_WIDTH)
 {
 	colour[0][0] = 0.0f; colour[0][1] = 0.0f; colour[0][2] = 0.0f;
 	colour[1][0] = 0.0f; colour[1][1] = 0.0f; colour[1][2] = 1.0f;
@@ -603,7 +603,7 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 {
 	bool eventHandled(false);
 
-	const float ROTATION_SCALE = 8.0f/1300.0f;
+	const float ROTATION_SCALE = 8.0f/width;
 
 	if (!ImGui::IsMouseHoveringAnyWindow()) {
 		// Put some code here to handle rotations.  Probably need to
@@ -645,8 +645,8 @@ bool A1::mouseButtonInputEvent(int button, int actions, int mods) {
 bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
 	const float ZOOM_SCALE = -1.0f/25.0f;
-	const float MAX_SCALING_FACTOR = 1.6;
-	const float MIN_SCALING_FACTOR = 0.4;
+	const float MAX_SCALING_FACTOR = 2.0f;
+	const float MIN_SCALING_FACTOR = 0.4f;
 
   scaling_factor += ZOOM_SCALE * yOffSet;
 
@@ -663,7 +663,7 @@ bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 bool A1::windowResizeEvent(int width, int height) {
 	bool eventHandled(false);
 
-	// Fill in with event handling code...
+	this->width = width;
 
 	return eventHandled;
 }

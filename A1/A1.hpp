@@ -15,6 +15,9 @@ public:
 	A1();
 	virtual ~A1();
 
+	static const int DEFAULT_WIDTH = 1024;
+	static const int DEFAULT_HEIGHT = 768;
+
 protected:
 	virtual void init() override;
 	virtual void appLogic() override;
@@ -81,6 +84,7 @@ private:
 
 	float colour[8][3];
 	int current_col;
+	int width;
 
 	double prevMouseX;
 	bool leftMouseButtonDown;
