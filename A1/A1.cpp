@@ -256,7 +256,7 @@ void A1::draw()
 		glUniform3f( col_uni, 1, 1, 1 );
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
-		// Draw the cubes and highlight outline if active
+		// Draw the cubes and outline
 		drawCubes();
 		drawCubeOutlines();
 
