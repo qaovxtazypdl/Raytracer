@@ -16,6 +16,7 @@ void Grid::reset()
 	size_t sz = m_dim*m_dim;
 	std::fill( m_heights, m_heights + sz, 0 );
 	std::fill( m_cols, m_cols + sz, 0 );
+	m_totalCubes = 0;
 }
 
 Grid::~Grid()

@@ -14,7 +14,7 @@ using namespace std;
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
-	: current_col(0), grid(DIM)
+	: current_col(0), grid(DIM), prevMouseX(0), current_rotation(0), scaling_factor(1.0f)
 {
 	colour[0][0] = 0.0f; colour[0][1] = 0.0f; colour[0][2] = 0.0f;
 	colour[1][0] = 0.0f; colour[1][1] = 0.0f; colour[1][2] = 1.0f;
@@ -253,7 +253,9 @@ void A1::draw()
 {
 	// Create a global transformation for the model (centre it).
 	mat4 W;
-	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
+	W = glm::scale(W, vec3(scaling_factor, scaling_factor, scaling_factor));
+	W = glm::rotate(W, current_rotation, vec3(0.0f, 1.0f, 0.0f));
+	W = glm::translate(W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ));
 
 	m_shader.enable();
 		glEnable( GL_DEPTH_TEST );
@@ -573,7 +575,10 @@ void A1::moveFocusUp(bool shiftHeld) {
 }
 
 void A1::resetToDefault() {
-
+	scaling_factor = 1.0f;
+	current_rotation = 0;
+	focusLocation = pair<unsigned, unsigned>(0,0);
+	grid.reset();
 }
 
 //----------------------------------------------------------------------------------------
@@ -598,12 +603,20 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 {
 	bool eventHandled(false);
 
+	const float ROTATION_SCALE = 8.0f/1300.0f;
+
 	if (!ImGui::IsMouseHoveringAnyWindow()) {
 		// Put some code here to handle rotations.  Probably need to
 		// check whether we're *dragging*, not just moving the mouse.
 		// Probably need some instance variables to track the current
 		// rotation amount, and maybe the previous X position (so
 		// that you can rotate relative to the *change* in X.
+		if (leftMouseButtonDown) {
+			current_rotation += ROTATION_SCALE * (xPos - prevMouseX);
+			eventHandled = true;
+		}
+
+		prevMouseX = xPos;
 	}
 
 	return eventHandled;
@@ -619,6 +632,7 @@ bool A1::mouseButtonInputEvent(int button, int actions, int mods) {
 	if (!ImGui::IsMouseHoveringAnyWindow()) {
 		// The user clicked in the window.  If it's the left
 		// mouse button, initiate a rotation.
+		leftMouseButtonDown = actions & 0x1;
 	}
 
 	return eventHandled;
@@ -630,8 +644,14 @@ bool A1::mouseButtonInputEvent(int button, int actions, int mods) {
  */
 bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
+	const float ZOOM_SCALE = -1.0f/25.0f;
+	const float MAX_SCALING_FACTOR = 1.6;
+	const float MIN_SCALING_FACTOR = 0.4;
 
-	// Zoom in or out.
+  scaling_factor += ZOOM_SCALE * yOffSet;
+
+  if (scaling_factor > MAX_SCALING_FACTOR) scaling_factor = MAX_SCALING_FACTOR;
+  else if (scaling_factor < MIN_SCALING_FACTOR) scaling_factor = MIN_SCALING_FACTOR;
 
 	return eventHandled;
 }

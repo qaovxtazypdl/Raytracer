@@ -81,4 +81,9 @@ private:
 
 	float colour[8][3];
 	int current_col;
+
+	double prevMouseX;
+	bool leftMouseButtonDown;
+	float current_rotation;
+	float scaling_factor;
 };

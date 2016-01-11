@@ -1,5 +1,4 @@
 todo:
-mouse rotation and zoom
-reset all
-
+scale rotation amount to window size
+should not overwrite color of existing bars?
 refactor!
