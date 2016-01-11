@@ -429,6 +429,30 @@ void A1::shrinkCurrentSelectedCubeStack() {
 	}
 }
 
+void A1::moveFocusRight() {
+	if (focusLocation.first < DIM - 1) {
+		focusLocation.first++;
+	}
+}
+
+void A1::moveFocusLeft() {
+	if (focusLocation.first > 0) {
+		focusLocation.first--;
+	}
+}
+
+void A1::moveFocusDown() {
+	if (focusLocation.second < DIM - 1) {
+		focusLocation.second++;
+	}
+}
+
+void A1::moveFocusUp() {
+	if (focusLocation.second > 0) {
+		focusLocation.second--;
+	}
+}
+
 //----------------------------------------------------------------------------------------
 /*
  * Event handler.  Handles cursor entering the window area events.
@@ -516,6 +540,25 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 		if (key == GLFW_KEY_BACKSPACE) {
 			shrinkCurrentSelectedCubeStack();
 			eventHandled = true;
+		}
+		if (key == GLFW_KEY_LEFT) {
+			moveFocusLeft();
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_RIGHT) {
+			moveFocusRight();
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_UP) {
+			moveFocusUp();
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_DOWN) {
+			moveFocusDown();
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_Q) {
+			glfwSetWindowShouldClose(m_window, GL_TRUE);
 		}
 	}
 

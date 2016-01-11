@@ -41,6 +41,10 @@ private:
 	// manipulation of data and logic
 	void growCurrentSelectedCubeStack();
 	void shrinkCurrentSelectedCubeStack();
+	void moveFocusLeft();
+	void moveFocusRight();
+	void moveFocusUp();
+	void moveFocusDown();
 
 	// Fields related to the current state of the grid
 	static const size_t DIM = 16;
