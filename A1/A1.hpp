@@ -47,6 +47,8 @@ private:
 	void moveFocusRight(bool shiftHeld);
 	void moveFocusUp(bool shiftHeld);
 	void moveFocusDown(bool shiftHeld);
+	void setCurrentColour(unsigned i, unsigned j);
+	void resetToDefault();
 
 	// Fields related to the current state of the grid
 	static const size_t DIM = 16;

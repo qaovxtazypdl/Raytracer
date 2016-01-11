@@ -222,8 +222,7 @@ void A1::guiLogic()
 			ImGui::ColorEdit3( "##Colour", colour[i] );
 			ImGui::SameLine();
 			if( ImGui::RadioButton( "##Col", &current_col, i ) ) {
-				// Select this colour.
-				grid.setColour(focusLocation.first, focusLocation.second, i);
+				setCurrentColour(focusLocation.first, focusLocation.second);
 			}
 			ImGui::PopID();
 		}
@@ -299,7 +298,7 @@ void A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *colors, unsigned *
 	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 1;
 	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
 
-	int colorIndex = grid.getColour(focusLocation.first, focusLocation.second);
+	int colorIndex = grid.getColour(x, z);
 	for (int i = 0; i < 8; i++) {
 		colors[colorStart++] = colour[colorIndex][0];
 		colors[colorStart++] = colour[colorIndex][1];
@@ -347,9 +346,9 @@ void A1::writeUnitCubeOutlineIntoBuffer(float *verts, float *colors, unsigned *i
 	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
 
 	for (int i = 0; i < 8; i++) {
-		colors[colorStart++] = isActiveOutline ? 1.0f : 1.0f;
-		colors[colorStart++] = isActiveOutline ? 0.75f : 1.00f;
-		colors[colorStart++] = isActiveOutline ? 0.0f : 1.0f;
+		colors[colorStart++] = isActiveOutline ? 1.0f : 0.9f;
+		colors[colorStart++] = isActiveOutline ? 0.75f : 0.9f;
+		colors[colorStart++] = isActiveOutline ? 0.0f : 0.9f;
 	}
 
   // front edges
@@ -420,8 +419,6 @@ void A1::drawCubes()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
-	//GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	//glUniform3f(uniformLocation_colour, 1.0f, 1.0f, 1.0f);
 	glDrawElements(	GL_TRIANGLES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
@@ -459,8 +456,6 @@ void A1::drawCubeOutlines()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
-	//GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	//glUniform3f(uniformLocation_colour, 0.0f, 0.0f, 0.0f);
 	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
@@ -500,8 +495,6 @@ void A1::drawActiveCubeStack()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
-	//GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	//glUniform3f(uniformLocation_colour, 1.0f, 0.75f, 0.0f);
 	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
@@ -517,6 +510,10 @@ void A1::drawActiveCubeStack()
 void A1::cleanup()
 {}
 
+void A1::setCurrentColour(unsigned i, unsigned j) {
+	grid.setColour(i, j, current_col);
+}
+
 void A1::growCurrentSelectedCubeStack() {
 	grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) + 1);
 }
@@ -531,6 +528,7 @@ void A1::moveFocusRight(bool shiftHeld) {
 	if (focusLocation.first < DIM - 1) {
 		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.first++;
+		setCurrentColour(focusLocation.first, focusLocation.second);
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
@@ -542,6 +540,7 @@ void A1::moveFocusLeft(bool shiftHeld) {
 	if (focusLocation.first > 0) {
 		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.first--;
+		setCurrentColour(focusLocation.first, focusLocation.second);
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
@@ -553,6 +552,7 @@ void A1::moveFocusDown(bool shiftHeld) {
 	if (focusLocation.second < DIM - 1) {
 		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.second++;
+		setCurrentColour(focusLocation.first, focusLocation.second);
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
@@ -564,11 +564,16 @@ void A1::moveFocusUp(bool shiftHeld) {
 	if (focusLocation.second > 0) {
 		unsigned prevHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 		focusLocation.second--;
+		setCurrentColour(focusLocation.first, focusLocation.second);
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
 		}
 	}
+}
+
+void A1::resetToDefault() {
+
 }
 
 //----------------------------------------------------------------------------------------
@@ -678,6 +683,10 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 		}
 		if (key == GLFW_KEY_Q) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
+			eventHandled = true;
+		}
+		if (key == GLFW_KEY_R) {
+			resetToDefault();
 			eventHandled = true;
 		}
 	}
