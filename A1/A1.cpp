@@ -16,9 +16,14 @@ using namespace std;
 A1::A1()
 	: current_col(0), grid(DIM)
 {
-	colour[0] = 0.0f;
-	colour[1] = 0.0f;
-	colour[2] = 0.0f;
+	colour[0][0] = 0.0f; colour[0][1] = 0.0f; colour[0][2] = 0.0f;
+	colour[1][0] = 0.0f; colour[1][1] = 0.0f; colour[1][2] = 1.0f;
+	colour[2][0] = 0.0f; colour[2][1] = 1.0f; colour[2][2] = 0.0f;
+	colour[3][0] = 0.0f; colour[3][1] = 1.0f; colour[3][2] = 1.0f;
+	colour[4][0] = 1.0f; colour[4][1] = 0.0f; colour[4][2] = 0.0f;
+	colour[5][0] = 1.0f; colour[5][1] = 0.0f; colour[5][2] = 1.0f;
+	colour[6][0] = 1.0f; colour[6][1] = 1.0f; colour[6][2] = 0.0f;
+	colour[7][0] = 1.0f; colour[7][1] = 1.0f; colour[7][2] = 1.0f;
 }
 
 //----------------------------------------------------------------------------------------
@@ -201,14 +206,16 @@ void A1::guiLogic()
 		// Prefixing a widget name with "##" keeps it from being
 		// displayed.
 
-		ImGui::PushID( 0 );
-		ImGui::ColorEdit3( "##Colour", colour );
-		ImGui::SameLine();
-		if( ImGui::RadioButton( "##Col", &current_col, 0 ) ) {
-			// Select this colour.
+		for (int i = 0; i < 8; i++) {
+			ImGui::PushID(i);
+			ImGui::ColorEdit3( "##Colour", colour[i] );
+			ImGui::SameLine();
+			if( ImGui::RadioButton( "##Col", &current_col, i ) ) {
+				// Select this colour.
+				grid.setColour(focusLocation.first, focusLocation.second, i);
+			}
+			ImGui::PopID();
 		}
-		ImGui::PopID();
-
 /*
 		// For convenience, you can uncomment this to show ImGui's massive
 		// demonstration window right in your application.  Very handy for
@@ -600,9 +607,9 @@ bool A1::windowResizeEvent(int width, int height) {
  */
 bool A1::keyInputEvent(int key, int action, int mods) {
 	bool eventHandled(false);
-	bool shiftHeld = mods & 0x1;
 
 	if (action == GLFW_PRESS) {
+		bool shiftHeld = mods & 0x1;
 		if (key == GLFW_KEY_SPACE) {
 			growCurrentSelectedCubeStack();
 			eventHandled = true;
@@ -629,6 +636,7 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 		}
 		if (key == GLFW_KEY_Q) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
+			eventHandled = true;
 		}
 	}
 

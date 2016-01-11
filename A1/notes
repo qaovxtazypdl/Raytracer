@@ -3,5 +3,5 @@ mouse rotation and zoom
 reset all
 
 CLARIFY how to add colors:
-	if we can just add to vbo we should rewrite highlight to use same as border and the color blocks
+	if we can just add to vbo we should rewrite highlight to use same as border
 	if not we need to refactor each block into one VBO? wtf no
