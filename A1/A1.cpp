@@ -75,12 +75,31 @@ void A1::initCubes() {
 	glGenBuffers( 1, &m_cubes_vbo );
 	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
 
-		// Create the cube vertex element buffer
+	// Create the cube vertex element buffer
 	glGenBuffers( 1, &m_cubes_element_vbo );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
 
-		// Specify the means of extracting the position values properly.
+	// Specify the means of extracting the position values properly.
 	GLint posAttrib = m_shader.getAttribLocation( "position" );
+	glEnableVertexAttribArray( posAttrib );
+	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+
+
+	// Create the vertex array to record buffer assignments.
+	glGenVertexArrays( 1, &m_cube_edges_vao );
+	glBindVertexArray( m_cube_edges_vao );
+
+	// Create the cube vertex buffer
+	glGenBuffers( 1, &m_cube_edges_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
+
+  // Create the cube vertex element buffer
+	glGenBuffers( 1, &m_cube_edges_element_vbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
+
+	// Specify the means of extracting the position values properly.
+	posAttrib = m_shader.getAttribLocation( "position" );
 	glEnableVertexAttribArray( posAttrib );
 	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
@@ -246,21 +265,45 @@ void A1::draw()
 }
 
 // x, y, z are the bottom left front corner.
-size_t A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *indices, size_t start, size_t idxStart, int x, int y, int z) {
-	size_t nextVertIdx = start;
+void A1::writeUnitCubeVerticesIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z) {
+  // front face index
+	indices[idxStart++] = start + 0; indices[idxStart++] = start + 1; indices[idxStart++] = start + 2;
+	indices[idxStart++] = start + 0; indices[idxStart++] = start + 2; indices[idxStart++] = start + 3;
+
+	// right face index
+	indices[idxStart++] = start + 1; indices[idxStart++] = start + 5; indices[idxStart++] = start + 6;
+	indices[idxStart++] = start + 1; indices[idxStart++] = start + 6; indices[idxStart++] = start + 2;
+
+	// left face index
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 0; indices[idxStart++] = start + 3;
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 3; indices[idxStart++] = start + 7;
+
+	// top face index
+	indices[idxStart++] = start + 3; indices[idxStart++] = start + 2; indices[idxStart++] = start + 6;
+	indices[idxStart++] = start + 3; indices[idxStart++] = start + 6; indices[idxStart++] = start + 7;
+
+	// bottom face index
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 5; indices[idxStart++] = start + 1;
+	indices[idxStart++] = start + 4; indices[idxStart++] = start + 1; indices[idxStart++] = start + 0;
+
+	// back face index
+	indices[idxStart++] = start + 5; indices[idxStart++] = start + 4; indices[idxStart++] = start + 7;
+	indices[idxStart++] = start + 5; indices[idxStart++] = start + 7; indices[idxStart++] = start + 6;
 
 	// "front" vertices
-	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0;
-	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0;
-	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1;
-	verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1;
+	verts[start++] = x + 1; verts[start++] = y + 0; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = y + 1; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = y + 1; verts[start++] = z + 1;
+	verts[start++] = x + 1; verts[start++] = y + 0; verts[start++] = z + 1;
 
 	// "back" vertices
-	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0;
-	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 0;
-	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1; verts[nextVertIdx++] = 1;
-	verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 0; verts[nextVertIdx++] = 1;
+	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 0;
+	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 0;
+	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 1;
+	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
+}
 
+void A1::writeUnitCubeOutlineIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z) {
   // front face
 	indices[idxStart++] = start + 0; indices[idxStart++] = start + 1; indices[idxStart++] = start + 2;
 	indices[idxStart++] = start + 0; indices[idxStart++] = start + 2; indices[idxStart++] = start + 3;
@@ -281,32 +324,73 @@ size_t A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *indices, size_t 
 	indices[idxStart++] = start + 4; indices[idxStart++] = start + 5; indices[idxStart++] = start + 1;
 	indices[idxStart++] = start + 4; indices[idxStart++] = start + 1; indices[idxStart++] = start + 0;
 
-	// back face
+	// back face index
 	indices[idxStart++] = start + 5; indices[idxStart++] = start + 4; indices[idxStart++] = start + 7;
 	indices[idxStart++] = start + 5; indices[idxStart++] = start + 7; indices[idxStart++] = start + 6;
 
-	return idxStart;
+	// "front" vertices
+	verts[start++] = x + 1; verts[start++] = y + 0; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = y + 1; verts[start++] = z + 0;
+	verts[start++] = x + 1; verts[start++] = y + 1; verts[start++] = z + 1;
+	verts[start++] = x + 1; verts[start++] = y + 0; verts[start++] = z + 1;
+
+	// "back" vertices
+	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 0;
+	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 0;
+	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 1;
+	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
 }
 
 void A1::drawCubes()
 {
-	size_t numSquares = 1;
+	size_t numSquares = 2;
 	size_t sz = numSquares * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+	size_t indexSz = numSquares * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
 
 	float *verts = new float[ sz ];
-	float *indices = new float[ numSquares * 6 * 2 * 3 ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
-	writeUnitCubeVerticesIntoBuffer(verts, indices, 0, 0, 0, 0, 0);
+	int *indices = new int[ indexSz ];
+	size_t vertStart = 0, idxStart = 0;
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
-	glBufferData( GL_ARRAY_BUFFER, sz*sizeof(float), verts, GL_STATIC_DRAW );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 3, indices, GL_STATIC_DRAW );
+	writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, 3, 0, 4);
+	writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, 11, 1, 15);
 
 	glBindVertexArray( m_cubes_vao );
 
-	//glDrawArrays( GL_TRIANGLES, 0, 3*1 );
-	glDrawElements(	GL_TRIANGLES, 3*2, GL_UNSIGNED_INT, 0);
+	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
+	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(int), indices, GL_DYNAMIC_DRAW );
+
+	glDrawElements(	GL_TRIANGLES, indexSz, GL_UNSIGNED_INT, 0);
+
+	// OpenGL has the buffer now, there's no need for us to keep a copy.
+	delete [] verts;
+	delete [] indices;
+}
+
+void A1::drawCubeOutlines()
+{
+	size_t numSquares = 2;
+	size_t sz = numSquares * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+	size_t indexSz = numSquares * 12 * 2;  // 12 edges / square, 2 points per edge
+
+	float *verts = new float[ sz ];
+	int *indices = new int[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
+	size_t vertStart = 0, idxStart = 0;
+
+	writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, 13, 0, 15);
+	writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, 13, 1, 15);
+
+	glBindVertexArray( m_cube_edges_vao );
+
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
+	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(int), indices, GL_DYNAMIC_DRAW );
+
+	glDrawElements(	GL_TRIANGLES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;

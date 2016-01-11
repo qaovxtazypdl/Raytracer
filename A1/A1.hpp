@@ -32,7 +32,9 @@ private:
 	void initCubes();
 
 	void drawCubes();
-	size_t writeUnitCubeVerticesIntoBuffer(float *verts, float *vertOrder, size_t start, size_t idxStart, int x, int y, int z);
+	void drawCubeOutlines();
+	void writeUnitCubeVerticesIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z);
+	void writeUnitCubeOutlineIntoBuffer(float *verts, int *indices, size_t &start, size_t &idxStart, int x, int y, int z);
 
 	// Fields related to the shader and uniforms.
 	ShaderProgram m_shader;
@@ -49,6 +51,10 @@ private:
 	GLuint m_cubes_vao; // Vertex Array Object
 	GLuint m_cubes_vbo; // Vertex Buffer Object
 	GLuint m_cubes_element_vbo; // Vertex Buffer Object for element array
+
+	GLuint m_cube_edges_vao; // Vertex Array Object
+	GLuint m_cube_edges_vbo; // Vertex Buffer Object
+	GLuint m_cube_edges_element_vbo; // Vertex Buffer Object for element array
 	// Matrices controlling the camera and projection.
 	glm::mat4 proj;
 	glm::mat4 view;
