@@ -68,21 +68,21 @@ private:
 	GLint M_uni; // Uniform location for Model matrix.
 
 	// Fields related to grid geometry.
-	GLuint m_grid_vao; // Vertex Array Object
-	GLuint m_grid_vbo; // Vertex Buffer Object
+	GLuint m_grid_vao;
+	GLuint m_grid_vbo;
 
 	// Fields related to cube geometries.
-	GLuint m_cubes_vao[DIM * DIM]; // Vertex Array Object
-	GLuint m_cubes_vbo[DIM * DIM]; // Vertex Buffer Object
-	GLuint m_cubes_element_vbo[DIM * DIM]; // Vertex Buffer Object for element array
+	GLuint m_cubes_vao[DIM * DIM];
+	GLuint m_cubes_vbo[DIM * DIM];
+	GLuint m_cubes_element_vbo[DIM * DIM];
 
-	GLuint m_cube_edges_vao[DIM * DIM]; // Vertex Array Object
-	GLuint m_cube_edges_vbo[DIM * DIM]; // Vertex Buffer Object
-	GLuint m_cube_edges_element_vbo[DIM * DIM]; // Vertex Buffer Object for element array
+	GLuint m_cube_edges_vao[DIM * DIM];
+	GLuint m_cube_edges_vbo[DIM * DIM];
+	GLuint m_cube_edges_element_vbo[DIM * DIM];
 
-	GLuint m_cube_active_vao; // Vertex Array Object
-	GLuint m_cube_active_vbo; // Vertex Buffer Object
-	GLuint m_cube_active_element_vbo; // Vertex Buffer Object for element array
+	GLuint m_cube_active_vao;
+	GLuint m_cube_active_vbo;
+	GLuint m_cube_active_element_vbo;
 
 	// Matrices controlling the camera and projection.
 	glm::mat4 proj;
@@ -92,8 +92,9 @@ private:
 	int current_col;
 	int width;
 
-	double prevMouseX;
+	double prevMouseX, prevMouseY;
 	bool leftMouseButtonDown;
-	float current_rotation;
+	float current_rotationX;
+	float current_rotationY;
 	float scaling_factor;
 };

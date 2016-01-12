@@ -14,7 +14,7 @@ using namespace std;
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
-	: current_col(0), grid(DIM), prevMouseX(0), current_rotation(0), scaling_factor(1.0f), width(DEFAULT_WIDTH)
+	: current_col(0), grid(DIM), prevMouseX(0), current_rotationX(0), current_rotationY(0), scaling_factor(1.0f), width(DEFAULT_WIDTH)
 {
 	colour[0][0] = 0.0f; colour[0][1] = 0.0f; colour[0][2] = 0.0f;
 	colour[1][0] = 0.0f; colour[1][1] = 0.0f; colour[1][2] = 1.0f;
@@ -239,7 +239,8 @@ void A1::draw()
 	// Create a global transformation for the model (centre it).
 	mat4 W;
 	W = glm::scale(W, vec3(scaling_factor, scaling_factor, scaling_factor));
-	W = glm::rotate(W, current_rotation, vec3(0.0f, 1.0f, 0.0f));
+	W = glm::rotate(W, current_rotationX, vec3(0.0f, 1.0f, 0.0f));
+	W = glm::rotate(W, current_rotationY, vec3(1.0f * cos(current_rotationX), 0.0f, 1.0f * sin(current_rotationX)));
 	W = glm::translate(W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ));
 
 	m_shader.enable();
@@ -543,7 +544,8 @@ void A1::moveFocusUp(bool shiftHeld) {
 
 void A1::resetToDefault() {
 	scaling_factor = 1.0f;
-	current_rotation = 0;
+	current_rotationX = 0;
+	current_rotationY = 0;
 	focusLocation = pair<unsigned, unsigned>(0,0);
 	grid.reset();
 }
@@ -579,11 +581,13 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// rotation amount, and maybe the previous X position (so
 		// that you can rotate relative to the *change* in X.
 		if (leftMouseButtonDown) {
-			current_rotation += ROTATION_SCALE * (xPos - prevMouseX);
+			current_rotationX += ROTATION_SCALE * (xPos - prevMouseX);
+			current_rotationY += ROTATION_SCALE * (yPos - prevMouseY);
 			eventHandled = true;
 		}
 
 		prevMouseX = xPos;
+		prevMouseY = yPos;
 	}
 
 	return eventHandled;
