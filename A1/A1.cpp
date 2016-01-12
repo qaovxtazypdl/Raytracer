@@ -16,14 +16,11 @@ using namespace std;
 A1::A1()
 	: current_col(0), grid(DIM), prevMouseX(0), current_rotationX(0), current_rotationY(0), scaling_factor(1.0f), width(DEFAULT_WIDTH)
 {
-	colour[0][0] = 0.0f; colour[0][1] = 0.0f; colour[0][2] = 0.0f;
-	colour[1][0] = 0.0f; colour[1][1] = 0.0f; colour[1][2] = 1.0f;
-	colour[2][0] = 0.0f; colour[2][1] = 1.0f; colour[2][2] = 0.0f;
-	colour[3][0] = 0.0f; colour[3][1] = 1.0f; colour[3][2] = 1.0f;
-	colour[4][0] = 1.0f; colour[4][1] = 0.0f; colour[4][2] = 0.0f;
-	colour[5][0] = 1.0f; colour[5][1] = 0.0f; colour[5][2] = 1.0f;
-	colour[6][0] = 1.0f; colour[6][1] = 1.0f; colour[6][2] = 0.0f;
-	colour[7][0] = 1.0f; colour[7][1] = 1.0f; colour[7][2] = 1.0f;
+	for (int i = 0; i < 8; i++) {
+		colour[i][0] = (float) ((i & 0x4) >> 2);
+		colour[i][1] = (float) ((i & 0x2) >> 1);
+		colour[i][2] = (float) (i & 0x1);
+	}
 }
 
 //----------------------------------------------------------------------------------------
@@ -257,8 +254,10 @@ void A1::draw()
 
 		// Draw the cubes and outline
 		for (int i = 0; i < DIM * DIM; i++) {
-			drawCubes(i);
-			drawCubeOutlines(i);
+			if (grid.getHeight(i / DIM, i % DIM) > 0) {
+				drawCubes(i);
+				drawCubeOutlines(i);
+			}
 		}
 
 		// draw focused stack
@@ -544,6 +543,14 @@ void A1::moveFocusUp(bool shiftHeld) {
 }
 
 void A1::resetToDefault() {
+	current_col = 0;
+
+	for (int i = 0; i < 8; i++) {
+		colour[i][0] = (float) ((i & 0x4) >> 2);
+		colour[i][1] = (float) ((i & 0x2) >> 1);
+		colour[i][2] = (float) (i & 0x1);
+	}
+
 	scaling_factor = 1.0f;
 	current_rotationX = 0;
 	current_rotationY = 0;
