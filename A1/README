@@ -1,0 +1,14 @@
+To compile the program (no changes to default):
+==============================================
+cd A1
+premake4 gmake
+make
+
+Compiled and tested on personal computer and gl06.
+
+
+
+Manual:
+===============================================
+I assumed that reset should also reset the color radio button choice, as well as any colors that were adjusted manually.
+I also added the ability to rotate in the vertical direction about the central axis using a corresponding mouse movement in the y direction to make it more flexible.
