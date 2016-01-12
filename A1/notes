@@ -1,10 +1,3 @@
-convert to uniforms and individual cube stack buffers??? worth it???
-	- allocate buffer as array of DIM*DIM buffers and initialize
-	- change stack drawing to only draw one cube stack at a time.
-	- draw outline stacks one at a time as well
-
-	remove total cubes
-	use separate buffer for active outline
 
 Jan 25 Mon 10am
 Jan 29 Fri 2:30pm

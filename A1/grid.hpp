@@ -12,14 +12,12 @@ public:
 
 	int getHeight( int x, int y ) const;
 	int getColour( int x, int y ) const;
-	unsigned getTotalCubes() const;
 
 	void setHeight( int x, int y, int h );
 	void setColour( int x, int y, int c );
 
 private:
 	size_t m_dim;
-	unsigned m_totalCubes;
 	int *m_heights;
 	int *m_cols;
 };
