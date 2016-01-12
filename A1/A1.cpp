@@ -71,51 +71,36 @@ void A1::init()
 void A1::initCubes() {
 	// Create vertex objects for cubes
 	// Create the vertex array to record buffer assignments.
-	glGenVertexArrays( 1, &m_cubes_vao );
-	glBindVertexArray( m_cubes_vao );
-
-	// Create the cube vertex buffer
-	glGenBuffers( 1, &m_cubes_vbo );
-	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
-
-	// Specify the means of extracting the position values properly.
 	GLint posAttrib = m_shader.getAttribLocation( "position" );
+
+	glGenVertexArrays( DIM * DIM, m_cubes_vao );
+	glGenBuffers( DIM * DIM, m_cubes_vbo );
+	glGenBuffers( DIM * DIM, m_cubes_element_vbo );
+
+	glGenVertexArrays( DIM * DIM, m_cube_edges_vao );
+	glGenBuffers( DIM * DIM, m_cube_edges_vbo );
+	glGenBuffers( DIM * DIM, m_cube_edges_element_vbo );
+
+	glGenVertexArrays( 1, &m_cube_active_vao );
+	glGenBuffers( 1, &m_cube_active_vbo );
+	glGenBuffers( 1, &m_cube_active_element_vbo );
+
+	for (int i = 0; i < DIM * DIM; i++) {
+		glBindVertexArray( m_cubes_vao[i] );
+		glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo[i] );
+		glEnableVertexAttribArray( posAttrib );
+		glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+		glBindVertexArray( m_cube_edges_vao[i] );
+		glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo[i] );
+		glEnableVertexAttribArray( posAttrib );
+		glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+	}
+
+	glBindVertexArray( m_cube_active_vao );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_active_vbo );
 	glEnableVertexAttribArray( posAttrib );
 	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-	// Create the cube color buffer
-	glGenBuffers( 1, &m_cube_colors_vbo );
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_colors_vbo );
-
-	GLint colAttrib = m_shader.getAttribLocation( "colour" );
-	glEnableVertexAttribArray( colAttrib );
-	glVertexAttribPointer( colAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-	// Create the cube vertex element buffer
-	glGenBuffers( 1, &m_cubes_element_vbo );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
-
-	// Create vertex objects for outlines
-	// Create the vertex array to record buffer assignments.
-	glGenVertexArrays( 1, &m_cube_edges_vao );
-	glBindVertexArray( m_cube_edges_vao );
-
-	// Create the cube vertex buffer
-	glGenBuffers( 1, &m_cube_edges_vbo );
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
-
-	// Specify the means of extracting the position values properly.
-	glEnableVertexAttribArray( posAttrib );
-	glVertexAttribPointer( posAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-	glGenBuffers( 1, &m_cube_edge_colors_vbo );
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edge_colors_vbo );
-	glEnableVertexAttribArray( colAttrib );
-	glVertexAttribPointer( colAttrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-  // Create the cube vertex element buffer
-	glGenBuffers( 1, &m_cube_edges_element_vbo );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
 
 	// Reset state to prevent rogue code from messing with *my*
 	// stuff!
@@ -266,11 +251,14 @@ void A1::draw()
 
 		// Just draw the grid for now.
 		glBindVertexArray( m_grid_vao );
+		setColour(1.0f, 1.0f, 1.0f);
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes and outline
-		drawCubes();
-		drawCubeOutlines();
+		for (int i = 0; i < DIM * DIM; i++) {
+			drawCubes(i);
+			drawCubeOutlines(i);
+		}
 
 		// draw focused stack
 		glDisable( GL_DEPTH_TEST );
@@ -285,7 +273,7 @@ void A1::draw()
 }
 
 // x, y, z are the bottom left front corner.
-void A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int y, int z) {
+void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z) {
 	size_t startIdx = start / 3; // divide by 3 because 3 entries is one index location.
 
 	// "front" vertices
@@ -299,13 +287,6 @@ void A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *colors, unsigned *
 	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 0;
 	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 1;
 	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
-
-	int colorIndex = grid.getColour(x, z);
-	for (int i = 0; i < 8; i++) {
-		colors[colorStart++] = colour[colorIndex][0];
-		colors[colorStart++] = colour[colorIndex][1];
-		colors[colorStart++] = colour[colorIndex][2];
-	}
 
   // front face index
 	indices[idxStart++] = startIdx + 0; indices[idxStart++] = startIdx + 1; indices[idxStart++] = startIdx + 2;
@@ -330,9 +311,12 @@ void A1::writeUnitCubeVerticesIntoBuffer(float *verts, float *colors, unsigned *
 	// back face index
 	indices[idxStart++] = startIdx + 5; indices[idxStart++] = startIdx + 4; indices[idxStart++] = startIdx + 7;
 	indices[idxStart++] = startIdx + 5; indices[idxStart++] = startIdx + 7; indices[idxStart++] = startIdx + 6;
+
+	int colorIndex = grid.getColour(x, z);
+	setColour(colorIndex);
 }
 
-void A1::writeUnitCubeOutlineIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int y, int z, bool isActiveOutline) {
+void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z, bool isActiveOutline) {
 	size_t startIdx = start / 3; // divide by 3 because 3 entries is one index location.
 
 	// "front" vertices
@@ -346,12 +330,6 @@ void A1::writeUnitCubeOutlineIntoBuffer(float *verts, float *colors, unsigned *i
 	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 0;
 	verts[start++] = x + 0; verts[start++] = y + 1; verts[start++] = z + 1;
 	verts[start++] = x + 0; verts[start++] = y + 0; verts[start++] = z + 1;
-
-	for (int i = 0; i < 8; i++) {
-		colors[colorStart++] = isActiveOutline ? 1.0f : 0.9f;
-		colors[colorStart++] = isActiveOutline ? 0.75f : 0.9f;
-		colors[colorStart++] = isActiveOutline ? 0.0f : 0.9f;
-	}
 
   // front edges
 	indices[idxStart++] = startIdx + 0; indices[idxStart++] = startIdx + 1;
@@ -370,138 +348,127 @@ void A1::writeUnitCubeOutlineIntoBuffer(float *verts, float *colors, unsigned *i
 	indices[idxStart++] = startIdx + 1; indices[idxStart++] = startIdx + 5;
 	indices[idxStart++] = startIdx + 2; indices[idxStart++] = startIdx + 6;
 	indices[idxStart++] = startIdx + 3; indices[idxStart++] = startIdx + 7;
+
+	setColour(isActiveOutline ? 1.0f : 0.9f, isActiveOutline ? 0.75f : 0.9f, isActiveOutline ? 0.0f : 0.9f);
 }
 
-void A1::writeBaseOutlineIntoBuffer(float *verts, float *colors, unsigned *indices, size_t &start, size_t &colorStart, size_t &idxStart, int x, int z) {
+void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int z) {
 	// base vertices
 	verts[start++] = x + 0; verts[start++] = 0; verts[start++] = z + 0;
 	verts[start++] = x + 1; verts[start++] = 0; verts[start++] = z + 0;
 	verts[start++] = x + 1; verts[start++] = 0; verts[start++] = z + 1;
 	verts[start++] = x + 0; verts[start++] = 0; verts[start++] = z + 1;
 
-	for (int i = 0; i < 4; i++) {
-		colors[colorStart++] = 1.0f;
-		colors[colorStart++] = 0.75f;
-		colors[colorStart++] = 0.0f;
-	}
-
   // base edges
 	indices[idxStart++] = 0; indices[idxStart++] = 1;
 	indices[idxStart++] = 1; indices[idxStart++] = 2;
 	indices[idxStart++] = 2; indices[idxStart++] = 3;
 	indices[idxStart++] = 3; indices[idxStart++] = 0;
+
+	setColour(1.0f, 0.75f, 0.0f);
 }
 
-void A1::drawCubes()
+void A1::setColour(unsigned index) {
+	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
+	glUniform3f(uniformLocation_colour, colour[index][0], colour[index][1], colour[index][2]);
+}
+
+void A1::setColour(float r, float g, float b) {
+	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
+	glUniform3f(uniformLocation_colour, r, g, b);
+}
+
+void A1::drawCubes(unsigned i)
 {
-	size_t sz = grid.getTotalCubes() * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
-	size_t indexSz = grid.getTotalCubes() * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
+	unsigned x = i / DIM, y = i % DIM;
+	size_t numCubes = grid.getHeight(x, y);
+	size_t sz = numCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+	size_t indexSz = numCubes * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
 
 	float *verts = new float[ sz ];
-	float *colors = new float[ sz ];
 	unsigned *indices = new unsigned[ indexSz ];
-	size_t vertStart = 0, idxStart = 0, colorStart = 0;
+	size_t vertStart = 0, idxStart = 0;
 
-	for (int i = 0; i < DIM; i++) {
-		for (int j = 0; j < DIM; j++) {
-			for (int height = 0; height < grid.getHeight(i, j); height++) {
-				writeUnitCubeVerticesIntoBuffer(verts, colors, indices, vertStart, colorStart, idxStart, i, height, j);
-			}
-		}
+	for (int height = 0; height < numCubes; height++) {
+		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height, y);
 	}
 
-	glBindVertexArray( m_cubes_vao );
+	glBindVertexArray( m_cubes_vao[i] );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cubes_vbo[i] );
 	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_colors_vbo );
-	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), colors, GL_DYNAMIC_DRAW );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cubes_element_vbo[i] );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
 	glDrawElements(	GL_TRIANGLES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
-	delete [] colors;
 	delete [] indices;
 }
 
-void A1::drawCubeOutlines()
+void A1::drawCubeOutlines(unsigned i)
 {
-	size_t sz = grid.getTotalCubes() * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
-	size_t indexSz = grid.getTotalCubes() * 12 * 2;  // 12 edges / square, 2 points per edge
+	unsigned x = i / DIM, y = i % DIM;
+	size_t numCubes = grid.getHeight(x, y);
+	size_t sz = numCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
+	size_t indexSz = numCubes * 12 * 2;  // 12 edges / square, 2 points per edge
 
 	float *verts = new float[ sz ];
-	float *colors = new float[ sz ];
 	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
-	size_t vertStart = 0, colorStart = 0, idxStart = 0;
+	size_t vertStart = 0, idxStart = 0;
 
-	for (int i = 0; i < DIM; i++) {
-		for (int j = 0; j < DIM; j++) {
-			for (int height = 0; height < grid.getHeight(i, j); height++) {
-				writeUnitCubeOutlineIntoBuffer(verts, colors, indices, vertStart, colorStart, idxStart,i , height, j, false);
-			}
-		}
+	for (int height = 0; height < numCubes; height++) {
+		writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height, y, false);
 	}
 
-	glBindVertexArray( m_cube_edges_vao );
+	glBindVertexArray( m_cube_edges_vao[i] );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo[i] );
 	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edge_colors_vbo );
-	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), colors, GL_DYNAMIC_DRAW );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo[i] );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
 	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
-	delete [] colors;
 	delete [] indices;
 }
 
 void A1::drawActiveCubeStack()
 {
-	unsigned i = focusLocation.first, j = focusLocation.second;
-	unsigned cubesToDraw = grid.getHeight(i, j);
-	size_t sz = cubesToDraw > 0 ? cubesToDraw * 8 * 3 : 4 * 3;  //8 vertices / square, 3 dimensions / vertex or 4 base vertices
-	size_t indexSz = cubesToDraw > 0 ? cubesToDraw * 12 * 2 : 4 * 2;  // 12 edges / square, 2 points per edge or 4 base edges
+	unsigned x = focusLocation.first, y = focusLocation.second;
+	unsigned numCubes = grid.getHeight(x, y);
+	size_t sz = numCubes > 0 ? numCubes * 8 * 3 : 4 * 3;  //8 vertices / square, 3 dimensions / vertex or 4 base vertices
+	size_t indexSz = numCubes > 0 ? numCubes * 12 * 2 : 4 * 2;  // 12 edges / square, 2 points per edge or 4 base edges
 
 	float *verts = new float[ sz ];
-	float *colors = new float[ sz ];
 	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
-	size_t vertStart = 0, colorStart = 0, idxStart = 0;
+	size_t vertStart = 0, idxStart = 0;
 
-	if (cubesToDraw > 0) {
-		for (int height = 0; height < cubesToDraw; height++) {
-			writeUnitCubeOutlineIntoBuffer(verts, colors, indices, vertStart, colorStart, idxStart,i , height, j, true);
+	if (numCubes > 0) {
+		for (int height = 0; height < numCubes; height++) {
+			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height, y, true);
 		}
 	} else {
-		writeBaseOutlineIntoBuffer(verts, colors, indices, vertStart, colorStart, idxStart, focusLocation.first, focusLocation.second);
+		writeBaseOutlineIntoBuffer(verts, indices, vertStart, idxStart, focusLocation.first, focusLocation.second);
 	}
 
-	glBindVertexArray( m_cube_edges_vao );
+	glBindVertexArray( m_cube_active_vao );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edges_vbo );
+	glBindBuffer( GL_ARRAY_BUFFER, m_cube_active_vbo );
 	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), verts, GL_DYNAMIC_DRAW );
 
-	glBindBuffer( GL_ARRAY_BUFFER, m_cube_edge_colors_vbo );
-	glBufferData( GL_ARRAY_BUFFER, sz * sizeof(float), colors, GL_DYNAMIC_DRAW );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_edges_element_vbo );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_cube_active_element_vbo );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexSz * sizeof(unsigned), indices, GL_DYNAMIC_DRAW );
 
 	glDrawElements(	GL_LINES, indexSz, GL_UNSIGNED_INT, 0);
 
 	// OpenGL has the buffer now, there's no need for us to keep a copy.
 	delete [] verts;
-	delete [] colors;
 	delete [] indices;
 }
 
