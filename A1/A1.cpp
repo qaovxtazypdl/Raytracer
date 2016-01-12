@@ -485,6 +485,7 @@ void A1::setCurrentColour(unsigned i, unsigned j) {
 }
 
 void A1::growCurrentSelectedCubeStack() {
+	setCurrentColour(focusLocation.first, focusLocation.second);
 	grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) + 1);
 }
 
