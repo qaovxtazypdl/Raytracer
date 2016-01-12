@@ -644,7 +644,7 @@ bool A1::mouseButtonInputEvent(int button, int actions, int mods) {
  */
 bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
-	const float ZOOM_SCALE = -1.0f/25.0f;
+	const float ZOOM_SCALE = 1.0f/25.0f;
 	const float MAX_SCALING_FACTOR = 2.0f;
 	const float MIN_SCALING_FACTOR = 0.4f;
 
