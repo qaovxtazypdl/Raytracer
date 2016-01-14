@@ -14,7 +14,7 @@ using namespace std;
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
-	: current_col(0), grid(DIM), prevMouseX(0), current_rotationX(0), current_rotationY(0), scaling_factor(1.0f), width(DEFAULT_WIDTH)
+	: current_col(0), grid(DIM), prevMouseX(0), current_rotationX(0), current_rotationY(0), scaling_factor(1.0f), width(DEFAULT_WIDTH), leftMouseButtonDown(false)
 {
 	for (int i = 0; i < 8; i++) {
 		colour[i][0] = (float) ((i & 0x4) >> 2);
