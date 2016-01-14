@@ -26,3 +26,21 @@
 *.exe
 *.out
 *.app
+
+# ignore build objects
+*.d
+
+/A1/build/Makefile
+/A1/Makefile
+/A1/imgui.ini
+/A1/A1
+
+/A0/build/Makefile
+/A0/Makefile
+/A0/imgui.ini
+/A0/A0
+
+/Makefile
+/build/imgui.make
+/build/cs488-framework.make
+/shared/glfw-3.1.1/build/
