@@ -190,6 +190,10 @@ void A1::guiLogic()
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
 		}
 
+		if( ImGui::Button( "Reset" ) ) {
+			resetToDefault();
+		}
+
 		// Eventually you'll create multiple colour widgets with
 		// radio buttons.  If you use PushID/PopID to give them all
 		// unique IDs, then ImGui will be able to keep them separate.
@@ -255,8 +259,8 @@ void A1::draw()
 		// Draw the cubes and outline
 		for (int i = 0; i < DIM * DIM; i++) {
 			if (grid.getHeight(i / DIM, i % DIM) > 0) {
-				drawCubes(i);
 				drawCubeOutlines(i);
+				drawCubes(i);
 			}
 		}
 
