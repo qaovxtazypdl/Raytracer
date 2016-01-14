@@ -4,7 +4,7 @@ cd A1
 premake4 gmake
 make
 
-Compiled and tested on personal computer and gl06.
+Compiled and tested on personal computer and gl23.
 
 
 
