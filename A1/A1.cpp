@@ -258,7 +258,7 @@ void A1::draw()
 
 		// Draw the cubes and outline
 		for (int i = 0; i < DIM * DIM; i++) {
-			if (grid.getHeight(i / DIM, i % DIM) > 0 || grid.getAnimationFrame(i / DIM, i % DIM) > 0) {
+			if (grid.getHeight(i / DIM, i % DIM) > 0 || (grid.getAnimationFrameType(i / DIM, i % DIM) == 2 && grid.getAnimationFrame(i / DIM, i % DIM) > 0)) {
 				drawCubeOutlines(i);
 				drawCubes(i);
         grid.advanceAnimationFrame(i / DIM, i % DIM);
@@ -413,8 +413,7 @@ void A1::drawCubes(unsigned i)
       heightOffset = (animationFrame * animationFrame) / 30.0;
     } else if (animationFrameType == 3 && animationFrame != 0) {
       // stack fade in
-      animationFrame = 20 - animationFrame;
-      alpha = (animationFrame) / 20.0;
+      alpha = (20 - animationFrame) / 20.0;
       alpha = alpha * alpha;
     }
 		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + heightOffset, y, alpha);
