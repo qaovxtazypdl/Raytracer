@@ -39,13 +39,13 @@ private:
 	void drawCubes(unsigned i);
 	void drawCubeOutlines(unsigned i);
 	void drawActiveCubeStack();
-	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z);
+	void writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z, float alpha);
 	void writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z, bool isActiveOutline);
 	void writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float z);
 
 	void setColour(unsigned index);
   void setColour(float r, float g, float b);
-	void setColour(float r, float g, float b, float a);
+  void setColour(unsigned index, float alpha);
 
 	// manipulation of data and logic
 	void growCurrentSelectedCubeStack();

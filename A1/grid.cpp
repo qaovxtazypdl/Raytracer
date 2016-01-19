@@ -7,7 +7,8 @@ Grid::Grid( size_t d )
 {
 	m_heights = new int[ d * d ];
   m_cols = new int[ d * d ];
-	m_frame = new int[ d * d ];
+  m_frame = new int[ d * d ];
+	m_frame_type = new int[ d * d ];
 
 	reset();
 }
@@ -41,6 +42,11 @@ int Grid::getAnimationFrame( int x, int y ) const
   return m_frame[ y * m_dim + x ];
 }
 
+int Grid::getAnimationFrameType( int x, int y ) const
+{
+  return m_frame_type[ y * m_dim + x ];
+}
+
 int Grid::getColour( int x, int y ) const
 {
 	return m_cols[ y * m_dim + x ];
@@ -52,9 +58,10 @@ void Grid::setHeight( int x, int y, int h )
 	m_heights[ y * m_dim + x ] = h;
 }
 
-void Grid::resetAnimationFrame( int x, int y )
+void Grid::resetAnimationFrame( int x, int y, int type )
 {
   m_frame[ y * m_dim + x ] = 20;
+  m_frame_type[ y * m_dim + x ] = type;
 }
 
 void Grid::advanceAnimationFrame( int x, int y )

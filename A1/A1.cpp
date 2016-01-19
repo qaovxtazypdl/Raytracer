@@ -258,13 +258,10 @@ void A1::draw()
 
 		// Draw the cubes and outline
 		for (int i = 0; i < DIM * DIM; i++) {
-			if (grid.getHeight(i / DIM, i % DIM) > 0) {
+			if (grid.getHeight(i / DIM, i % DIM) > 0 || grid.getAnimationFrame(i / DIM, i % DIM) > 0) {
 				drawCubeOutlines(i);
 				drawCubes(i);
-
-        if (grid.getAnimationFrame(i / DIM, i % DIM) > 0) {
-          grid.advanceAnimationFrame(i / DIM, i % DIM);
-        }
+        grid.advanceAnimationFrame(i / DIM, i % DIM);
 			}
 		}
 
@@ -281,7 +278,7 @@ void A1::draw()
 }
 
 // x, y, z are the bottom left front corner.
-void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z) {
+void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z, float alpha) {
 	size_t startIdx = start / 3; // divide by 3 because 3 entries is one index location.
 
 	// "front" vertices
@@ -321,7 +318,7 @@ void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t
 	indices[idxStart++] = startIdx + 5; indices[idxStart++] = startIdx + 7; indices[idxStart++] = startIdx + 6;
 
 	int colorIndex = grid.getColour(x, z);
-	setColour(colorIndex);
+	setColour(colorIndex, alpha);
 }
 
 void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z, bool isActiveOutline) {
@@ -378,18 +375,26 @@ void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, size_t &sta
 
 void A1::setColour(unsigned index) {
 	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	glUniform3f(uniformLocation_colour, colour[index][0], colour[index][1], colour[index][2]);
+	glUniform4f(uniformLocation_colour, colour[index][0], colour[index][1], colour[index][2], 1.0f);
+}
+
+void A1::setColour(unsigned index, float alpha) {
+  GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
+  glUniform4f(uniformLocation_colour, colour[index][0], colour[index][1], colour[index][2], alpha);
 }
 
 void A1::setColour(float r, float g, float b) {
 	GLint uniformLocation_colour = m_shader.getUniformLocation("colour");
-	glUniform3f(uniformLocation_colour, r, g, b);
+	glUniform4f(uniformLocation_colour, r, g, b, 1.0f);
 }
 
 void A1::drawCubes(unsigned i)
 {
-	unsigned x = i / DIM, y = i % DIM;
-	size_t numCubes = grid.getHeight(x, y);
+  unsigned x = i / DIM, y = i % DIM;
+  int animationFrame = grid.getAnimationFrame(x, y);
+  int animationFrameType = grid.getAnimationFrameType(x, y);
+
+	size_t numCubes = grid.getHeight(x, y) + ((animationFrameType == 2 && animationFrame > 0) ? 1 : 0);
 	size_t sz = numCubes * 8 * 3;  //8 vertices / square, 3 dimensions / vertex
 	size_t indexSz = numCubes * 6 * 2 * 3;  // 6 faces / square, 2 triangles / square, 3 indices / triangle
 
@@ -397,9 +402,22 @@ void A1::drawCubes(unsigned i)
 	unsigned *indices = new unsigned[ indexSz ];
 	size_t vertStart = 0, idxStart = 0;
 
-  int animationFrame = grid.getAnimationFrame(x, y);
 	for (int height = 0; height < numCubes; height++) {
-		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y);
+    int heightOffset = 0;
+    float alpha = 1.0f;
+    if (animationFrameType == 1 && animationFrame != 0 && height == numCubes - 1) {
+      heightOffset = (animationFrame * animationFrame) / 30.0;
+    } else if (animationFrameType == 2 && animationFrame != 0 && height == numCubes - 1) {
+      // release
+      animationFrame = 20 - animationFrame;
+      heightOffset = (animationFrame * animationFrame) / 30.0;
+    } else if (animationFrameType == 3 && animationFrame != 0) {
+      // stack fade in
+      animationFrame = 20 - animationFrame;
+      alpha = (animationFrame) / 20.0;
+      alpha = alpha * alpha;
+    }
+		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + heightOffset, y, alpha);
 	}
 
 	glBindVertexArray( m_cubes_vao[i] );
@@ -430,7 +448,7 @@ void A1::drawCubeOutlines(unsigned i)
 
   int animationFrame = grid.getAnimationFrame(x, y);
 	for (int height = 0; height < numCubes; height++) {
-		writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y, false);
+		writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1 && grid.getAnimationFrameType(x, y) == 1) ? (animationFrame * animationFrame) / 30.0 : 0), y, false);
 	}
 
 	glBindVertexArray( m_cube_edges_vao[i] );
@@ -462,7 +480,7 @@ void A1::drawActiveCubeStack()
   int animationFrame = grid.getAnimationFrame(x, y);
 	if (numCubes > 0) {
 		for (int height = 0; height < numCubes; height++) {
-			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y, true);
+			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1 && grid.getAnimationFrameType(x, y) == 1) ? (animationFrame * animationFrame) / 30.0 : 0), y, true);
 		}
 	} else {
 		writeBaseOutlineIntoBuffer(verts, indices, vertStart, idxStart, focusLocation.first, focusLocation.second);
@@ -496,13 +514,14 @@ void A1::setCurrentColour(unsigned i, unsigned j) {
 
 void A1::growCurrentSelectedCubeStack() {
 	setCurrentColour(focusLocation.first, focusLocation.second);
-  grid.resetAnimationFrame(focusLocation.first, focusLocation.second);
 	grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) + 1);
+  grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 1);
 }
 
 void A1::shrinkCurrentSelectedCubeStack() {
 	if (grid.getHeight(focusLocation.first, focusLocation.second) > 0) {
 	  grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) - 1);
+    grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 2);
 	}
 }
 
@@ -514,6 +533,7 @@ void A1::moveFocusRight(bool shiftHeld) {
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
+      grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 3);
 		}
 	}
 }
@@ -526,6 +546,7 @@ void A1::moveFocusLeft(bool shiftHeld) {
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
+      grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 3);
 		}
 	}
 }
@@ -538,6 +559,7 @@ void A1::moveFocusDown(bool shiftHeld) {
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
+      grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 3);
 		}
 	}
 }
@@ -550,6 +572,7 @@ void A1::moveFocusUp(bool shiftHeld) {
 		if (shiftHeld) {
 			unsigned currentHeight = grid.getHeight(focusLocation.first, focusLocation.second);
 			grid.setHeight(focusLocation.first, focusLocation.second, prevHeight);
+      grid.resetAnimationFrame(focusLocation.first, focusLocation.second, 3);
 		}
 	}
 }
