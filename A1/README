@@ -13,4 +13,4 @@ Manual:
 I assumed that reset should also reset the color radio button choice, as well as any colors that were adjusted manually.
 I assumed that when moving the grid over a cell that is colored differently than the current selected color, we immediately apply the new color to the stack, instead of switching the current color.
 I also added the ability to rotate in the vertical direction about the central axis using a corresponding mouse movement in the y direction to make it more flexible.
-I also implemented a simple "animation" when adding blocks. The animation will immediately terminate if a new block is added when the previous block is still animating.
+I also implemented a simple "animation" when manipulating block. The animation will immediately terminate if a new block in the same square is manipulated when the previous block is still animating.
