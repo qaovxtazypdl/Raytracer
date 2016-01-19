@@ -261,6 +261,10 @@ void A1::draw()
 			if (grid.getHeight(i / DIM, i % DIM) > 0) {
 				drawCubeOutlines(i);
 				drawCubes(i);
+
+        if (grid.getAnimationFrame(i / DIM, i % DIM) > 0) {
+          grid.advanceAnimationFrame(i / DIM, i % DIM);
+        }
 			}
 		}
 
@@ -277,7 +281,7 @@ void A1::draw()
 }
 
 // x, y, z are the bottom left front corner.
-void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z) {
+void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z) {
 	size_t startIdx = start / 3; // divide by 3 because 3 entries is one index location.
 
 	// "front" vertices
@@ -320,7 +324,7 @@ void A1::writeUnitCubeVerticesIntoBuffer(float *verts, unsigned *indices, size_t
 	setColour(colorIndex);
 }
 
-void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int y, int z, bool isActiveOutline) {
+void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float y, float z, bool isActiveOutline) {
 	size_t startIdx = start / 3; // divide by 3 because 3 entries is one index location.
 
 	// "front" vertices
@@ -356,7 +360,7 @@ void A1::writeUnitCubeOutlineIntoBuffer(float *verts, unsigned *indices, size_t 
 	setColour(isActiveOutline ? 1.0f : 0.9f, isActiveOutline ? 0.75f : 0.9f, isActiveOutline ? 0.0f : 0.9f);
 }
 
-void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, int x, int z) {
+void A1::writeBaseOutlineIntoBuffer(float *verts, unsigned *indices, size_t &start, size_t &idxStart, float x, float z) {
 	// base vertices
 	verts[start++] = x + 0; verts[start++] = 0; verts[start++] = z + 0;
 	verts[start++] = x + 1; verts[start++] = 0; verts[start++] = z + 0;
@@ -393,8 +397,9 @@ void A1::drawCubes(unsigned i)
 	unsigned *indices = new unsigned[ indexSz ];
 	size_t vertStart = 0, idxStart = 0;
 
+  int animationFrame = grid.getAnimationFrame(x, y);
 	for (int height = 0; height < numCubes; height++) {
-		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height, y);
+		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y);
 	}
 
 	glBindVertexArray( m_cubes_vao[i] );
@@ -423,8 +428,9 @@ void A1::drawCubeOutlines(unsigned i)
 	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
 	size_t vertStart = 0, idxStart = 0;
 
+  int animationFrame = grid.getAnimationFrame(x, y);
 	for (int height = 0; height < numCubes; height++) {
-		writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height, y, false);
+		writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y, false);
 	}
 
 	glBindVertexArray( m_cube_edges_vao[i] );
@@ -453,9 +459,10 @@ void A1::drawActiveCubeStack()
 	unsigned *indices = new unsigned[ indexSz ]; // 1 square, 6 faces / square, 2 triangles / square, 3 indices / triangle
 	size_t vertStart = 0, idxStart = 0;
 
+  int animationFrame = grid.getAnimationFrame(x, y);
 	if (numCubes > 0) {
 		for (int height = 0; height < numCubes; height++) {
-			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height, y, true);
+			writeUnitCubeOutlineIntoBuffer(verts, indices, vertStart, idxStart, x, height + ((height == numCubes-1) ? (animationFrame * animationFrame * animationFrame) / 80.0 : 0), y, true);
 		}
 	} else {
 		writeBaseOutlineIntoBuffer(verts, indices, vertStart, idxStart, focusLocation.first, focusLocation.second);
@@ -489,6 +496,7 @@ void A1::setCurrentColour(unsigned i, unsigned j) {
 
 void A1::growCurrentSelectedCubeStack() {
 	setCurrentColour(focusLocation.first, focusLocation.second);
+  grid.resetAnimationFrame(focusLocation.first, focusLocation.second);
 	grid.setHeight(focusLocation.first, focusLocation.second, grid.getHeight(focusLocation.first, focusLocation.second) + 1);
 }
 
