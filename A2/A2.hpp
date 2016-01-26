@@ -65,6 +65,7 @@ protected:
   glm::mat4 rotate(const glm::vec3 &rotationAngle);
   void drawEdge(const glm::vec4 &v1, const glm::vec4 &v2);
   void handleMouseMove(int buttonsDown, double movement);
+  void reset();
 
 	ShaderProgram m_shader;
 
@@ -77,7 +78,9 @@ protected:
 	glm::vec3 m_currentLineColour;
 
   glm::vec3 m_positionOffset;
+  glm::vec3 m_positionOffset_v;
   glm::vec3 m_rotationAngle;
+  glm::vec3 m_rotationAngle_v;
   glm::vec3 m_scalingFactor;
 
   int m_buttonsDown;

@@ -27,7 +27,9 @@ VertexData::VertexData()
 A2::A2()
 	: m_currentLineColour(vec3(0.0f)),
     m_positionOffset(vec3(0.0f)),
+    m_positionOffset_v(vec3(0.0f)),
     m_rotationAngle(vec3(0.0f)),
+    m_rotationAngle_v(vec3(0.0f)),
     m_scalingFactor(vec3(0.5f)),
     m_buttonsDown(0),
     m_prevMouseX(0),
@@ -42,6 +44,15 @@ A2::A2()
 A2::~A2()
 {
 
+}
+
+void A2::reset() {
+  m_positionOffset = vec3(0.0f);
+  m_positionOffset_v = vec3(0.0f);
+  m_rotationAngle = vec3(0.0f);
+  m_rotationAngle_v = vec3(0.0f);
+  m_scalingFactor = vec3(0.5f);
+  m_currentMode = 'R';
 }
 
 //----------------------------------------------------------------------------------------
@@ -275,13 +286,17 @@ void A2::appLogic()
   glm::mat4 mTranslate = translate(m_positionOffset);
   glm::mat4 mScale = scale(m_scalingFactor);
   glm::mat4 mRotate = rotate(m_rotationAngle);
+
+  glm::mat4 vTranslate = inverse(translate(m_positionOffset_v));
+  glm::mat4 vRotate = inverse(rotate(m_rotationAngle_v));
+
   glm::mat4 MGnomon = mTranslate * mRotate * glm::mat4( 1.0 ); //special case - gnomon should not scale
   glm::mat4 M = mTranslate * mScale * mRotate * glm::mat4( 1.0 );
-  glm::mat4 V = glm::mat4( 1.0 );
+  glm::mat4 V = vTranslate * vRotate * glm::mat4( 1.0 );
   glm::mat4 P = glm::mat4( 1.0 );
 
   for (int i = 0; i < cubeVerts.size(); i++) {
-    cubeVerts[i] = M * V * P * cubeVerts[i];
+    cubeVerts[i] = P * V * M * cubeVerts[i];
   }
 
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
@@ -307,14 +322,14 @@ void A2::appLogic()
   gnomon.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
 
   setLineColour(vec3(1.0f, 0.0f, 0.0f));
-  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[1]);
-  drawEdge(gnomon[0], gnomon[1]);
+  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[1]);
+  drawEdge(P * V * gnomon[0], P * V * gnomon[1]);
   setLineColour(vec3(0.0f, 1.0f, 0.0f));
-  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[2]);
-  drawEdge(gnomon[0], gnomon[2]);
+  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[2]);
+  drawEdge(P * V * gnomon[0], P * V * gnomon[2]);
   setLineColour(vec3(0.0f, 0.0f, 1.0f));
-  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[3]);
-  drawEdge(gnomon[0], gnomon[3]);
+  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[3]);
+  drawEdge(P * V * gnomon[0], P * V * gnomon[3]);
 }
 
 //----------------------------------------------------------------------------------------
@@ -421,7 +436,7 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
   const float PI = 3.14159265f;
   //m_currentMode is the current
   if (m_currentMode == 'T') {
-    //ROTATE
+    //TRANSLATE
     const float SCALE = 2.0f / m_width;
     if (buttonsDown & 0x1) {
       //left button
@@ -438,8 +453,8 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       m_positionOffset[1] += SCALE * movement;
     }
   } else if (m_currentMode == 'R') {
+    //ROTATE
     const float SCALE = 2 * PI / m_width;
-    //TRANSLATE
     if (buttonsDown & 0x1) {
     //left button
       m_rotationAngle[0] += SCALE * movement;
@@ -455,8 +470,8 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       m_rotationAngle[1] += SCALE * movement;
     }
   } else if (m_currentMode == 'S') {
-    const float SCALE = 3.0f/m_width;
     //SCALE
+    const float SCALE = 3.0f/m_width;
     if (buttonsDown & 0x1) {
     //left button
       m_scalingFactor[0] += SCALE * movement;
@@ -477,8 +492,41 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       if (m_scalingFactor[1] < 0.25f) m_scalingFactor[1] = 0.25f;
       else if (m_scalingFactor[1] > 2.0f) m_scalingFactor[1] = 2.0f;
     }
-  }
+  } else if (m_currentMode == 'O') {
+    //ROTATE_VIEW
+    const float SCALE = 2 * PI / m_width;
+    if (buttonsDown & 0x1) {
+    //left button
+      m_rotationAngle_v[0] += SCALE * movement;
+    }
 
+    if (buttonsDown & 0x2) {
+      //right button
+      m_rotationAngle_v[2] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x4) {
+      //middle button
+      m_rotationAngle_v[1] += SCALE * movement;
+    }
+  } else if (m_currentMode == 'N') {
+    //TRANSLATE_VIEW
+    const float SCALE = 2.0f / m_width;
+    if (buttonsDown & 0x1) {
+      //left button
+      m_positionOffset_v[0] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x2) {
+      //right button
+      m_positionOffset_v[2] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x4) {
+      //middle button
+      m_positionOffset_v[1] += SCALE * movement;
+    }
+  }
 }
 
 //----------------------------------------------------------------------------------------
@@ -581,12 +629,16 @@ bool A2::keyInputEvent (
 
 	// Fill in with event handling code...
   if (action == GLFW_PRESS) {
-    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S) {
+    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N) {
       m_currentMode = key;
       eventHandled = true;
     }
     if (key == GLFW_KEY_Q) {
       glfwSetWindowShouldClose(m_window, GL_TRUE);
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_A) {
+      reset();
       eventHandled = true;
     }
   }
