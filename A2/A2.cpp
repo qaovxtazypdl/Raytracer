@@ -292,9 +292,9 @@ void A2::appLogic()
 
   // add model gnomon
   verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
+  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 0.0f) *= 0.25f / length(M * vec4(0.25f, 0.0f, 0.0f, 0.0f))); verts[9][3] = 1.0f;
+  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 0.0f) *= 0.25f / length(M * vec4(0.0f, 0.25f, 0.0f, 0.0f))); verts[10][3] = 1.0f;
+  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 0.0f) *= 0.25f / length(M * vec4(0.0f, 0.0f, 0.25f, 0.0f))); verts[11][3] = 1.0f;
 
   // apply model transforms
   for (int i = 0; i < verts.size(); i++) {
