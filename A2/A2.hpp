@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 
 #include <vector>
+#include <map>
+#include <string>
 
 // Set a global maximum number of vertices in order to pre-allocate VBO data
 // in one shot, rather than reallocating each frame.
@@ -77,10 +79,11 @@ protected:
 
 	glm::vec3 m_currentLineColour;
 
-  glm::mat4 M,V,P,MGnomon;
+  glm::mat4 M,V,P,MGnomon,TotalScaling;
 
   int m_buttonsDown;
   int m_prevMouseX;
   int m_width;
   char m_currentMode;
+  const std::map<char, std::string> modes;
 };

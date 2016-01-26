@@ -30,13 +30,23 @@ A2::A2()
     m_prevMouseX(0),
     m_currentMode('R'),
     m_width(768),
-    M(mat4(0.5f)),
+    M(mat4(1.0f)),
     V(mat4(1.0f)),
     P(mat4(1.0f)),
-    MGnomon(mat4(0.5f))
+    MGnomon(mat4(1.0f)),
+    TotalScaling(mat4(1.0f)),
+    modes({
+      {'O', "Rotate View"},
+      {'N', "Translate View"},
+      {'P', "Perspective"},
+      {'R', "Rotate Model"},
+      {'T', "Translate Model"},
+      {'S', "Scale Model"},
+      {'V', "Viewport"}
+    })
 {
-  M[3][3] = 1.0f;
-  MGnomon[3][3] = 1.0f;
+  M = M * scale(vec3(0.5, 0.5, 0.5));
+  TotalScaling = TotalScaling * scale(vec3(0.5, 0.5, 0.5));
 }
 
 //----------------------------------------------------------------------------------------
@@ -47,10 +57,13 @@ A2::~A2()
 }
 
 void A2::reset() {
-  M = mat4(0.5f); M[3][3] = 1.0f;
+  M = mat4(1.0f);
   V = mat4(1.0f);
   P = mat4(1.0f);
-  MGnomon = mat4(0.5f); MGnomon[3][3] = 1.0f;
+  MGnomon = mat4(1.0f);
+
+  M = M * scale(vec3(0.5, 0.5, 0.5));
+  TotalScaling = TotalScaling * scale(vec3(0.5, 0.5, 0.5));
   m_currentMode = 'R';
 }
 
@@ -349,12 +362,11 @@ void A2::guiLogic()
       reset();
     }
 
-    vector<char> modes = {'O', 'N', 'P', 'R', 'T', 'S', 'V'};
     for (auto it = modes.begin(); it != modes.end(); ++it) {
-      ImGui::PushID(*it);
-      ImGui::Text("%c", *it);
+      ImGui::PushID(it->first);
+      ImGui::Text("%c - %16s", it->first, it->second.c_str());
       ImGui::SameLine();
-      if( ImGui::RadioButton( "##Col", (int *)&m_currentMode, (int)*it ) ) {
+      if( ImGui::RadioButton( "##Col", (int *)&m_currentMode, (int)it->first ) ) {
         //
       }
       ImGui::PopID();
@@ -444,7 +456,7 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 0.0f,
       (buttonsDown & 0x2) ? diff : 0.0f);
     M = M * translate(vTranslate);
-    MGnomon = MGnomon * translate(vTranslate);
+    MGnomon = MGnomon * TotalScaling * translate(vTranslate) * inverse(TotalScaling);
   } else if (m_currentMode == 'R') {
     //ROTATE
     const float SCALE = 2 * PI / m_width;
@@ -465,6 +477,7 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 1.0f,
       (buttonsDown & 0x2) ? diff : 1.0f);
     M = M * scale(vScale);
+    TotalScaling = TotalScaling * scale(vScale);
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
     const float SCALE = 2 * PI / m_width;
