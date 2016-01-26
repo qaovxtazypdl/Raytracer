@@ -365,13 +365,13 @@ void A2::appLogic()
   //draw gnomons
   setLineColour(vec3(1.0f, 0.0f, 0.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 1]);
-  drawEdge(verts[(8+4) + 0], verts[(8+4) + 1]);
+  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 1]);
   setLineColour(vec3(0.0f, 1.0f, 0.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 2]);
-  drawEdge(verts[(8+4) + 0], verts[(8+4) + 2]);
+  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 2]);
   setLineColour(vec3(0.0f, 0.0f, 1.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 3]);
-  drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
+  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
 }
 
 //----------------------------------------------------------------------------------------
