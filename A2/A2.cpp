@@ -50,7 +50,7 @@ void A2::reset() {
   M = mat4(0.5f); M[3][3] = 1.0f;
   V = mat4(1.0f);
   P = mat4(1.0f);
-  MGnomon = mat4(1.0f); MGnomon[3][3] = 1.0f;
+  MGnomon = mat4(0.5f); MGnomon[3][3] = 1.0f;
   m_currentMode = 'R';
 }
 
@@ -459,11 +459,11 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
     //SCALE
     //TODO - cannot scale below certain amount??
     const float SCALE = 3.0f/m_width;
-    const float diff = SCALE * movement;
+    const float diff = 1.0f + SCALE * movement;
     vec3 vScale = vec3(
-      (buttonsDown & 0x1) ? diff : 0.0f,
-      (buttonsDown & 0x4) ? diff : 0.0f,
-      (buttonsDown & 0x2) ? diff : 0.0f);
+      (buttonsDown & 0x1) ? diff : 1.0f,
+      (buttonsDown & 0x4) ? diff : 1.0f,
+      (buttonsDown & 0x2) ? diff : 1.0f);
     M = M * scale(vScale);
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
