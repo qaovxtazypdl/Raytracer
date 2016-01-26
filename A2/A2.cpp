@@ -26,17 +26,17 @@ VertexData::VertexData()
 // Constructor
 A2::A2()
 	: m_currentLineColour(vec3(0.0f)),
-    m_positionOffset(vec3(0.0f)),
-    m_positionOffset_v(vec3(0.0f)),
-    m_rotationAngle(vec3(0.0f)),
-    m_rotationAngle_v(vec3(0.0f)),
-    m_scalingFactor(vec3(0.5f)),
     m_buttonsDown(0),
     m_prevMouseX(0),
     m_currentMode('R'),
-    m_width(768)
+    m_width(768),
+    M(mat4(0.5f)),
+    V(mat4(1.0f)),
+    P(mat4(1.0f)),
+    MGnomon(mat4(0.5f))
 {
-
+  M[3][3] = 1.0f;
+  MGnomon[3][3] = 1.0f;
 }
 
 //----------------------------------------------------------------------------------------
@@ -47,11 +47,10 @@ A2::~A2()
 }
 
 void A2::reset() {
-  m_positionOffset = vec3(0.0f);
-  m_positionOffset_v = vec3(0.0f);
-  m_rotationAngle = vec3(0.0f);
-  m_rotationAngle_v = vec3(0.0f);
-  m_scalingFactor = vec3(0.5f);
+  M = mat4(0.5f); M[3][3] = 1.0f;
+  V = mat4(1.0f);
+  P = mat4(1.0f);
+  MGnomon = mat4(1.0f); MGnomon[3][3] = 1.0f;
   m_currentMode = 'R';
 }
 
@@ -283,18 +282,6 @@ void A2::appLogic()
   cubeVerts.push_back(vec4(-1, -1, -1, 1));
   cubeVerts.push_back(vec4(-1, -1, 1, 1));
 
-  glm::mat4 mTranslate = translate(m_positionOffset);
-  glm::mat4 mScale = scale(m_scalingFactor);
-  glm::mat4 mRotate = rotate(m_rotationAngle);
-
-  glm::mat4 vTranslate = inverse(translate(m_positionOffset_v));
-  glm::mat4 vRotate = inverse(rotate(m_rotationAngle_v));
-
-  glm::mat4 MGnomon = mTranslate * mRotate * glm::mat4( 1.0 ); //special case - gnomon should not scale
-  glm::mat4 M = mTranslate * mScale * mRotate * glm::mat4( 1.0 );
-  glm::mat4 V = vTranslate * vRotate * glm::mat4( 1.0 );
-  glm::mat4 P = glm::mat4( 1.0 );
-
   for (int i = 0; i < cubeVerts.size(); i++) {
     cubeVerts[i] = P * V * M * cubeVerts[i];
   }
@@ -314,7 +301,6 @@ void A2::appLogic()
   drawEdge(cubeVerts[3], cubeVerts[7]);
 
   //draw gnomons
-  M = translate(m_positionOffset) * rotate(m_rotationAngle);
   vector<glm::vec4> gnomon;
   gnomon.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
   gnomon.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
@@ -359,6 +345,20 @@ void A2::guiLogic()
 		if( ImGui::Button( "Quit Application" ) ) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
 		}
+    if( ImGui::Button( "Reset" ) ) {
+      reset();
+    }
+
+    vector<char> modes = {'O', 'N', 'P', 'R', 'T', 'S', 'V'};
+    for (auto it = modes.begin(); it != modes.end(); ++it) {
+      ImGui::PushID(*it);
+      ImGui::Text("%c", *it);
+      ImGui::SameLine();
+      if( ImGui::RadioButton( "##Col", (int *)&m_currentMode, (int)*it ) ) {
+        //
+      }
+      ImGui::PopID();
+    }
 
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
@@ -438,94 +438,51 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
   if (m_currentMode == 'T') {
     //TRANSLATE
     const float SCALE = 2.0f / m_width;
-    if (buttonsDown & 0x1) {
-      //left button
-      m_positionOffset[0] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x2) {
-      //right button
-      m_positionOffset[2] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x4) {
-      //middle button
-      m_positionOffset[1] += SCALE * movement;
-    }
+    const float diff = SCALE * movement;
+    vec3 vTranslate = vec3(
+      (buttonsDown & 0x1) ? diff : 0.0f,
+      (buttonsDown & 0x4) ? diff : 0.0f,
+      (buttonsDown & 0x2) ? diff : 0.0f);
+    M = M * translate(vTranslate);
+    MGnomon = MGnomon * translate(vTranslate);
   } else if (m_currentMode == 'R') {
     //ROTATE
     const float SCALE = 2 * PI / m_width;
-    if (buttonsDown & 0x1) {
-    //left button
-      m_rotationAngle[0] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x2) {
-      //right button
-      m_rotationAngle[2] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x4) {
-      //middle button
-      m_rotationAngle[1] += SCALE * movement;
-    }
+    const float diff = SCALE * movement;
+    vec3 vRotate = vec3(
+      (buttonsDown & 0x1) ? diff : 0.0f,
+      (buttonsDown & 0x4) ? diff : 0.0f,
+      (buttonsDown & 0x2) ? diff : 0.0f);
+    M = M * rotate(vRotate);
+    MGnomon = MGnomon * rotate(vRotate);
   } else if (m_currentMode == 'S') {
     //SCALE
+    //TODO - cannot scale below certain amount??
     const float SCALE = 3.0f/m_width;
-    if (buttonsDown & 0x1) {
-    //left button
-      m_scalingFactor[0] += SCALE * movement;
-      if (m_scalingFactor[0] < 0.25f) m_scalingFactor[0] = 0.25f;
-      else if (m_scalingFactor[0] > 2.0f) m_scalingFactor[0] = 2.0f;
-    }
-
-    if (buttonsDown & 0x2) {
-      //right button
-      m_scalingFactor[2] += SCALE * movement;
-      if (m_scalingFactor[2] < 0.25f) m_scalingFactor[2] = 0.25f;
-      else if (m_scalingFactor[2] > 2.0f) m_scalingFactor[2] = 2.0f;
-    }
-
-    if (buttonsDown & 0x4) {
-      //middle button
-      m_scalingFactor[1] += SCALE * movement;
-      if (m_scalingFactor[1] < 0.25f) m_scalingFactor[1] = 0.25f;
-      else if (m_scalingFactor[1] > 2.0f) m_scalingFactor[1] = 2.0f;
-    }
+    const float diff = SCALE * movement;
+    vec3 vScale = vec3(
+      (buttonsDown & 0x1) ? diff : 0.0f,
+      (buttonsDown & 0x4) ? diff : 0.0f,
+      (buttonsDown & 0x2) ? diff : 0.0f);
+    M = M * scale(vScale);
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
     const float SCALE = 2 * PI / m_width;
-    if (buttonsDown & 0x1) {
-    //left button
-      m_rotationAngle_v[0] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x2) {
-      //right button
-      m_rotationAngle_v[2] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x4) {
-      //middle button
-      m_rotationAngle_v[1] += SCALE * movement;
-    }
+    const float diff = SCALE * movement;
+    vec3 vRotate = vec3(
+      (buttonsDown & 0x1) ? diff : 0.0f,
+      (buttonsDown & 0x4) ? diff : 0.0f,
+      (buttonsDown & 0x2) ? diff : 0.0f);
+    V = inverse(rotate(vRotate)) * V;
   } else if (m_currentMode == 'N') {
     //TRANSLATE_VIEW
     const float SCALE = 2.0f / m_width;
-    if (buttonsDown & 0x1) {
-      //left button
-      m_positionOffset_v[0] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x2) {
-      //right button
-      m_positionOffset_v[2] += SCALE * movement;
-    }
-
-    if (buttonsDown & 0x4) {
-      //middle button
-      m_positionOffset_v[1] += SCALE * movement;
-    }
+    const float diff = SCALE * movement;
+    vec3 vTranslate = vec3(
+      (buttonsDown & 0x1) ? diff : 0.0f,
+      (buttonsDown & 0x4) ? diff : 0.0f,
+      (buttonsDown & 0x2) ? diff : 0.0f);
+    V = inverse(translate(vTranslate)) * V;
   }
 }
 

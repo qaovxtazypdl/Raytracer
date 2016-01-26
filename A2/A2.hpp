@@ -77,11 +77,7 @@ protected:
 
 	glm::vec3 m_currentLineColour;
 
-  glm::vec3 m_positionOffset;
-  glm::vec3 m_positionOffset_v;
-  glm::vec3 m_rotationAngle;
-  glm::vec3 m_rotationAngle_v;
-  glm::vec3 m_scalingFactor;
+  glm::mat4 M,V,P,MGnomon;
 
   int m_buttonsDown;
   int m_prevMouseX;
