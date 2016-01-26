@@ -62,7 +62,7 @@ void A1::init()
 	proj = glm::perspective(
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
-		1.0f, 1000.0f );
+		10.0f, 100.0f );
 }
 
 void A1::initCubes() {
@@ -416,7 +416,7 @@ void A1::drawCubes(unsigned i)
       alpha = (20 - animationFrame) / 20.0;
       alpha = alpha * alpha;
     }
-		writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + heightOffset, y, alpha);
+	  writeUnitCubeVerticesIntoBuffer(verts, indices, vertStart, idxStart, x, height + heightOffset, y, alpha);
 	}
 
 	glBindVertexArray( m_cubes_vao[i] );
