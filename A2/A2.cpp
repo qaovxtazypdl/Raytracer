@@ -11,6 +11,8 @@ using namespace std;
 #include <glm/gtx/io.hpp>
 using namespace glm;
 
+const float PI = 3.14159265f;
+
 //----------------------------------------------------------------------------------------
 // Constructor
 VertexData::VertexData()
@@ -30,9 +32,13 @@ A2::A2()
     m_prevMouseX(0),
     m_currentMode('R'),
     m_width(768),
+    m_height(768),
     M(mat4(1.0f)),
     V(mat4(1.0f)),
     P(mat4(1.0f)),
+    m_near(0.75f),
+    m_far(500.0f),
+    m_fov(45.0f),
     modes({
       {'O', "Rotate View"},
       {'N', "Translate View"},
@@ -43,7 +49,9 @@ A2::A2()
       {'V', "Viewport"}
     })
 {
-  M = M * scale(vec3(0.5, 0.5, 0.5));
+  M = M * scale(vec3(0.15, 0.15, 0.15));
+  P = perspective(m_fov, m_near, m_far);
+
 }
 
 //----------------------------------------------------------------------------------------
@@ -58,8 +66,12 @@ void A2::reset() {
   V = mat4(1.0f);
   P = mat4(1.0f);
 
-  M = M * scale(vec3(0.5, 0.5, 0.5));
+  M = M * scale(vec3(0.15, 0.15, 0.15));
   m_currentMode = 'R';
+  m_near = 0.75f;
+  m_far = 500.0f;
+  m_fov = 45.0f;
+  P = perspective(m_fov, m_near, m_far);
 }
 
 //----------------------------------------------------------------------------------------
@@ -207,6 +219,23 @@ void A2::drawLine(
 	m_vertexData.numVertices += 2;
 }
 
+glm::mat4 A2::perspective(float fov, float n, float f) {
+  const float aspect = (float)m_width / m_height;
+  glm::mat4 P = glm::mat4( 0.0 );
+
+  P[0][0] = (1/tan((fov/2) * PI / 180)) / aspect;
+  P[1][1] = 1/tan((fov/2) * PI / 180);
+  //P[2][2] = (n + f) / n;
+  //P[3][2] = -f;
+  //P[2][3] = 1/n;
+
+  P[2][2] = -(f+n)/(f-n);
+  P[3][2] = -2*f*n/(f-n);
+  P[2][3] = -1;
+
+  return P;
+}
+
 //mat[col][row]
 glm::mat4 A2::translate(const glm::vec3 &positionOffset) {
   glm::mat4 T = glm::mat4( 1.0 );
@@ -266,7 +295,7 @@ glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
 }
 
 void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
-  drawLine(vec2(v1[0], v1[1]), vec2(v2[0], v2[1]));
+  drawLine(vec2(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2]), vec2(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2]));
 }
 
 //----------------------------------------------------------------------------------------
@@ -313,7 +342,7 @@ void A2::appLogic()
   } //view coordinates
 
   for (int i = 0; i < verts.size(); i++) {
-    verts[i] = V * verts[i];
+    verts[i] = P * verts[i];
   } //world coordinates
 
   //drawEdge draws normalized device coords
@@ -384,7 +413,9 @@ void A2::guiLogic()
       ImGui::PopID();
     }
 
-		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
+    ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
+    ImGui::Text( "Near Plane: %.3f, Far Plane: %.3f", m_near, m_far);
+		ImGui::Text( "FOV (degrees): %.2f", m_fov);
 
 	ImGui::End();
 }
@@ -457,7 +488,6 @@ bool A2::cursorEnterWindowEvent (
 }
 
 void A2::handleMouseMove(int buttonsDown, double movement) {
-  const float PI = 3.14159265f;
   //m_currentMode is the current
   if (m_currentMode == 'T') {
     //TRANSLATE
@@ -505,6 +535,18 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 0.0f,
       (buttonsDown & 0x2) ? diff : 0.0f);
     V = inverse(translate(vTranslate)) * V;
+  } else if (m_currentMode == 'P') {
+    //PROJECTION
+    const float SCALE = 2.0f / m_width;
+    const float diff = SCALE * movement;
+
+    if (buttonsDown & 0x1) m_fov += 25 * diff; //fov zooms in faster - 50 per screen
+    if (buttonsDown & 0x4) m_near += diff;
+    if (buttonsDown & 0x2) m_far += diff;
+
+    if (m_fov < 5) m_fov = 5;
+    if (m_fov > 160) m_fov = 160;
+    P = perspective(m_fov, m_near, m_far);
   }
 }
 
@@ -608,7 +650,7 @@ bool A2::keyInputEvent (
 
 	// Fill in with event handling code...
   if (action == GLFW_PRESS) {
-    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N) {
+    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N || key == GLFW_KEY_P) {
       m_currentMode = key;
       eventHandled = true;
     }

@@ -65,6 +65,7 @@ protected:
   glm::mat4 translate(const glm::vec3 &positionOffset);
   glm::mat4 scale(const glm::vec3 &scalingFactor);
   glm::mat4 rotate(const glm::vec3 &rotationAngle);
+  glm::mat4 perspective(float fov, float n, float f);
   void drawEdge(const glm::vec4 &v1, const glm::vec4 &v2);
   void handleMouseMove(int buttonsDown, double movement);
   void reset();
@@ -81,9 +82,10 @@ protected:
 
   glm::mat4 M,V,P;
 
+  float m_near, m_far, m_fov;
   int m_buttonsDown;
   int m_prevMouseX;
-  int m_width;
+  int m_width, m_height;
   char m_currentMode;
   const std::map<char, std::string> modes;
 };
