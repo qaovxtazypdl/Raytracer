@@ -312,6 +312,11 @@ void A2::appLogic()
     verts[i] = V * verts[i];
   } //view coordinates
 
+  for (int i = 0; i < verts.size(); i++) {
+    verts[i] = V * verts[i];
+  } //world coordinates
+
+  //drawEdge draws normalized device coords
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
   drawEdge(verts[0], verts[1]);
   drawEdge(verts[1], verts[2]);
