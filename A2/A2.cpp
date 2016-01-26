@@ -31,7 +31,8 @@ A2::A2()
     m_scalingFactor(vec3(0.5f)),
     m_buttonsDown(0),
     m_prevMouseX(0),
-    m_currentMode('R')
+    m_currentMode('R'),
+    m_width(768)
 {
 
 }
@@ -417,10 +418,11 @@ bool A2::cursorEnterWindowEvent (
 }
 
 void A2::handleMouseMove(int buttonsDown, double movement) {
+  const float PI = 3.14159265f;
   //m_currentMode is the current
   if (m_currentMode == 'T') {
     //ROTATE
-    const float SCALE = 0.01f;
+    const float SCALE = 2.0f / m_width;
     if (buttonsDown & 0x1) {
       //left button
       m_positionOffset[0] += SCALE * movement;
@@ -436,7 +438,7 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       m_positionOffset[1] += SCALE * movement;
     }
   } else if (m_currentMode == 'R') {
-    const float SCALE = 8.0f/1000;
+    const float SCALE = 2 * PI / m_width;
     //TRANSLATE
     if (buttonsDown & 0x1) {
     //left button
@@ -453,7 +455,7 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       m_rotationAngle[1] += SCALE * movement;
     }
   } else if (m_currentMode == 'S') {
-    const float SCALE = 0.01f;
+    const float SCALE = 3.0f/m_width;
     //SCALE
     if (buttonsDown & 0x1) {
     //left button
@@ -519,7 +521,8 @@ bool A2::mouseButtonInputEvent (
 
   if (actions == 0) {
     //release
-    m_buttonsDown &= !(0x1 << button);
+    m_buttonsDown &= ~(0x1 << button);
+    eventHandled = true;
   }
 
   if (!ImGui::IsMouseHoveringAnyWindow()) {
@@ -528,8 +531,8 @@ bool A2::mouseButtonInputEvent (
     if (actions == 1) {
       //hold
       m_buttonsDown |= (0x1 << button);
+      eventHandled = true;
     }
-    eventHandled = true;
   }
 
 	return eventHandled;
@@ -560,7 +563,7 @@ bool A2::windowResizeEvent (
 ) {
 	bool eventHandled(false);
 
-	// Fill in with event handling code...
+  m_width = width;
 
 	return eventHandled;
 }

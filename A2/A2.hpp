@@ -25,7 +25,6 @@ public:
 	GLsizei numVertices;
 };
 
-
 class A2 : public CS488Window {
 public:
 	A2();
@@ -83,5 +82,6 @@ protected:
 
   int m_buttonsDown;
   int m_prevMouseX;
+  int m_width;
   char m_currentMode;
 };
