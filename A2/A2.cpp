@@ -33,8 +33,6 @@ A2::A2()
     M(mat4(1.0f)),
     V(mat4(1.0f)),
     P(mat4(1.0f)),
-    MGnomon(mat4(1.0f)),
-    TotalScaling(mat4(1.0f)),
     modes({
       {'O', "Rotate View"},
       {'N', "Translate View"},
@@ -46,7 +44,6 @@ A2::A2()
     })
 {
   M = M * scale(vec3(0.5, 0.5, 0.5));
-  TotalScaling = TotalScaling * scale(vec3(0.5, 0.5, 0.5));
 }
 
 //----------------------------------------------------------------------------------------
@@ -60,10 +57,8 @@ void A2::reset() {
   M = mat4(1.0f);
   V = mat4(1.0f);
   P = mat4(1.0f);
-  MGnomon = mat4(1.0f);
 
   M = M * scale(vec3(0.5, 0.5, 0.5));
-  TotalScaling = TotalScaling * scale(vec3(0.5, 0.5, 0.5));
   m_currentMode = 'R';
 }
 
@@ -285,50 +280,62 @@ void A2::appLogic()
 	// Call at the beginning of frame, before drawing lines:
 	initLineData();
 
-  vector<glm::vec4> cubeVerts;
-  cubeVerts.push_back(vec4(1, 1, 1, 1));
-  cubeVerts.push_back(vec4(1, 1, -1, 1));
-  cubeVerts.push_back(vec4(1, -1, -1, 1));
-  cubeVerts.push_back(vec4(1, -1, 1, 1));
-  cubeVerts.push_back(vec4(-1, 1, 1, 1));
-  cubeVerts.push_back(vec4(-1, 1, -1, 1));
-  cubeVerts.push_back(vec4(-1, -1, -1, 1));
-  cubeVerts.push_back(vec4(-1, -1, 1, 1));
+  vector<glm::vec4> verts;
+  verts.push_back(vec4(1, 1, 1, 1));
+  verts.push_back(vec4(1, 1, -1, 1));
+  verts.push_back(vec4(1, -1, -1, 1));
+  verts.push_back(vec4(1, -1, 1, 1));
+  verts.push_back(vec4(-1, 1, 1, 1));
+  verts.push_back(vec4(-1, 1, -1, 1));
+  verts.push_back(vec4(-1, -1, -1, 1));
+  verts.push_back(vec4(-1, -1, 1, 1));
 
-  for (int i = 0; i < cubeVerts.size(); i++) {
-    cubeVerts[i] = P * V * M * cubeVerts[i];
-  }
+  // add model gnomon
+  verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
+
+  // apply model transforms
+  for (int i = 0; i < verts.size(); i++) {
+    verts[i] = M * verts[i];
+  } //model coordinates
+
+  // add world gnomon
+  verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
+
+  // apply view transforms
+  for (int i = 0; i < verts.size(); i++) {
+    verts[i] = V * verts[i];
+  } //view coordinates
 
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
-  drawEdge(cubeVerts[0], cubeVerts[1]);
-  drawEdge(cubeVerts[1], cubeVerts[2]);
-  drawEdge(cubeVerts[2], cubeVerts[3]);
-  drawEdge(cubeVerts[3], cubeVerts[0]);
-  drawEdge(cubeVerts[4], cubeVerts[5]);
-  drawEdge(cubeVerts[5], cubeVerts[6]);
-  drawEdge(cubeVerts[6], cubeVerts[7]);
-  drawEdge(cubeVerts[7], cubeVerts[4]);
-  drawEdge(cubeVerts[0], cubeVerts[4]);
-  drawEdge(cubeVerts[1], cubeVerts[5]);
-  drawEdge(cubeVerts[2], cubeVerts[6]);
-  drawEdge(cubeVerts[3], cubeVerts[7]);
+  drawEdge(verts[0], verts[1]);
+  drawEdge(verts[1], verts[2]);
+  drawEdge(verts[2], verts[3]);
+  drawEdge(verts[3], verts[0]);
+  drawEdge(verts[4], verts[5]);
+  drawEdge(verts[5], verts[6]);
+  drawEdge(verts[6], verts[7]);
+  drawEdge(verts[7], verts[4]);
+  drawEdge(verts[0], verts[4]);
+  drawEdge(verts[1], verts[5]);
+  drawEdge(verts[2], verts[6]);
+  drawEdge(verts[3], verts[7]);
 
   //draw gnomons
-  vector<glm::vec4> gnomon;
-  gnomon.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  gnomon.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
-  gnomon.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
-  gnomon.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
-
   setLineColour(vec3(1.0f, 0.0f, 0.0f));
-  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[1]);
-  drawEdge(P * V * gnomon[0], P * V * gnomon[1]);
+  drawEdge(verts[(8) + 0], verts[(8) + 1]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 1]);
   setLineColour(vec3(0.0f, 1.0f, 0.0f));
-  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[2]);
-  drawEdge(P * V * gnomon[0], P * V * gnomon[2]);
+  drawEdge(verts[(8) + 0], verts[(8) + 2]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 2]);
   setLineColour(vec3(0.0f, 0.0f, 1.0f));
-  drawEdge(P * V * MGnomon * gnomon[0], P * V * MGnomon * gnomon[3]);
-  drawEdge(P * V * gnomon[0], P * V * gnomon[3]);
+  drawEdge(verts[(8) + 0], verts[(8) + 3]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
 }
 
 //----------------------------------------------------------------------------------------
@@ -456,7 +463,6 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 0.0f,
       (buttonsDown & 0x2) ? diff : 0.0f);
     M = M * translate(vTranslate);
-    MGnomon = MGnomon * TotalScaling * translate(vTranslate) * inverse(TotalScaling);
   } else if (m_currentMode == 'R') {
     //ROTATE
     const float SCALE = 2 * PI / m_width;
@@ -466,7 +472,6 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 0.0f,
       (buttonsDown & 0x2) ? diff : 0.0f);
     M = M * rotate(vRotate);
-    MGnomon = MGnomon * rotate(vRotate);
   } else if (m_currentMode == 'S') {
     //SCALE
     //TODO - cannot scale below certain amount??
@@ -477,7 +482,6 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
       (buttonsDown & 0x4) ? diff : 1.0f,
       (buttonsDown & 0x2) ? diff : 1.0f);
     M = M * scale(vScale);
-    TotalScaling = TotalScaling * scale(vScale);
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
     const float SCALE = 2 * PI / m_width;

@@ -79,7 +79,7 @@ protected:
 
 	glm::vec3 m_currentLineColour;
 
-  glm::mat4 M,V,P,MGnomon,TotalScaling;
+  glm::mat4 M,V,P,TotalScaling;
 
   int m_buttonsDown;
   int m_prevMouseX;
