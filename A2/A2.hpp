@@ -60,6 +60,13 @@ protected:
 			const glm::vec2 & v1
 	);
 
+  //additions
+  glm::mat4 translate(const glm::vec3 &positionOffset);
+  glm::mat4 scale(const glm::vec3 &scalingFactor);
+  glm::mat4 rotate(const glm::vec3 &rotationAngle);
+  void drawEdge(const glm::vec4 &v1, const glm::vec4 &v2);
+  void handleMouseMove(int buttonsDown, double movement);
+
 	ShaderProgram m_shader;
 
 	GLuint m_vao;            // Vertex Array Object
@@ -70,4 +77,11 @@ protected:
 
 	glm::vec3 m_currentLineColour;
 
+  glm::vec3 m_positionOffset;
+  glm::vec3 m_rotationAngle;
+  glm::vec3 m_scalingFactor;
+
+  int m_buttonsDown;
+  int m_prevMouseX;
+  char m_currentMode;
 };

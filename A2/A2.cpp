@@ -25,7 +25,13 @@ VertexData::VertexData()
 //----------------------------------------------------------------------------------------
 // Constructor
 A2::A2()
-	: m_currentLineColour(vec3(0.0f))
+	: m_currentLineColour(vec3(0.0f)),
+    m_positionOffset(vec3(0.0f)),
+    m_rotationAngle(vec3(0.0f)),
+    m_scalingFactor(vec3(0.5f)),
+    m_buttonsDown(0),
+    m_prevMouseX(0),
+    m_currentMode('R')
 {
 
 }
@@ -182,6 +188,68 @@ void A2::drawLine(
 	m_vertexData.numVertices += 2;
 }
 
+//mat[col][row]
+glm::mat4 A2::translate(const glm::vec3 &positionOffset) {
+  glm::mat4 T = glm::mat4( 1.0 );
+  for(int i = 0; i < 3; i++) T[3][i] = positionOffset[i];
+
+  return T;
+}
+
+void printMatrix(const mat4 &m) {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      cout << m[i][j] << " ";
+    }
+    cout << endl;
+  }
+  cout << endl;
+}
+
+//scaling factors in x,y,z directions.
+glm::mat4 A2::scale(const glm::vec3 &scalingFactor) {
+  glm::mat4 T = glm::mat4( 1.0 );
+  for(int i = 0; i < 3; i++) T[i][i] = scalingFactor[i];
+
+  return T;
+}
+
+// rotation angle vector is x radians of rotation in x,y,z respectively.
+glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
+  // ALWAYS do x rotation, then y rotation, then z rotation.
+  glm::mat4 Tx = glm::mat4( 1.0 );
+  glm::mat4 Ty = glm::mat4( 1.0 );
+  glm::mat4 Tz = glm::mat4( 1.0 );
+  float angle;
+
+  // x rotation
+  angle = rotationAngle[0];
+  Tx[1][1] = cos(angle);
+  Tx[2][1] = -sin(angle);
+  Tx[1][2] = sin(angle);
+  Tx[2][2] = cos(angle);
+
+  // y rotation
+  angle = rotationAngle[1];
+  Ty[0][0] = cos(angle);
+  Ty[2][0] = sin(angle);
+  Ty[0][2] = -sin(angle);
+  Ty[2][2] = cos(angle);
+
+  // z rotation
+  angle = rotationAngle[2];
+  Tz[0][0] = cos(angle);
+  Tz[1][0] = -sin(angle);
+  Tz[0][1] = sin(angle);
+  Tz[1][1] = cos(angle);
+
+  return Tz * Ty * Tx;
+}
+
+void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
+  drawLine(vec2(v1[0], v1[1]), vec2(v2[0], v2[1]));
+}
+
 //----------------------------------------------------------------------------------------
 /*
  * Called once per frame, before guiLogic().
@@ -193,20 +261,59 @@ void A2::appLogic()
 	// Call at the beginning of frame, before drawing lines:
 	initLineData();
 
-	// Draw outer square:
+  vector<glm::vec4> cubeVerts;
+  cubeVerts.push_back(vec4(1, 1, 1, 1));
+  cubeVerts.push_back(vec4(1, 1, -1, 1));
+  cubeVerts.push_back(vec4(1, -1, -1, 1));
+  cubeVerts.push_back(vec4(1, -1, 1, 1));
+  cubeVerts.push_back(vec4(-1, 1, 1, 1));
+  cubeVerts.push_back(vec4(-1, 1, -1, 1));
+  cubeVerts.push_back(vec4(-1, -1, -1, 1));
+  cubeVerts.push_back(vec4(-1, -1, 1, 1));
+
+  glm::mat4 mTranslate = translate(m_positionOffset);
+  glm::mat4 mScale = scale(m_scalingFactor);
+  glm::mat4 mRotate = rotate(m_rotationAngle);
+  glm::mat4 MGnomon = mTranslate * mRotate * glm::mat4( 1.0 ); //special case - gnomon should not scale
+  glm::mat4 M = mTranslate * mScale * mRotate * glm::mat4( 1.0 );
+  glm::mat4 V = glm::mat4( 1.0 );
+  glm::mat4 P = glm::mat4( 1.0 );
+
+  for (int i = 0; i < cubeVerts.size(); i++) {
+    cubeVerts[i] = M * V * P * cubeVerts[i];
+  }
+
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
-	drawLine(vec2(-0.5f, -0.5f), vec2(0.5f, -0.5f));
-	drawLine(vec2(0.5f, -0.5f), vec2(0.5f, 0.5f));
-	drawLine(vec2(0.5f, 0.5f), vec2(-0.5f, 0.5f));
-	drawLine(vec2(-0.5f, 0.5f), vec2(-0.5f, -0.5f));
+  drawEdge(cubeVerts[0], cubeVerts[1]);
+  drawEdge(cubeVerts[1], cubeVerts[2]);
+  drawEdge(cubeVerts[2], cubeVerts[3]);
+  drawEdge(cubeVerts[3], cubeVerts[0]);
+  drawEdge(cubeVerts[4], cubeVerts[5]);
+  drawEdge(cubeVerts[5], cubeVerts[6]);
+  drawEdge(cubeVerts[6], cubeVerts[7]);
+  drawEdge(cubeVerts[7], cubeVerts[4]);
+  drawEdge(cubeVerts[0], cubeVerts[4]);
+  drawEdge(cubeVerts[1], cubeVerts[5]);
+  drawEdge(cubeVerts[2], cubeVerts[6]);
+  drawEdge(cubeVerts[3], cubeVerts[7]);
 
+  //draw gnomons
+  M = translate(m_positionOffset) * rotate(m_rotationAngle);
+  vector<glm::vec4> gnomon;
+  gnomon.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  gnomon.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
+  gnomon.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
+  gnomon.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
 
-	// Draw inner square:
-	setLineColour(vec3(0.2f, 1.0f, 1.0f));
-	drawLine(vec2(-0.25f, -0.25f), vec2(0.25f, -0.25f));
-	drawLine(vec2(0.25f, -0.25f), vec2(0.25f, 0.25f));
-	drawLine(vec2(0.25f, 0.25f), vec2(-0.25f, 0.25f));
-	drawLine(vec2(-0.25f, 0.25f), vec2(-0.25f, -0.25f));
+  setLineColour(vec3(1.0f, 0.0f, 0.0f));
+  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[1]);
+  drawEdge(gnomon[0], gnomon[1]);
+  setLineColour(vec3(0.0f, 1.0f, 0.0f));
+  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[2]);
+  drawEdge(gnomon[0], gnomon[2]);
+  setLineColour(vec3(0.0f, 0.0f, 1.0f));
+  drawEdge(MGnomon * V * P * gnomon[0], MGnomon * V * P * gnomon[3]);
+  drawEdge(gnomon[0], gnomon[3]);
 }
 
 //----------------------------------------------------------------------------------------
@@ -309,6 +416,69 @@ bool A2::cursorEnterWindowEvent (
 	return eventHandled;
 }
 
+void A2::handleMouseMove(int buttonsDown, double movement) {
+  //m_currentMode is the current
+  if (m_currentMode == 'T') {
+    //ROTATE
+    const float SCALE = 0.01f;
+    if (buttonsDown & 0x1) {
+      //left button
+      m_positionOffset[0] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x2) {
+      //right button
+      m_positionOffset[2] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x4) {
+      //middle button
+      m_positionOffset[1] += SCALE * movement;
+    }
+  } else if (m_currentMode == 'R') {
+    const float SCALE = 8.0f/1000;
+    //TRANSLATE
+    if (buttonsDown & 0x1) {
+    //left button
+      m_rotationAngle[0] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x2) {
+      //right button
+      m_rotationAngle[2] += SCALE * movement;
+    }
+
+    if (buttonsDown & 0x4) {
+      //middle button
+      m_rotationAngle[1] += SCALE * movement;
+    }
+  } else if (m_currentMode == 'S') {
+    const float SCALE = 0.01f;
+    //SCALE
+    if (buttonsDown & 0x1) {
+    //left button
+      m_scalingFactor[0] += SCALE * movement;
+      if (m_scalingFactor[0] < 0.25f) m_scalingFactor[0] = 0.25f;
+      else if (m_scalingFactor[0] > 2.0f) m_scalingFactor[0] = 2.0f;
+    }
+
+    if (buttonsDown & 0x2) {
+      //right button
+      m_scalingFactor[2] += SCALE * movement;
+      if (m_scalingFactor[2] < 0.25f) m_scalingFactor[2] = 0.25f;
+      else if (m_scalingFactor[2] > 2.0f) m_scalingFactor[2] = 2.0f;
+    }
+
+    if (buttonsDown & 0x4) {
+      //middle button
+      m_scalingFactor[1] += SCALE * movement;
+      if (m_scalingFactor[1] < 0.25f) m_scalingFactor[1] = 0.25f;
+      else if (m_scalingFactor[1] > 2.0f) m_scalingFactor[1] = 2.0f;
+    }
+  }
+
+}
+
 //----------------------------------------------------------------------------------------
 /*
  * Event handler.  Handles mouse cursor movement events.
@@ -319,7 +489,19 @@ bool A2::mouseMoveEvent (
 ) {
 	bool eventHandled(false);
 
-	// Fill in with event handling code...
+	if (!ImGui::IsMouseHoveringAnyWindow()) {
+    // Put some code here to handle rotations.  Probably need to
+    // check whether we're *dragging*, not just moving the mouse.
+    // Probably need some instance variables to track the current
+    // rotation amount, and maybe the previous X position (so
+    // that you can rotate relative to the *change* in X.
+    if (m_buttonsDown) {
+      handleMouseMove(m_buttonsDown, xPos - m_prevMouseX);
+      eventHandled = true;
+    }
+
+    m_prevMouseX = xPos;
+  }
 
 	return eventHandled;
 }
@@ -335,7 +517,20 @@ bool A2::mouseButtonInputEvent (
 ) {
 	bool eventHandled(false);
 
-	// Fill in with event handling code...
+  if (actions == 0) {
+    //release
+    m_buttonsDown &= !(0x1 << button);
+  }
+
+  if (!ImGui::IsMouseHoveringAnyWindow()) {
+    // The user clicked in the window.  If it's the left
+    // mouse button, initiate a rotation.
+    if (actions == 1) {
+      //hold
+      m_buttonsDown |= (0x1 << button);
+    }
+    eventHandled = true;
+  }
 
 	return eventHandled;
 }
@@ -382,6 +577,16 @@ bool A2::keyInputEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+  if (action == GLFW_PRESS) {
+    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S) {
+      m_currentMode = key;
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_Q) {
+      glfwSetWindowShouldClose(m_window, GL_TRUE);
+      eventHandled = true;
+    }
+  }
 
 	return eventHandled;
 }
