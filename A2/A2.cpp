@@ -324,10 +324,32 @@ glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
   return Tz * Ty * Tx;
 }
 
+// converts world coordinates pair to a drawn line in NDC
 void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
   vec3 z_mapped_v1 = WindowToViewport * vec3(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2], 1);
   vec3 z_mapped_v2 = WindowToViewport * vec3(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2], 1);
-  drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
+
+  //clip the line on the viewport edges
+  int OA = 0, OB = 0; //outcodes
+  OA |= (z_mapped_v1[0] <= m_vp_right) << 0;
+  OA |= (z_mapped_v1[0] >= m_vp_left) << 1;
+  OA |= (z_mapped_v1[1] >= m_vp_bottom) << 2;
+  OA |= (z_mapped_v1[1] <= m_vp_top) << 3;
+
+  OB |= (z_mapped_v2[0] <= m_vp_right) << 0;
+  OB |= (z_mapped_v2[0] >= m_vp_left) << 1;
+  OB |= (z_mapped_v2[1] >= m_vp_bottom) << 2;
+  OB |= (z_mapped_v2[1] <= m_vp_top) << 3;
+
+  if ((OA & OB) == 0xf) {
+    //trivial accept case
+    drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
+  } else if ((OA | OB) != 0xf) {
+    //trivial reject case
+  } else {
+    //do clip
+    drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
+  }
 }
 
 //----------------------------------------------------------------------------------------
@@ -405,7 +427,7 @@ void A2::appLogic()
   drawEdge(verts[(8) + 0], verts[(8) + 3]);
   drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
 
-  //draw viewport lines
+  //draw viewport lines - no clipping in any circumstance.
   drawLine(vec2(m_vp_left, m_vp_top), vec2(m_vp_right, m_vp_top));
   drawLine(vec2(m_vp_right, m_vp_top), vec2(m_vp_right, m_vp_bottom));
   drawLine(vec2(m_vp_right, m_vp_bottom), vec2(m_vp_left, m_vp_bottom));
