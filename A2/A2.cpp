@@ -2,7 +2,6 @@
 #include "cs488-framework/GlErrorCheck.hpp"
 
 #include <iostream>
-#include <algorithm>
 using namespace std;
 
 #include <imgui/imgui.h>
@@ -250,16 +249,6 @@ glm::mat4 A2::perspective(float fov, float n, float f) {
   return P;
 }
 
-void printMatrix(const mat4 &m) {
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      cout << m[i][j] << " ";
-    }
-    cout << endl;
-  }
-  cout << endl;
-}
-
 //mat[col][row]
 glm::mat3 A2::translate(const glm::vec2 &positionOffset) {
   glm::mat3 T = glm::mat3( 1.0 );
@@ -324,33 +313,48 @@ glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
   return Tz * Ty * Tx;
 }
 
+bool wecClip(vec3 &A, vec3 &B, double wecA, double wecB) {
+  if (wecA < 0 && wecB < 0) return false; //reject
+  else if (wecA >= 0 && wecB > 0) return true;
+  else {
+    float t = wecA / (wecA - wecB);
+    if (wecA < 0)
+      A = A + t * (B - A);
+    else
+      B = A + t * (B - A);
+    return true;
+  }
+}
+
 // converts world coordinates pair to a drawn line in NDC
 void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
   vec3 z_mapped_v1 = WindowToViewport * vec3(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2], 1);
   vec3 z_mapped_v2 = WindowToViewport * vec3(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2], 1);
 
-  //clip the line on the viewport edges
-  int OA = 0, OB = 0; //outcodes
-  OA |= (z_mapped_v1[0] <= m_vp_right) << 0;
-  OA |= (z_mapped_v1[0] >= m_vp_left) << 1;
-  OA |= (z_mapped_v1[1] >= m_vp_bottom) << 2;
-  OA |= (z_mapped_v1[1] <= m_vp_top) << 3;
+  double wecA, wecB;
 
-  OB |= (z_mapped_v2[0] <= m_vp_right) << 0;
-  OB |= (z_mapped_v2[0] >= m_vp_left) << 1;
-  OB |= (z_mapped_v2[1] >= m_vp_bottom) << 2;
-  OB |= (z_mapped_v2[1] <= m_vp_top) << 3;
+  //clip left
+  wecA = z_mapped_v1[0] - m_vp_left;
+  wecB = z_mapped_v2[0] - m_vp_left;
+  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
 
-  if ((OA & OB) == 0xf) {
-    //trivial accept case
-    drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
-  } else if ((OA | OB) != 0xf) {
-    //trivial reject case
-  } else {
-    //do clip
-    drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
-  }
-}
+  //clip right
+  wecA = m_vp_right - z_mapped_v1[0];
+  wecB = m_vp_right - z_mapped_v2[0];
+  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
+
+  //clip bottom
+  wecA = z_mapped_v1[1] - m_vp_bottom;
+  wecB = z_mapped_v2[1] - m_vp_bottom;
+  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
+
+  //clip top
+  wecA = m_vp_top - z_mapped_v1[1];
+  wecB = m_vp_top - z_mapped_v2[1];
+  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
+
+  drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
+ }
 
 //----------------------------------------------------------------------------------------
 /*
@@ -576,6 +580,14 @@ void A2::resizeViewport(const std::pair<double, double> &start, const std::pair<
     mat3(1.0f);
 }
 
+vec3 getVectorElements(int buttonsDown, float valueIfDown, float orElse) {
+  return vec3(
+    (buttonsDown & 0x1) ? valueIfDown : orElse,
+    (buttonsDown & 0x4) ? valueIfDown : orElse,
+    (buttonsDown & 0x2) ? valueIfDown : orElse
+  );
+}
+
 void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
   double movement = xPos - m_prevMouseX;
   //m_currentMode is the current
@@ -583,48 +595,28 @@ void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
     //TRANSLATE
     const float SCALE = 2.0f / m_width;
     const float diff = SCALE * movement;
-    vec3 vTranslate = vec3(
-      (buttonsDown & 0x1) ? diff : 0.0f,
-      (buttonsDown & 0x4) ? diff : 0.0f,
-      (buttonsDown & 0x2) ? diff : 0.0f);
-    M = M * translate(vTranslate);
+    M = M * translate(getVectorElements(buttonsDown, diff, 0.0f));
   } else if (m_currentMode == 'R') {
     //ROTATE
     const float SCALE = 2 * PI / m_width;
     const float diff = SCALE * movement;
-    vec3 vRotate = vec3(
-      (buttonsDown & 0x1) ? diff : 0.0f,
-      (buttonsDown & 0x4) ? diff : 0.0f,
-      (buttonsDown & 0x2) ? diff : 0.0f);
-    M = M * rotate(vRotate);
+    M = M * rotate(getVectorElements(buttonsDown, diff, 0.0f));
   } else if (m_currentMode == 'S') {
     //SCALE
     //TODO - cannot scale below certain amount??
     const float SCALE = 3.0f/m_width;
     const float diff = 1.0f + SCALE * movement;
-    vec3 vScale = vec3(
-      (buttonsDown & 0x1) ? diff : 1.0f,
-      (buttonsDown & 0x4) ? diff : 1.0f,
-      (buttonsDown & 0x2) ? diff : 1.0f);
-    M = M * scale(vScale);
+    M = M * scale(getVectorElements(buttonsDown, diff, 1.0f));
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
     const float SCALE = 2 * PI / m_width;
     const float diff = SCALE * movement;
-    vec3 vRotate = vec3(
-      (buttonsDown & 0x1) ? diff : 0.0f,
-      (buttonsDown & 0x4) ? diff : 0.0f,
-      (buttonsDown & 0x2) ? diff : 0.0f);
-    V = inverse(rotate(vRotate)) * V;
+    V = inverse(rotate(getVectorElements(buttonsDown, diff, 0.0f))) * V;
   } else if (m_currentMode == 'N') {
     //TRANSLATE_VIEW
     const float SCALE = 2.0f / m_width;
     const float diff = SCALE * movement;
-    vec3 vTranslate = vec3(
-      (buttonsDown & 0x1) ? diff : 0.0f,
-      (buttonsDown & 0x4) ? diff : 0.0f,
-      (buttonsDown & 0x2) ? diff : 0.0f);
-    V = inverse(translate(vTranslate)) * V;
+    V = inverse(translate(getVectorElements(buttonsDown, diff, 0.0f))) * V;
   } else if (m_currentMode == 'P') {
     //PROJECTION
     const float SCALE = 2.0f / m_width;
@@ -755,13 +747,8 @@ bool A2::keyInputEvent (
 
 	// Fill in with event handling code...
   if (action == GLFW_PRESS) {
-    if (key == GLFW_KEY_R ||
-      key == GLFW_KEY_T ||
-      key == GLFW_KEY_S ||
-      key == GLFW_KEY_O ||
-      key == GLFW_KEY_N ||
-      key == GLFW_KEY_P ||
-      key == GLFW_KEY_V) {
+    set<int> modeKeys = {GLFW_KEY_R, GLFW_KEY_T, GLFW_KEY_S, GLFW_KEY_O, GLFW_KEY_N, GLFW_KEY_P, GLFW_KEY_V};
+    if (modeKeys.find(key) != modeKeys.end()) {
       m_currentMode = key;
       eventHandled = true;
     }

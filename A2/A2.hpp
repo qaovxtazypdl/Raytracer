@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <map>
+#include <set>
+#include <algorithm>
 #include <string>
 
 // Set a global maximum number of vertices in order to pre-allocate VBO data
