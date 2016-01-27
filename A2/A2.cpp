@@ -16,18 +16,18 @@ const float PI = 3.14159265f;
 //----------------------------------------------------------------------------------------
 // Constructor
 VertexData::VertexData()
-	: numVertices(0),
-	  index(0)
+  : numVertices(0),
+    index(0)
 {
-	positions.reserve(kMaxVertices);
-	colours.reserve(kMaxVertices);
+  positions.reserve(kMaxVertices);
+  colours.reserve(kMaxVertices);
 }
 
 
 //----------------------------------------------------------------------------------------
 // Constructor
 A2::A2()
-	: m_currentLineColour(vec3(0.0f)),
+  : m_currentLineColour(vec3(0.0f)),
     m_buttonsDown(0),
     m_prevMouseX(0),
     m_prevMouseY(0),
@@ -46,7 +46,7 @@ A2::A2()
     m_vp_top(768 * 0.05),
     m_vp_bottom(768 - 768 * 0.05),
     m_new_viewport_start(),
-    modes({
+    m_modes({
       {'O', "Rotate View"},
       {'N', "Translate View"},
       {'P', "Perspective"},
@@ -93,143 +93,143 @@ void A2::reset() {
  */
 void A2::init()
 {
-	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	glEnable(GL_LINE_SMOOTH);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glEnable(GL_LINE_SMOOTH);
 
 
-	// Set the background colour.
-	glClearColor(0.3, 0.5, 0.7, 1.0);
+  // Set the background colour.
+  glClearColor(0.3, 0.5, 0.7, 1.0);
 
-	createShaderProgram();
+  createShaderProgram();
 
-	glGenVertexArrays(1, &m_vao);
+  glGenVertexArrays(1, &m_vao);
 
-	enableVertexAttribIndices();
+  enableVertexAttribIndices();
 
-	generateVertexBuffers();
+  generateVertexBuffers();
 
-	mapVboDataToVertexAttributeLocation();
+  mapVboDataToVertexAttributeLocation();
 }
 
 //----------------------------------------------------------------------------------------
 void A2::createShaderProgram()
 {
-	m_shader.generateProgramObject();
-	m_shader.attachVertexShader( getAssetFilePath("VertexShader.vs").c_str() );
-	m_shader.attachFragmentShader( getAssetFilePath("FragmentShader.fs").c_str() );
-	m_shader.link();
+  m_shader.generateProgramObject();
+  m_shader.attachVertexShader( getAssetFilePath("VertexShader.vs").c_str() );
+  m_shader.attachFragmentShader( getAssetFilePath("FragmentShader.fs").c_str() );
+  m_shader.link();
 }
 
 //----------------------------------------------------------------------------------------
 void A2::enableVertexAttribIndices()
 {
-	glBindVertexArray(m_vao);
+  glBindVertexArray(m_vao);
 
-	// Enable the attribute index location for "position" when rendering.
-	GLint positionAttribLocation = m_shader.getAttribLocation( "position" );
-	glEnableVertexAttribArray(positionAttribLocation);
+  // Enable the attribute index location for "position" when rendering.
+  GLint positionAttribLocation = m_shader.getAttribLocation( "position" );
+  glEnableVertexAttribArray(positionAttribLocation);
 
-	// Enable the attribute index location for "colour" when rendering.
-	GLint colourAttribLocation = m_shader.getAttribLocation( "colour" );
-	glEnableVertexAttribArray(colourAttribLocation);
+  // Enable the attribute index location for "colour" when rendering.
+  GLint colourAttribLocation = m_shader.getAttribLocation( "colour" );
+  glEnableVertexAttribArray(colourAttribLocation);
 
-	// Restore defaults
-	glBindVertexArray(0);
+  // Restore defaults
+  glBindVertexArray(0);
 
-	CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
 }
 
 //----------------------------------------------------------------------------------------
 void A2::generateVertexBuffers()
 {
-	// Generate a vertex buffer to store line vertex positions
-	{
-		glGenBuffers(1, &m_vbo_positions);
+  // Generate a vertex buffer to store line vertex positions
+  {
+    glGenBuffers(1, &m_vbo_positions);
 
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
 
-		// Set to GL_DYNAMIC_DRAW because the data store will be modified frequently.
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * kMaxVertices, nullptr,
-				GL_DYNAMIC_DRAW);
-
-
-		// Unbind the target GL_ARRAY_BUFFER, now that we are finished using it.
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		CHECK_GL_ERRORS;
-	}
-
-	// Generate a vertex buffer to store line colors
-	{
-		glGenBuffers(1, &m_vbo_colours);
-
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
-
-		// Set to GL_DYNAMIC_DRAW because the data store will be modified frequently.
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * kMaxVertices, nullptr,
-				GL_DYNAMIC_DRAW);
+    // Set to GL_DYNAMIC_DRAW because the data store will be modified frequently.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * kMaxVertices, nullptr,
+        GL_DYNAMIC_DRAW);
 
 
-		// Unbind the target GL_ARRAY_BUFFER, now that we are finished using it.
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // Unbind the target GL_ARRAY_BUFFER, now that we are finished using it.
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		CHECK_GL_ERRORS;
-	}
+    CHECK_GL_ERRORS;
+  }
+
+  // Generate a vertex buffer to store line colors
+  {
+    glGenBuffers(1, &m_vbo_colours);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
+
+    // Set to GL_DYNAMIC_DRAW because the data store will be modified frequently.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * kMaxVertices, nullptr,
+        GL_DYNAMIC_DRAW);
+
+
+    // Unbind the target GL_ARRAY_BUFFER, now that we are finished using it.
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    CHECK_GL_ERRORS;
+  }
 }
 
 //----------------------------------------------------------------------------------------
 void A2::mapVboDataToVertexAttributeLocation()
 {
-	// Bind VAO in order to record the data mapping.
-	glBindVertexArray(m_vao);
+  // Bind VAO in order to record the data mapping.
+  glBindVertexArray(m_vao);
 
-	// Tell GL how to map data from the vertex buffer "m_vbo_positions" into the
-	// "position" vertex attribute index for any bound shader program.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
-	GLint positionAttribLocation = m_shader.getAttribLocation( "position" );
-	glVertexAttribPointer(positionAttribLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+  // Tell GL how to map data from the vertex buffer "m_vbo_positions" into the
+  // "position" vertex attribute index for any bound shader program.
+  glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
+  GLint positionAttribLocation = m_shader.getAttribLocation( "position" );
+  glVertexAttribPointer(positionAttribLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	// Tell GL how to map data from the vertex buffer "m_vbo_colours" into the
-	// "colour" vertex attribute index for any bound shader program.
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
-	GLint colorAttribLocation = m_shader.getAttribLocation( "colour" );
-	glVertexAttribPointer(colorAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+  // Tell GL how to map data from the vertex buffer "m_vbo_colours" into the
+  // "colour" vertex attribute index for any bound shader program.
+  glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
+  GLint colorAttribLocation = m_shader.getAttribLocation( "colour" );
+  glVertexAttribPointer(colorAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	//-- Unbind target, and restore default values:
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+  //-- Unbind target, and restore default values:
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 
-	CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
 }
 
 //---------------------------------------------------------------------------------------
 void A2::initLineData()
 {
-	m_vertexData.numVertices = 0;
-	m_vertexData.index = 0;
+  m_vertexData.numVertices = 0;
+  m_vertexData.index = 0;
 }
 
 //---------------------------------------------------------------------------------------
 void A2::setLineColour (
-		const glm::vec3 & colour
+    const glm::vec3 & colour
 ) {
-	m_currentLineColour = colour;
+  m_currentLineColour = colour;
 }
 
 //---------------------------------------------------------------------------------------
 void A2::drawLine(
-		const glm::vec2 & v0,   // Line Start (NDC coordinate)
-		const glm::vec2 & v1    // Line End (NDC coordinate)
+    const glm::vec2 & v0,   // Line Start (NDC coordinate)
+    const glm::vec2 & v1    // Line End (NDC coordinate)
 ) {
 
-	m_vertexData.positions[m_vertexData.index] = v0;
-	m_vertexData.colours[m_vertexData.index] = m_currentLineColour;
-	++m_vertexData.index;
-	m_vertexData.positions[m_vertexData.index] = v1;
-	m_vertexData.colours[m_vertexData.index] = m_currentLineColour;
-	++m_vertexData.index;
+  m_vertexData.positions[m_vertexData.index] = v0;
+  m_vertexData.colours[m_vertexData.index] = m_currentLineColour;
+  ++m_vertexData.index;
+  m_vertexData.positions[m_vertexData.index] = v1;
+  m_vertexData.colours[m_vertexData.index] = m_currentLineColour;
+  ++m_vertexData.index;
 
-	m_vertexData.numVertices += 2;
+  m_vertexData.numVertices += 2;
 }
 
 glm::mat4 A2::perspective(float fov, float n, float f) {
@@ -362,10 +362,10 @@ void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
  */
 void A2::appLogic()
 {
-	// Place per frame, application logic here ...
+  // Place per frame, application logic here ...
 
-	// Call at the beginning of frame, before drawing lines:
-	initLineData();
+  // Call at the beginning of frame, before drawing lines:
+  initLineData();
 
   vector<glm::vec4> verts;
   verts.push_back(vec4(1, 1, 1, 1));
@@ -406,7 +406,7 @@ void A2::appLogic()
   } //world coordinates
 
   //drawEdge draws device coords
-	setLineColour(vec3(1.0f, 0.7f, 0.8f));
+  setLineColour(vec3(1.0f, 0.7f, 0.8f));
   drawEdge(verts[0], verts[1]);
   drawEdge(verts[1], verts[2]);
   drawEdge(verts[2], verts[3]);
@@ -444,32 +444,32 @@ void A2::appLogic()
  */
 void A2::guiLogic()
 {
-	static bool firstRun(true);
-	if (firstRun) {
-		ImGui::SetNextWindowPos(ImVec2(50, 50));
-		firstRun = false;
-	}
+  static bool firstRun(true);
+  if (firstRun) {
+    ImGui::SetNextWindowPos(ImVec2(50, 50));
+    firstRun = false;
+  }
 
-	static bool showDebugWindow(true);
-	ImGuiWindowFlags windowFlags(ImGuiWindowFlags_AlwaysAutoResize);
-	float opacity(0.5f);
+  static bool showDebugWindow(true);
+  ImGuiWindowFlags windowFlags(ImGuiWindowFlags_AlwaysAutoResize);
+  float opacity(0.5f);
 
-	ImGui::Begin("Properties", &showDebugWindow, ImVec2(100,100), opacity,
-			windowFlags);
-
-
-		// Add more gui elements here here ...
+  ImGui::Begin("Properties", &showDebugWindow, ImVec2(100,100), opacity,
+      windowFlags);
 
 
-		// Create Button, and check if it was clicked:
-		if( ImGui::Button( "Quit Application" ) ) {
-			glfwSetWindowShouldClose(m_window, GL_TRUE);
-		}
+    // Add more gui elements here here ...
+
+
+    // Create Button, and check if it was clicked:
+    if( ImGui::Button( "Quit Application" ) ) {
+      glfwSetWindowShouldClose(m_window, GL_TRUE);
+    }
     if( ImGui::Button( "Reset" ) ) {
       reset();
     }
 
-    for (auto it = modes.begin(); it != modes.end(); ++it) {
+    for (auto it = m_modes.begin(); it != m_modes.end(); ++it) {
       ImGui::PushID(it->first);
       ImGui::Text("%c - %16s", it->first, it->second.c_str());
       ImGui::SameLine();
@@ -486,31 +486,31 @@ void A2::guiLogic()
     ImGui::Text( "L: %f, R:%f", m_vp_left, m_vp_right);
     ImGui::Text( "T:%f, B:%f", m_vp_top, m_vp_bottom);
 
-	ImGui::End();
+  ImGui::End();
 }
 
 //----------------------------------------------------------------------------------------
 void A2::uploadVertexDataToVbos() {
 
-	//-- Copy vertex position data into VBO, m_vbo_positions:
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec2) * m_vertexData.numVertices,
-				m_vertexData.positions.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //-- Copy vertex position data into VBO, m_vbo_positions:
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_positions);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec2) * m_vertexData.numVertices,
+        m_vertexData.positions.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		CHECK_GL_ERRORS;
-	}
+    CHECK_GL_ERRORS;
+  }
 
-	//-- Copy vertex colour data into VBO, m_vbo_colours:
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec3) * m_vertexData.numVertices,
-				m_vertexData.colours.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //-- Copy vertex colour data into VBO, m_vbo_colours:
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_colours);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vec3) * m_vertexData.numVertices,
+        m_vertexData.colours.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		CHECK_GL_ERRORS;
-	}
+    CHECK_GL_ERRORS;
+  }
 }
 
 //----------------------------------------------------------------------------------------
@@ -519,18 +519,18 @@ void A2::uploadVertexDataToVbos() {
  */
 void A2::draw()
 {
-	uploadVertexDataToVbos();
+  uploadVertexDataToVbos();
 
-	glBindVertexArray(m_vao);
+  glBindVertexArray(m_vao);
 
-	m_shader.enable();
-		glDrawArrays(GL_LINES, 0, m_vertexData.numVertices);
-	m_shader.disable();
+  m_shader.enable();
+    glDrawArrays(GL_LINES, 0, m_vertexData.numVertices);
+  m_shader.disable();
 
-	// Restore defaults
-	glBindVertexArray(0);
+  // Restore defaults
+  glBindVertexArray(0);
 
-	CHECK_GL_ERRORS;
+  CHECK_GL_ERRORS;
 }
 
 //----------------------------------------------------------------------------------------
@@ -547,13 +547,13 @@ void A2::cleanup()
  * Event handler.  Handles cursor entering the window area events.
  */
 bool A2::cursorEnterWindowEvent (
-		int entered
+    int entered
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
-	// Fill in with event handling code...
+  // Fill in with event handling code...
 
-	return eventHandled;
+  return eventHandled;
 }
 
 void A2::resizeViewport(const std::pair<double, double> &start, const std::pair<double, double> &end) {
@@ -645,12 +645,12 @@ void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
  * Event handler.  Handles mouse cursor movement events.
  */
 bool A2::mouseMoveEvent (
-		double xPos,
-		double yPos
+    double xPos,
+    double yPos
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
-	if (!ImGui::IsMouseHoveringAnyWindow()) {
+  if (!ImGui::IsMouseHoveringAnyWindow()) {
     // Put some code here to handle rotations.  Probably need to
     // check whether we're *dragging*, not just moving the mouse.
     // Probably need some instance variables to track the current
@@ -665,7 +665,7 @@ bool A2::mouseMoveEvent (
     m_prevMouseY = yPos;
   }
 
-	return eventHandled;
+  return eventHandled;
 }
 
 //----------------------------------------------------------------------------------------
@@ -673,11 +673,11 @@ bool A2::mouseMoveEvent (
  * Event handler.  Handles mouse button events.
  */
 bool A2::mouseButtonInputEvent (
-		int button,
-		int actions,
-		int mods
+    int button,
+    int actions,
+    int mods
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
   if (actions == 0) {
     //release
@@ -700,7 +700,7 @@ bool A2::mouseButtonInputEvent (
     }
   }
 
-	return eventHandled;
+  return eventHandled;
 }
 
 //----------------------------------------------------------------------------------------
@@ -708,14 +708,14 @@ bool A2::mouseButtonInputEvent (
  * Event handler.  Handles mouse scroll wheel events.
  */
 bool A2::mouseScrollEvent (
-		double xOffSet,
-		double yOffSet
+    double xOffSet,
+    double yOffSet
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
-	// Fill in with event handling code...
+  // Fill in with event handling code...
 
-	return eventHandled;
+  return eventHandled;
 }
 
 //----------------------------------------------------------------------------------------
@@ -723,15 +723,15 @@ bool A2::mouseScrollEvent (
  * Event handler.  Handles window resize events.
  */
 bool A2::windowResizeEvent (
-		int width,
-		int height
+    int width,
+    int height
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
   m_width = width;
   m_height = height;
 
-	return eventHandled;
+  return eventHandled;
 }
 
 //----------------------------------------------------------------------------------------
@@ -739,13 +739,13 @@ bool A2::windowResizeEvent (
  * Event handler.  Handles key input events.
  */
 bool A2::keyInputEvent (
-		int key,
-		int action,
-		int mods
+    int key,
+    int action,
+    int mods
 ) {
-	bool eventHandled(false);
+  bool eventHandled(false);
 
-	// Fill in with event handling code...
+  // Fill in with event handling code...
   if (action == GLFW_PRESS) {
     set<int> modeKeys = {GLFW_KEY_R, GLFW_KEY_T, GLFW_KEY_S, GLFW_KEY_O, GLFW_KEY_N, GLFW_KEY_P, GLFW_KEY_V};
     if (modeKeys.find(key) != modeKeys.end()) {
@@ -762,5 +762,5 @@ bool A2::keyInputEvent (
     }
   }
 
-	return eventHandled;
+  return eventHandled;
 }
