@@ -454,9 +454,11 @@ void A2::guiLogic()
     }
 
     ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
-    ImGui::Text( "Near Plane: %.3f, Far Plane: %.3f", m_near, m_far);
-    ImGui::Text( "L: %f, R:%f, T:%f, B:%f", m_vp_left, m_vp_right, m_vp_top, m_vp_bottom);
-		ImGui::Text( "FOV (degrees): %.2f", m_fov);
+    ImGui::Text( "Near Plane: %.3f", m_near);
+    ImGui::Text( "Far Plane: %.3f", m_far);
+    ImGui::Text( "FOV (degrees): %.2f", m_fov);
+    ImGui::Text( "L: %f, R:%f", m_vp_left, m_vp_right);
+    ImGui::Text( "T:%f, B:%f", m_vp_top, m_vp_bottom);
 
 	ImGui::End();
 }
@@ -731,7 +733,13 @@ bool A2::keyInputEvent (
 
 	// Fill in with event handling code...
   if (action == GLFW_PRESS) {
-    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N || key == GLFW_KEY_P || key == GLFW_KEY_V) {
+    if (key == GLFW_KEY_R ||
+      key == GLFW_KEY_T ||
+      key == GLFW_KEY_S ||
+      key == GLFW_KEY_O ||
+      key == GLFW_KEY_N ||
+      key == GLFW_KEY_P ||
+      key == GLFW_KEY_V) {
       m_currentMode = key;
       eventHandled = true;
     }
