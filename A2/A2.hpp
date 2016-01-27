@@ -62,12 +62,18 @@ protected:
 	);
 
   //additions
+  //2d
+  glm::mat3 translate(const glm::vec2 &positionOffset);
+  glm::mat3 scale(const glm::vec2 &scalingFactor);
+  //3d
   glm::mat4 translate(const glm::vec3 &positionOffset);
   glm::mat4 scale(const glm::vec3 &scalingFactor);
   glm::mat4 rotate(const glm::vec3 &rotationAngle);
   glm::mat4 perspective(float fov, float n, float f);
+  //misc
   void drawEdge(const glm::vec4 &v1, const glm::vec4 &v2);
-  void handleMouseMove(int buttonsDown, double movement);
+  void handleMouseMove(int buttonsDown, double xPos, double yPos);
+  void resizeViewport(const std::pair<double, double> &start, const std::pair<double, double> &end);
   void reset();
 
 	ShaderProgram m_shader;
@@ -81,11 +87,14 @@ protected:
 	glm::vec3 m_currentLineColour;
 
   glm::mat4 M,V,P;
+  glm::mat3 WindowToViewport;
 
   float m_near, m_far, m_fov;
   int m_buttonsDown;
-  int m_prevMouseX;
+  int m_prevMouseX, m_prevMouseY;
   int m_width, m_height;
   char m_currentMode;
+  double m_vp_left, m_vp_right, m_vp_top, m_vp_bottom;
+  std::pair<double, double> m_new_viewport_start;
   const std::map<char, std::string> modes;
 };

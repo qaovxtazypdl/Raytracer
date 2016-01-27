@@ -2,6 +2,7 @@
 #include "cs488-framework/GlErrorCheck.hpp"
 
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 #include <imgui/imgui.h>
@@ -30,15 +31,22 @@ A2::A2()
 	: m_currentLineColour(vec3(0.0f)),
     m_buttonsDown(0),
     m_prevMouseX(0),
+    m_prevMouseY(0),
     m_currentMode('R'),
     m_width(768),
     m_height(768),
     M(mat4(1.0f)),
     V(mat4(1.0f)),
     P(mat4(1.0f)),
+    WindowToViewport(mat3(1.0f)),
     m_near(0.75f),
     m_far(500.0f),
     m_fov(45.0f),
+    m_vp_left(768 * 0.05),
+    m_vp_right(768 - 768 * 0.05),
+    m_vp_top(768 * 0.05),
+    m_vp_bottom(768 - 768 * 0.05),
+    m_new_viewport_start(),
     modes({
       {'O', "Rotate View"},
       {'N', "Translate View"},
@@ -51,7 +59,7 @@ A2::A2()
 {
   M = M * scale(vec3(0.15, 0.15, 0.15));
   P = perspective(m_fov, m_near, m_far);
-
+  resizeViewport(pair<double, double>(m_vp_left, m_vp_top), pair<double, double>(m_vp_right, m_vp_bottom));
 }
 
 //----------------------------------------------------------------------------------------
@@ -62,16 +70,22 @@ A2::~A2()
 }
 
 void A2::reset() {
-  M = mat4(1.0f);
+  M = mat4(1.0f) * scale(vec3(0.15, 0.15, 0.15));
   V = mat4(1.0f);
-  P = mat4(1.0f);
 
-  M = M * scale(vec3(0.15, 0.15, 0.15));
   m_currentMode = 'R';
   m_near = 0.75f;
   m_far = 500.0f;
   m_fov = 45.0f;
+
   P = perspective(m_fov, m_near, m_far);
+
+  m_vp_left = m_width * 0.05;
+  m_vp_right = m_width - m_width * 0.05;
+  m_vp_top = m_height * 0.05;
+  m_vp_bottom = m_height - m_height * 0.05;
+
+  resizeViewport(pair<double, double>(m_vp_left, m_vp_top), pair<double, double>(m_vp_right, m_vp_bottom));
 }
 
 //----------------------------------------------------------------------------------------
@@ -236,14 +250,6 @@ glm::mat4 A2::perspective(float fov, float n, float f) {
   return P;
 }
 
-//mat[col][row]
-glm::mat4 A2::translate(const glm::vec3 &positionOffset) {
-  glm::mat4 T = glm::mat4( 1.0 );
-  for(int i = 0; i < 3; i++) T[3][i] = positionOffset[i];
-
-  return T;
-}
-
 void printMatrix(const mat4 &m) {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
@@ -252,6 +258,30 @@ void printMatrix(const mat4 &m) {
     cout << endl;
   }
   cout << endl;
+}
+
+//mat[col][row]
+glm::mat3 A2::translate(const glm::vec2 &positionOffset) {
+  glm::mat3 T = glm::mat3( 1.0 );
+  for(int i = 0; i < 2; i++) T[2][i] = positionOffset[i];
+
+  return T;
+}
+
+//scaling factors in x,y,z directions.
+glm::mat3 A2::scale(const glm::vec2 &scalingFactor) {
+  glm::mat3 T = glm::mat3( 1.0 );
+  for(int i = 0; i < 2; i++) T[i][i] = scalingFactor[i];
+
+  return T;
+}
+
+//mat[col][row]
+glm::mat4 A2::translate(const glm::vec3 &positionOffset) {
+  glm::mat4 T = glm::mat4( 1.0 );
+  for(int i = 0; i < 3; i++) T[3][i] = positionOffset[i];
+
+  return T;
 }
 
 //scaling factors in x,y,z directions.
@@ -295,7 +325,9 @@ glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
 }
 
 void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
-  drawLine(vec2(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2]), vec2(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2]));
+  vec3 z_mapped_v1 = WindowToViewport * vec3(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2], 1);
+  vec3 z_mapped_v2 = WindowToViewport * vec3(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2], 1);
+  drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
 }
 
 //----------------------------------------------------------------------------------------
@@ -365,13 +397,19 @@ void A2::appLogic()
   //draw gnomons
   setLineColour(vec3(1.0f, 0.0f, 0.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 1]);
-  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 1]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 1]);
   setLineColour(vec3(0.0f, 1.0f, 0.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 2]);
-  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 2]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 2]);
   setLineColour(vec3(0.0f, 0.0f, 1.0f));
   drawEdge(verts[(8) + 0], verts[(8) + 3]);
-  //drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
+  drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
+
+  //draw viewport lines
+  drawLine(vec2(m_vp_left, m_vp_top), vec2(m_vp_right, m_vp_top));
+  drawLine(vec2(m_vp_right, m_vp_top), vec2(m_vp_right, m_vp_bottom));
+  drawLine(vec2(m_vp_right, m_vp_bottom), vec2(m_vp_left, m_vp_bottom));
+  drawLine(vec2(m_vp_left, m_vp_bottom), vec2(m_vp_left, m_vp_top));
 }
 
 //----------------------------------------------------------------------------------------
@@ -417,6 +455,7 @@ void A2::guiLogic()
 
     ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
     ImGui::Text( "Near Plane: %.3f, Far Plane: %.3f", m_near, m_far);
+    ImGui::Text( "L: %f, R:%f, T:%f, B:%f", m_vp_left, m_vp_right, m_vp_top, m_vp_bottom);
 		ImGui::Text( "FOV (degrees): %.2f", m_fov);
 
 	ImGui::End();
@@ -489,7 +528,32 @@ bool A2::cursorEnterWindowEvent (
 	return eventHandled;
 }
 
-void A2::handleMouseMove(int buttonsDown, double movement) {
+void A2::resizeViewport(const std::pair<double, double> &start, const std::pair<double, double> &end) {
+  double startX = start.first < 0 ? 0 : start.first > m_width ? m_width : start.first;
+  double startY = start.second < 0 ? 0 : start.second > m_height ? m_height : start.second;
+  double endX = end.first < 0 ? 0 : end.first > m_width ? m_width : end.first;
+  double endY = end.second < 0 ? 0 : end.second > m_height ? m_height : end.second;
+
+  // convert to NDC
+  m_vp_left = std::min(startX, endX) / m_width * 2 - 1;
+  m_vp_right = std::max(startX, endX) / m_width * 2 - 1;
+  m_vp_top = std::min(startY, endY) / m_height * -2 + 1;
+  m_vp_bottom = std::max(startY, endY) / m_height * -2 + 1;
+
+  //reconstruct the scaling/translation matrix from NDC to viewport
+  //resize x: 2->(right-left) => factor of (right-left)/2
+  //resize y: 2->(top-bottom) => factor of (top-bottom)/2
+
+  //translate x 0->(right+left)/2
+  //translate y 0->(top+bottom)/2
+  WindowToViewport =
+    translate(vec2((m_vp_right+m_vp_left)/2, (m_vp_top+m_vp_bottom)/2)) *
+    scale(vec2((m_vp_right-m_vp_left)/2, (m_vp_top-m_vp_bottom)/2)) *
+    mat3(1.0f);
+}
+
+void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
+  double movement = xPos - m_prevMouseX;
   //m_currentMode is the current
   if (m_currentMode == 'T') {
     //TRANSLATE
@@ -549,6 +613,14 @@ void A2::handleMouseMove(int buttonsDown, double movement) {
     if (m_fov < 5) m_fov = 5;
     if (m_fov > 160) m_fov = 160;
     P = perspective(m_fov, m_near, m_far);
+  } else if (m_currentMode == 'V') {
+    if (buttonsDown & 0x1) {
+      //update viewport if position is not equal to starting posn
+      pair<double, double> currentLoc(xPos, yPos);
+      if (m_new_viewport_start != currentLoc) {
+        resizeViewport(m_new_viewport_start, currentLoc);
+      }
+    }
   }
 }
 
@@ -569,11 +641,12 @@ bool A2::mouseMoveEvent (
     // rotation amount, and maybe the previous X position (so
     // that you can rotate relative to the *change* in X.
     if (m_buttonsDown) {
-      handleMouseMove(m_buttonsDown, xPos - m_prevMouseX);
+      handleMouseMove(m_buttonsDown, xPos, yPos);
       eventHandled = true;
     }
 
     m_prevMouseX = xPos;
+    m_prevMouseY = yPos;
   }
 
 	return eventHandled;
@@ -603,6 +676,11 @@ bool A2::mouseButtonInputEvent (
       //hold
       m_buttonsDown |= (0x1 << button);
       eventHandled = true;
+      if (m_currentMode == 'V' && button == 0) {
+        // record current point as starting pt
+        m_new_viewport_start.first = m_prevMouseX;
+        m_new_viewport_start.second = m_prevMouseY;
+      }
     }
   }
 
@@ -635,6 +713,7 @@ bool A2::windowResizeEvent (
 	bool eventHandled(false);
 
   m_width = width;
+  m_height = height;
 
 	return eventHandled;
 }
@@ -652,7 +731,7 @@ bool A2::keyInputEvent (
 
 	// Fill in with event handling code...
   if (action == GLFW_PRESS) {
-    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N || key == GLFW_KEY_P) {
+    if (key == GLFW_KEY_R || key == GLFW_KEY_T || key == GLFW_KEY_S || key == GLFW_KEY_O || key == GLFW_KEY_N || key == GLFW_KEY_P || key == GLFW_KEY_V) {
       m_currentMode = key;
       eventHandled = true;
     }
