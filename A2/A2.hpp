@@ -85,7 +85,7 @@ protected:
 
   glm::vec3 m_currentLineColour;
 
-  glm::mat4 M,V,P;
+  glm::mat4 M,V,P,MScale;
   glm::mat3 WindowToViewport;
 
   float m_near, m_far, m_fov;

@@ -37,6 +37,7 @@ A2::A2()
     M(mat4(1.0f)),
     V(mat4(1.0f)),
     P(mat4(1.0f)),
+    MScale(mat4(1.0f)),
     WindowToViewport(mat3(1.0f)),
     m_near(0.75f),
     m_far(500.0f),
@@ -56,7 +57,7 @@ A2::A2()
       {'V', "Viewport"}
     })
 {
-  M = M * scale(vec3(0.15, 0.15, 0.15));
+  MScale = MScale * scale(vec3(0.15, 0.15, 0.15));
   P = perspective(m_fov, m_near, m_far);
   resizeViewport(pair<double, double>(m_vp_left, m_vp_top), pair<double, double>(m_vp_right, m_vp_bottom));
 }
@@ -69,8 +70,9 @@ A2::~A2()
 }
 
 void A2::reset() {
-  M = mat4(1.0f) * scale(vec3(0.15, 0.15, 0.15));
+  M = mat4(1.0f);
   V = mat4(1.0f);
+  MScale = scale(vec3(0.15, 0.15, 0.15));
 
   m_currentMode = 'R';
   m_near = 0.75f;
@@ -377,27 +379,37 @@ void A2::appLogic()
   verts.push_back(vec4(-1, -1, -1, 1));
   verts.push_back(vec4(-1, -1, 1, 1));
 
-  // add model gnomon
-  verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 0.0f) *= 0.25f / length(M * vec4(0.25f, 0.0f, 0.0f, 0.0f))); verts[9][3] = 1.0f;
-  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 0.0f) *= 0.25f / length(M * vec4(0.0f, 0.25f, 0.0f, 0.0f))); verts[10][3] = 1.0f;
-  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 0.0f) *= 0.25f / length(M * vec4(0.0f, 0.0f, 0.25f, 0.0f))); verts[11][3] = 1.0f;
+  // apply scaling
+  for (int i = 0; i < verts.size(); i++) {
+    verts[i] = MScale * verts[i];
+  } //model coordinates
 
-  // apply model transforms
+  // add model gnomon - no scaling!
+  verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 1.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+  // apply other model transforms
   for (int i = 0; i < verts.size(); i++) {
     verts[i] = M * verts[i];
   } //model coordinates
 
   // add world gnomon
   verts.push_back(vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.25f, 0.0f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.0f, 0.25f, 0.0f, 1.0f));
-  verts.push_back(vec4(0.0f, 0.0f, 0.25f, 1.0f));
+  verts.push_back(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 1.0f, 0.0f, 1.0f));
+  verts.push_back(vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
   // apply view transforms
   for (int i = 0; i < verts.size(); i++) {
     verts[i] = V * verts[i];
   } //view coordinates
+
+  // DEBUG - print dot products to ensure orthogonality
+  //cout << dot(verts[(8) + 1] - verts[(8) + 0], verts[(8) + 2] - verts[(8) + 0])  << endl;
+  //cout << dot(verts[(8) + 1] - verts[(8) + 0], verts[(8) + 3] - verts[(8) + 0])  << endl;
+  //cout << dot(verts[(8) + 3] - verts[(8) + 0], verts[(8) + 2] - verts[(8) + 0])  << endl;
 
   // clip near plane before applying projection
   // probably need to turn this into a list of edges by this point.
@@ -432,6 +444,7 @@ void A2::appLogic()
   drawEdge(verts[(8+4) + 0], verts[(8+4) + 3]);
 
   //draw viewport lines - no clipping in any circumstance.
+  setLineColour(vec3(0.0f, 0.0f, 0.0f));
   drawLine(vec2(m_vp_left, m_vp_top), vec2(m_vp_right, m_vp_top));
   drawLine(vec2(m_vp_right, m_vp_top), vec2(m_vp_right, m_vp_bottom));
   drawLine(vec2(m_vp_right, m_vp_bottom), vec2(m_vp_left, m_vp_bottom));
@@ -591,11 +604,12 @@ vec3 getVectorElements(int buttonsDown, float valueIfDown, float orElse) {
 void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
   double movement = xPos - m_prevMouseX;
   //m_currentMode is the current
+  // for T, R, we need to take the current scaling into account. unapply the scaling, apply the transform, then reapply the scaling.
   if (m_currentMode == 'T') {
     //TRANSLATE
     const float SCALE = 2.0f / m_width;
     const float diff = SCALE * movement;
-    M = M * translate(getVectorElements(buttonsDown, diff, 0.0f));
+    M = M * translate(getVectorElements(buttonsDown, diff, 0.0f)); //scaling transform to ensure scaling is always FIRST
   } else if (m_currentMode == 'R') {
     //ROTATE
     const float SCALE = 2 * PI / m_width;
@@ -606,7 +620,7 @@ void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
     //TODO - cannot scale below certain amount??
     const float SCALE = 3.0f/m_width;
     const float diff = 1.0f + SCALE * movement;
-    M = M * scale(getVectorElements(buttonsDown, diff, 1.0f));
+    MScale = MScale * scale(getVectorElements(buttonsDown, diff, 1.0f));
   } else if (m_currentMode == 'O') {
     //ROTATE_VIEW
     const float SCALE = 2 * PI / m_width;
