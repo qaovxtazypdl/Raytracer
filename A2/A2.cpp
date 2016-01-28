@@ -40,7 +40,7 @@ A2::A2()
     MScale(mat4(1.0f)),
     WindowToViewport(mat3(1.0f)),
     m_near(0.75f),
-    m_far(500.0f),
+    m_far(100.0f),
     m_fov(45.0f),
     m_vp_left(768 * 0.05),
     m_vp_right(768 - 768 * 0.05),
@@ -57,7 +57,7 @@ A2::A2()
       {'V', "Viewport"}
     })
 {
-  MScale = MScale * scale(vec3(0.15, 0.15, 0.15));
+  V = translate(vec3(0.0f, 0.0f, 3.0f)) * V;
   P = perspective(m_fov, m_near, m_far);
   resizeViewport(pair<double, double>(m_vp_left, m_vp_top), pair<double, double>(m_vp_right, m_vp_bottom));
 }
@@ -71,12 +71,12 @@ A2::~A2()
 
 void A2::reset() {
   M = mat4(1.0f);
-  V = mat4(1.0f);
-  MScale = scale(vec3(0.15, 0.15, 0.15));
+  V = translate(vec3(0.0f, 0.0f, 3.0f)) * mat4(1.0f);
+  MScale = mat4(1.0f);
 
   m_currentMode = 'R';
   m_near = 0.75f;
-  m_far = 500.0f;
+  m_far = 100.0f;
   m_fov = 45.0f;
 
   P = perspective(m_fov, m_near, m_far);
