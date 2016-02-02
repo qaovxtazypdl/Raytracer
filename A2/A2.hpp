@@ -70,7 +70,7 @@ protected:
   glm::mat4 rotate(const glm::vec3 &rotationAngle);
   glm::mat4 perspective(float fov, float n, float f);
   //misc
-  void drawEdge(const glm::vec4 &v1, const glm::vec4 &v2);
+  void drawEdge(glm::vec4 v1, glm::vec4 v2, bool print=false);
   void handleMouseMove(int buttonsDown, double xPos, double yPos);
   void resizeViewport(const std::pair<double, double> &start, const std::pair<double, double> &end);
   void reset();

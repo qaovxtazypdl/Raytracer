@@ -39,9 +39,9 @@ A2::A2()
     P(mat4(1.0f)),
     MScale(mat4(1.0f)),
     WindowToViewport(mat3(1.0f)),
-    m_near(0.75f),
-    m_far(100.0f),
-    m_fov(45.0f),
+    m_near(1.0f),
+    m_far(10.0f),
+    m_fov(100.0f),
     m_vp_left(768 * 0.05),
     m_vp_right(768 - 768 * 0.05),
     m_vp_top(768 * 0.05),
@@ -57,8 +57,7 @@ A2::A2()
       {'V', "Viewport"}
     })
 {
-  V = translate(vec3(0.0f, 0.0f, 3.0f)) * V;
-  P = perspective(m_fov, m_near, m_far);
+  V = translate(vec3(0.0f, 0.0f, 4.0f)) * V;
   resizeViewport(pair<double, double>(m_vp_left, m_vp_top), pair<double, double>(m_vp_right, m_vp_bottom));
 }
 
@@ -71,15 +70,13 @@ A2::~A2()
 
 void A2::reset() {
   M = mat4(1.0f);
-  V = translate(vec3(0.0f, 0.0f, 3.0f)) * mat4(1.0f);
+  V = translate(vec3(0.0f, 0.0f, 5.0f)) * mat4(1.0f);
   MScale = mat4(1.0f);
 
   m_currentMode = 'R';
   m_near = 0.75f;
-  m_far = 100.0f;
-  m_fov = 45.0f;
-
-  P = perspective(m_fov, m_near, m_far);
+  m_far = 10.0f;
+  m_fov = 100.0f;
 
   m_vp_left = m_width * 0.05;
   m_vp_right = m_width - m_width * 0.05;
@@ -235,18 +232,14 @@ void A2::drawLine(
 }
 
 glm::mat4 A2::perspective(float fov, float n, float f) {
-  const float aspect = (float)m_width / m_height;
+  const float aspect = (float)m_framebufferWidth / m_framebufferHeight;
   glm::mat4 P = glm::mat4( 0.0 );
 
   P[0][0] = (1/tan((fov/2) * PI / 180)) / aspect;
   P[1][1] = 1/tan((fov/2) * PI / 180);
-  //P[2][2] = (n + f) / n;
-  //P[3][2] = -f;
-  //P[2][3] = 1/n;
-
-  P[2][2] = -(f+n)/(f-n);
+  P[2][2] = (f+n)/(f-n);
   P[3][2] = -2*f*n/(f-n);
-  P[2][3] = -1;
+  P[2][3] = 1;
 
   return P;
 }
@@ -328,12 +321,58 @@ bool wecClip(vec3 &A, vec3 &B, double wecA, double wecB) {
   }
 }
 
-// converts world coordinates pair to a drawn line in NDC
-void A2::drawEdge(const glm::vec4 &v1, const glm::vec4 &v2) {
-  vec3 z_mapped_v1 = WindowToViewport * vec3(v1[0] * m_near / v1[2], v1[1] * m_near / v1[2], 1);
-  vec3 z_mapped_v2 = WindowToViewport * vec3(v2[0] * m_near / v2[2], v2[1] * m_near / v2[2], 1);
+bool wecClip(vec4 &A, vec4 &B, double wecA, double wecB) {
+  if (wecA < 0 && wecB < 0) return false; //reject
+  else if (wecA >= 0 && wecB > 0) return true;
+  else {
+    float t = wecA / (wecA - wecB);
+    if (wecA < 0)
+      A = A + t * (B - A);
+    else
+      B = A + t * (B - A);
+    return true;
+  }
+}
 
+
+// converts world coordinates pair to a drawn line in NDC
+void A2::drawEdge(glm::vec4 v1, glm::vec4 v2, bool print) {
   double wecA, wecB;
+  // clip near/far plane before applying projection
+  //do near-far plane clip here
+  wecA = v1[2] - m_near;
+  wecB = v2[2] - m_near;
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  wecA = m_far - v1[2];
+  wecB = m_far - v2[2];
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  // probably need to turn this into a list of edges by this point.
+  v1 = P * v1;
+  v2 = P * v2;
+
+  wecA = v1[3] - v1[0];
+  wecB = v2[3] - v2[0];
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  wecA = v1[3] + v1[0];
+  wecB = v2[3] + v2[0];
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  wecA = v1[3] - v1[1];
+  wecB = v2[3] - v2[1];
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  wecA = v1[3] + v1[1];
+  wecB = v2[3] + v2[1];
+  if (!wecClip(v1, v2, wecA, wecB)) return;
+
+  vec3 z_mapped_v1 = WindowToViewport * vec3(v1[0] / v1[3], v1[1] / v1[3], 1);
+  vec3 z_mapped_v2 = WindowToViewport * vec3(v2[0] / v2[3], v2[1] / v2[3], 1);
+
+  if(print)
+  cout << v1 * (1/v1[3]) << endl;
 
   //clip left
   wecA = z_mapped_v1[0] - m_vp_left;
@@ -406,18 +445,8 @@ void A2::appLogic()
     verts[i] = V * verts[i];
   } //view coordinates
 
-  // DEBUG - print dot products to ensure orthogonality
-  //cout << dot(verts[(8) + 1] - verts[(8) + 0], verts[(8) + 2] - verts[(8) + 0])  << endl;
-  //cout << dot(verts[(8) + 1] - verts[(8) + 0], verts[(8) + 3] - verts[(8) + 0])  << endl;
-  //cout << dot(verts[(8) + 3] - verts[(8) + 0], verts[(8) + 2] - verts[(8) + 0])  << endl;
-
-  // clip near plane before applying projection
-  // probably need to turn this into a list of edges by this point.
-  for (int i = 0; i < verts.size(); i++) {
-    verts[i] = P * verts[i];
-  } //world coordinates
-
-  //drawEdge draws device coords
+  //drawEdge draws device coords and applies projection mapping
+  P = perspective(m_fov, m_near, m_far);
   setLineColour(vec3(1.0f, 0.7f, 0.8f));
   drawEdge(verts[0], verts[1]);
   drawEdge(verts[1], verts[2]);
@@ -642,7 +671,6 @@ void A2::handleMouseMove(int buttonsDown, double xPos, double yPos) {
 
     if (m_fov < 5) m_fov = 5;
     if (m_fov > 160) m_fov = 160;
-    P = perspective(m_fov, m_near, m_far);
   } else if (m_currentMode == 'V') {
     if (buttonsDown & 0x1) {
       //update viewport if position is not equal to starting posn
