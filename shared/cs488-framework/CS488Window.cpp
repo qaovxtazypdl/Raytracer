@@ -13,7 +13,7 @@ using namespace std;
 
 //-- Forward Declarations:
 extern "C" {
-	int gl3wInit(void);
+    int gl3wInit(void);
 }
 static void renderImGui (int framebufferWidth, int framebufferHeight);
 
@@ -44,8 +44,8 @@ CS488Window::CS488Window()
 //----------------------------------------------------------------------------------------
 // Destructor
 CS488Window::~CS488Window() {
-	// Free all GLFW resources.
-	glfwTerminate();
+    // Free all GLFW resources.
+    glfwTerminate();
 }
 
 //----------------------------------------------------------------------------------------
@@ -53,13 +53,13 @@ CS488Window::~CS488Window() {
  * Error callback to be registered with GLFW.
  */
 void CS488Window::errorCallback(
-		int error,
-		const char * description
+        int error,
+        const char * description
 ) {
-	stringstream msg;
-	msg << "GLFW Error Code: " << error << "\n" <<
-			"GLFW Error Description: " << description << "\n";
-	throw Exception(msg.str());
+    stringstream msg;
+    msg << "GLFW Error Code: " << error << "\n" <<
+            "GLFW Error Description: " << description << "\n";
+    throw Exception(msg.str());
 }
 
 //----------------------------------------------------------------------------------------
@@ -67,11 +67,11 @@ void CS488Window::errorCallback(
  * Window resize event callback to be registered with GLFW.
  */
 void CS488Window::windowResizeCallBack (
-		GLFWwindow * window,
-		int width,
-		int height
+        GLFWwindow * window,
+        int width,
+        int height
 ) {
-	getInstance()->windowResizeEvent(width, height);
+    getInstance()->windowResizeEvent(width, height);
 }
 
 //----------------------------------------------------------------------------------------
@@ -79,16 +79,16 @@ void CS488Window::windowResizeCallBack (
  * Key input event callback to be registered with GLFW.
  */
 void CS488Window::keyInputCallBack (
-		GLFWwindow * window,
-		int key,
-		int scancode,
-		int action,
-		int mods
+        GLFWwindow * window,
+        int key,
+        int scancode,
+        int action,
+        int mods
 ) {
-	if(!getInstance()->keyInputEvent(key, action, mods)) {
-		// Send event to parent class for processing.
-		getInstance()->CS488Window::keyInputEvent(key, action, mods);
-	}
+    if(!getInstance()->keyInputEvent(key, action, mods)) {
+        // Send event to parent class for processing.
+        getInstance()->CS488Window::keyInputEvent(key, action, mods);
+    }
 }
 
 //----------------------------------------------------------------------------------------
@@ -96,11 +96,11 @@ void CS488Window::keyInputCallBack (
  * Mouse scroll event callback to be registered with GLFW.
  */
 void CS488Window::mouseScrollCallBack (
-		GLFWwindow * window,
-		double xOffSet,
-		double yOffSet
+        GLFWwindow * window,
+        double xOffSet,
+        double yOffSet
 ) {
-	getInstance()->mouseScrollEvent(xOffSet, yOffSet);
+    getInstance()->mouseScrollEvent(xOffSet, yOffSet);
 }
 
 
@@ -109,12 +109,12 @@ void CS488Window::mouseScrollCallBack (
  * Mouse button event callback to be registered with GLFW.
  */
 void CS488Window::mouseButtonCallBack (
-		GLFWwindow * window,
-		int button,
-		int actions,
-		int mods
+        GLFWwindow * window,
+        int button,
+        int actions,
+        int mods
 ) {
-	getInstance()->mouseButtonInputEvent(button, actions, mods);
+    getInstance()->mouseButtonInputEvent(button, actions, mods);
 }
 
 //----------------------------------------------------------------------------------------
@@ -122,11 +122,11 @@ void CS488Window::mouseButtonCallBack (
  *  Mouse move event callback to be registered with GLFW.
  */
 void CS488Window::mouseMoveCallBack (
-		GLFWwindow * window,
-		double xPos,
-		double yPos
+        GLFWwindow * window,
+        double xPos,
+        double yPos
 ) {
-	getInstance()->mouseMoveEvent(xPos, yPos);
+    getInstance()->mouseMoveEvent(xPos, yPos);
 }
 
 //----------------------------------------------------------------------------------------
@@ -134,10 +134,10 @@ void CS488Window::mouseMoveCallBack (
  * Cursor enter window event callback to be registered with GLFW.
  */
 void CS488Window::cursorEnterWindowCallBack (
-		GLFWwindow * window,
-		int entered
+        GLFWwindow * window,
+        int entered
 ) {
-	getInstance()->cursorEnterWindowEvent(entered);
+    getInstance()->cursorEnterWindowEvent(entered);
 }
 
 //----------------------------------------------------------------------------------------
@@ -145,10 +145,10 @@ void CS488Window::cursorEnterWindowCallBack (
  * Event handler. Handles window resize events.
  */
 bool CS488Window::windowResizeEvent (
-		int width,
-		int height
+        int width,
+        int height
 ) {
-	return false;
+    return false;
 }
 
 
@@ -157,37 +157,37 @@ bool CS488Window::windowResizeEvent (
  * Event handler. Handles key input events.
  */
 bool CS488Window::keyInputEvent (
-		int key,
-		int action,
-		int mods
+        int key,
+        int action,
+        int mods
 ) {
-	bool eventHandled(false);
+    bool eventHandled(false);
 
-	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_ESCAPE) {
-			glfwSetWindowShouldClose(m_window, GL_TRUE);
-			eventHandled = true;
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_ESCAPE) {
+            glfwSetWindowShouldClose(m_window, GL_TRUE);
+            eventHandled = true;
 
-		} else if (key == GLFW_KEY_P) {
-			m_paused = !m_paused;
-			if(m_paused) {
-				static bool showPauseWindow(true);
-				ImGui::SetNextWindowPosCenter();
-				ImGui::SetNextWindowSize(ImVec2(m_framebufferWidth*0.5,
-						m_framebufferHeight*0.5));
-				ImGui::Begin("PAUSED", &showPauseWindow, ImVec2(m_framebufferWidth*0.5,
-								m_framebufferHeight*0.5), 0.1f, ImGuiWindowFlags_NoTitleBar);
-				ImGui::Text("Paused");
-				ImGui::Text("Press P to continue...");
-				ImGui::End();
-				renderImGui(m_framebufferWidth, m_framebufferHeight);
-				glfwSwapBuffers(m_window);
-			}
-			eventHandled = true;
-		}
-	}
+        } else if (key == GLFW_KEY_P) {
+            m_paused = !m_paused;
+            if(m_paused) {
+                static bool showPauseWindow(true);
+                ImGui::SetNextWindowPosCenter();
+                ImGui::SetNextWindowSize(ImVec2(m_framebufferWidth*0.5,
+                        m_framebufferHeight*0.5));
+                ImGui::Begin("PAUSED", &showPauseWindow, ImVec2(m_framebufferWidth*0.5,
+                                m_framebufferHeight*0.5), 0.1f, ImGuiWindowFlags_NoTitleBar);
+                ImGui::Text("Paused");
+                ImGui::Text("Press P to continue...");
+                ImGui::End();
+                renderImGui(m_framebufferWidth, m_framebufferHeight);
+                glfwSwapBuffers(m_window);
+            }
+            eventHandled = true;
+        }
+    }
 
-	return eventHandled;
+    return eventHandled;
 }
 
 //----------------------------------------------------------------------------------------
@@ -195,10 +195,10 @@ bool CS488Window::keyInputEvent (
  * Event handler. Handles mouse scroll events.
  */
 bool CS488Window::mouseScrollEvent (
-		double xOffSet,
-		double yOffSet
+        double xOffSet,
+        double yOffSet
 ) {
-	return false;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------
@@ -206,11 +206,11 @@ bool CS488Window::mouseScrollEvent (
  * Event handler. Handles mouse button events.
  */
 bool CS488Window::mouseButtonInputEvent (
-		int button,
-		int actions,
-		int mods
+        int button,
+        int actions,
+        int mods
 ) {
-	return false;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------
@@ -218,10 +218,10 @@ bool CS488Window::mouseButtonInputEvent (
  * Event handler. Handles mouse move events.
  */
 bool CS488Window::mouseMoveEvent (
-		double xPos,
-		double yPos
+        double xPos,
+        double yPos
 ) {
-	return false;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------
@@ -229,30 +229,30 @@ bool CS488Window::mouseMoveEvent (
  * Event handler. Handles mouse cursor entering window area events.
  */
 bool CS488Window::cursorEnterWindowEvent (
-		int entered
+        int entered
 ) {
-	return false;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------
 void CS488Window::centerWindow() {
-	int windowWidth, windowHeight;
-	glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
+    int windowWidth, windowHeight;
+    glfwGetWindowSize(m_window, &windowWidth, &windowHeight);
 
-	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-	if (monitor == NULL) {
-		return;
-	}
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    if (monitor == NULL) {
+        return;
+    }
 
-	int x, y;
-	const GLFWvidmode *videoMode = glfwGetVideoMode(monitor);
-	x = videoMode->width;
-	y = videoMode->height;
+    int x, y;
+    const GLFWvidmode *videoMode = glfwGetVideoMode(monitor);
+    x = videoMode->width;
+    y = videoMode->height;
 
-	x = (x - windowWidth) / 2;
-	y = (y - windowHeight) / 2;
+    x = (x - windowWidth) / 2;
+    y = (y - windowHeight) / 2;
 
-	glfwSetWindowPos(m_window, x, y);
+    glfwSetWindowPos(m_window, x, y);
 }
 
 //----------------------------------------------------------------------------------------
@@ -260,12 +260,12 @@ void CS488Window::centerWindow() {
  * Register callbacks with GLFW, and associate events with the current GLFWwindow.
  */
 void CS488Window::registerGlfwCallBacks() {
-	glfwSetKeyCallback(m_window, keyInputCallBack);
-	glfwSetWindowSizeCallback(m_window, windowResizeCallBack);
-	glfwSetScrollCallback(m_window, mouseScrollCallBack);
-	glfwSetMouseButtonCallback(m_window, mouseButtonCallBack);
-	glfwSetCursorPosCallback(m_window, mouseMoveCallBack);
-	glfwSetCursorEnterCallback(m_window, cursorEnterWindowCallBack);
+    glfwSetKeyCallback(m_window, keyInputCallBack);
+    glfwSetWindowSizeCallback(m_window, windowResizeCallBack);
+    glfwSetScrollCallback(m_window, mouseScrollCallBack);
+    glfwSetMouseButtonCallback(m_window, mouseButtonCallBack);
+    glfwSetCursorPosCallback(m_window, mouseMoveCallBack);
+    glfwSetCursorEnterCallback(m_window, cursorEnterWindowCallBack);
 }
 //----------------------------------------------------------------------------------------
 /*
@@ -283,51 +283,51 @@ shared_ptr<CS488Window> CS488Window::getInstance()
 
 //----------------------------------------------------------------------------------------
 void CS488Window::launch (
-		int argc, 
-		char **argv,
-		CS488Window *window,
-		int width,
-		int height,
-		const std::string& title, 
-		float fps
+        int argc,
+        char **argv,
+        CS488Window *window,
+        int width,
+        int height,
+        const std::string& title,
+        float fps
 ) {
-	char * slash = strrchr( argv[0], '/' );
-	if( slash == nullptr ) {
-		m_exec_dir = ".";
-	} else {
-		m_exec_dir = string( argv[0], slash );
-	}
+    char * slash = strrchr( argv[0], '/' );
+    if( slash == nullptr ) {
+        m_exec_dir = ".";
+    } else {
+        m_exec_dir = string( argv[0], slash );
+    }
 
-	if( m_instance == nullptr ) {
+    if( m_instance == nullptr ) {
         m_instance = shared_ptr<CS488Window>(window);
-		m_instance->run( width, height, title, fps );
-	}
+        m_instance->run( width, height, title, fps );
+    }
 }
 
 //----------------------------------------------------------------------------------------
 static void renderImGui (
-		int framebufferWidth,
-		int framebufferHeight
+        int framebufferWidth,
+        int framebufferHeight
 ) {
-	// Set viewport to full window size.
-	glViewport(0, 0, framebufferWidth, framebufferHeight);
-	ImGui::Render();
+    // Set viewport to full window size.
+    glViewport(0, 0, framebufferWidth, framebufferHeight);
+    ImGui::Render();
 }
 
 //----------------------------------------------------------------------------------------
 void CS488Window::run (
-		int width,
-		int height,
-		const string &windowTitle,
-		float desiredFramesPerSecond
+        int width,
+        int height,
+        const string &windowTitle,
+        float desiredFramesPerSecond
 ) {
-	m_windowTitle = windowTitle;
+    m_windowTitle = windowTitle;
     m_windowWidth = width;
     m_windowHeight = height;
-	glfwSetErrorCallback(errorCallback);
+    glfwSetErrorCallback(errorCallback);
 
     if (glfwInit() == GL_FALSE) {
-	    throw Exception("Call to glfwInit() failed.");
+        throw Exception("Call to glfwInit() failed.");
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -360,8 +360,8 @@ void CS488Window::run (
 
     centerWindow();
     glfwMakeContextCurrent(m_window);
-	gl3wInit();
-    
+    gl3wInit();
+
 #ifdef DEBUG_GL
     printGLInfo();
 #endif
@@ -370,9 +370,9 @@ void CS488Window::run (
 
     registerGlfwCallBacks();
 
-	// Setup ImGui binding.  Tell the ImGui subsystem not to
-	// bother setting up its callbacks -- ours will do just fine here.
-	ImGui_ImplGlfwGL3_Init( m_window, false );
+    // Setup ImGui binding.  Tell the ImGui subsystem not to
+    // bother setting up its callbacks -- ours will do just fine here.
+    ImGui_ImplGlfwGL3_Init( m_window, false );
 
     // Clear error buffer.
     while(glGetError() != GL_NO_ERROR);
@@ -382,7 +382,7 @@ void CS488Window::run (
         // To prevent tearing artifacts.
         glfwSwapInterval(1);
 
-		// Call client-defined startup code.
+        // Call client-defined startup code.
         init();
 
         // steady_clock::time_point frameStartTime;
@@ -390,31 +390,31 @@ void CS488Window::run (
         // Main Program Loop:
         while (!glfwWindowShouldClose(m_window)) {
             glfwPollEvents();
-			ImGui_ImplGlfwGL3_NewFrame();
+            ImGui_ImplGlfwGL3_NewFrame();
 
             if (!m_paused) {
-				// Apply application-specific logic
-	            appLogic();
+                // Apply application-specific logic
+                appLogic();
 
-	            guiLogic();
+                guiLogic();
 
-				// Ask the derived class to do the actual OpenGL drawing.
+                // Ask the derived class to do the actual OpenGL drawing.
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 draw();
 
-	            // In case of a window resize, get new framebuffer dimensions.
-	            glfwGetFramebufferSize(m_window, &m_framebufferWidth,
-			            &m_framebufferHeight);
+                // In case of a window resize, get new framebuffer dimensions.
+                glfwGetFramebufferSize(m_window, &m_framebufferWidth,
+                        &m_framebufferHeight);
 
-	            // Draw any UI controls specified in guiLogic() by derived class.
-	            renderImGui(m_framebufferWidth, m_framebufferHeight);
+                // Draw any UI controls specified in guiLogic() by derived class.
+                renderImGui(m_framebufferWidth, m_framebufferHeight);
 
-				// Finally, blast everything to the screen.
+                // Finally, blast everything to the screen.
                 glfwSwapBuffers(m_window);
             }
 
         }
-        
+
     } catch (const  std::exception & e) {
         std::cerr << "Exception Thrown: ";
         std::cerr << e.what() << endl;
@@ -429,20 +429,20 @@ void CS488Window::run (
 
 //----------------------------------------------------------------------------------------
 void CS488Window::init() {
-	// Render only the front face of geometry.
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+    // Render only the front face of geometry.
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 
-	// Setup depth testing
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
-	glDepthRange(0.0f, 1.0f);
-	glEnable(GL_DEPTH_CLAMP);
+    // Setup depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+    glEnable(GL_DEPTH_CLAMP);
 
-	glClearDepth(1.0f);
-	glClearColor(0.3, 0.5, 0.7, 1.0);
+    glClearDepth(1.0f);
+    glClearColor(0.3, 0.5, 0.7, 1.0);
 
 }
 
@@ -471,47 +471,47 @@ void CS488Window::cleanup() {
  * Used to print OpenGL version and supported extensions to standard output stream.
  */
 static void printGLInfo() {
-	const GLubyte * renderer = glGetString( GL_RENDERER );
-	const GLubyte * vendor = glGetString( GL_VENDOR );
-	const GLubyte * version = glGetString( GL_VERSION );
-	const GLubyte * glsl_version = glGetString( GL_SHADING_LANGUAGE_VERSION );
+    const GLubyte * renderer = glGetString( GL_RENDERER );
+    const GLubyte * vendor = glGetString( GL_VENDOR );
+    const GLubyte * version = glGetString( GL_VERSION );
+    const GLubyte * glsl_version = glGetString( GL_SHADING_LANGUAGE_VERSION );
 
-	GLint majorVersion, minorVersion;
+    GLint majorVersion, minorVersion;
 
-	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
-	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+    glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+    glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
 
-	stringstream message;
+    stringstream message;
 
-	if (vendor)
-		message << "GL Vendor          : " << vendor << endl;
+    if (vendor)
+        message << "GL Vendor          : " << vendor << endl;
 
-	if (renderer)
-		message << "GL Renderer        : " << renderer << endl;
+    if (renderer)
+        message << "GL Renderer        : " << renderer << endl;
 
-	if (version)
-		message << "GL Version         : " << version << endl;
+    if (version)
+        message << "GL Version         : " << version << endl;
 
-	message << "GL Version         : " << majorVersion << "." << minorVersion << endl
-			<< "GLSL Version       : " << glsl_version << endl;
+    message << "GL Version         : " << majorVersion << "." << minorVersion << endl
+            << "GLSL Version       : " << glsl_version << endl;
 
-	cout << message.str();
+    cout << message.str();
 
-	cout << "Supported Extensions: " << endl;
-	const GLubyte * extension;
-	GLint nExtensions;
-	glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
+    cout << "Supported Extensions: " << endl;
+    const GLubyte * extension;
+    GLint nExtensions;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
 
-	for (GLuint i = 0; i < nExtensions; ++i) {
-		extension = glGetStringi(GL_EXTENSIONS, i);
-		if (extension) {
-			cout << extension << endl;
-		}
-	}
+    for (GLuint i = 0; i < nExtensions; ++i) {
+        extension = glGetStringi(GL_EXTENSIONS, i);
+        if (extension) {
+            cout << extension << endl;
+        }
+    }
 }
 
 //----------------------------------------------------------------------------------------
 std::string CS488Window::getAssetFilePath(const char *base)
 {
-	return m_exec_dir + "/Assets/" + base;
+    return m_exec_dir + "/Assets/" + base;
 }
