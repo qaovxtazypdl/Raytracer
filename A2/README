@@ -1,0 +1,13 @@
+To compile the program (no changes to default):
+==============================================
+cd A2
+premake4 gmake
+make
+
+Compiled and tested on personal computer and gl29.
+
+Manual:
+===============================================
+My default FOV is 60, and I assumed that to get the cube to initially show up inside the frustrum, I could initially translate the view 4 units back.
+I added some more debug info into the status lines. R,L,T,B are the NDC positions of the viewport.
+I assumed that for the purposes of this assignment, the aspect ratio should always be 1.0f regardless of window size.
