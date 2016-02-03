@@ -322,10 +322,10 @@ void A2::drawEdge(glm::vec4 v1, glm::vec4 v2, bool print) {
   wecB = m_far - v2[2];
   if (!wecClip(v1, v2, wecA, wecB)) return;
 
-  // probably need to turn this into a list of edges by this point.
   v1 = P * v1;
   v2 = P * v2;
 
+  //do side clip
   wecA = v1[3] - v1[0];
   wecB = v2[3] - v2[0];
   if (!wecClip(v1, v2, wecA, wecB)) return;
