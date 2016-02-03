@@ -309,19 +309,6 @@ glm::mat4 A2::rotate(const glm::vec3 &rotationAngle) {
   return Tz * Ty * Tx;
 }
 
-bool wecClip(vec3 &A, vec3 &B, double wecA, double wecB) {
-  if (wecA < 0 && wecB < 0) return false; //reject
-  else if (wecA >= 0 && wecB > 0) return true;
-  else {
-    float t = wecA / (wecA - wecB);
-    if (wecA < 0)
-      A = A + t * (B - A);
-    else
-      B = A + t * (B - A);
-    return true;
-  }
-}
-
 bool wecClip(vec4 &A, vec4 &B, double wecA, double wecB) {
   if (wecA < 0 && wecB < 0) return false; //reject
   else if (wecA >= 0 && wecB > 0) return true;
@@ -374,26 +361,6 @@ void A2::drawEdge(glm::vec4 v1, glm::vec4 v2, bool print) {
 
   if(print)
   cout << v1 * (1/v1[3]) << endl;
-
-  //clip left
-  wecA = z_mapped_v1[0] - m_vp_left;
-  wecB = z_mapped_v2[0] - m_vp_left;
-  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
-
-  //clip right
-  wecA = m_vp_right - z_mapped_v1[0];
-  wecB = m_vp_right - z_mapped_v2[0];
-  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
-
-  //clip bottom
-  wecA = z_mapped_v1[1] - m_vp_bottom;
-  wecB = z_mapped_v2[1] - m_vp_bottom;
-  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
-
-  //clip top
-  wecA = m_vp_top - z_mapped_v1[1];
-  wecB = m_vp_top - z_mapped_v2[1];
-  if (!wecClip(z_mapped_v1, z_mapped_v2, wecA, wecB)) return;
 
   drawLine(vec2(z_mapped_v1[0], z_mapped_v1[1]), vec2(z_mapped_v2[0], z_mapped_v2[1]));
  }
