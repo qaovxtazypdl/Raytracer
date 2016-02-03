@@ -92,7 +92,7 @@ protected:
   int m_buttonsDown;
   int m_prevMouseX, m_prevMouseY;
   int m_width, m_height;
-  int m_currentMode;
+  char m_currentMode;
   double m_vp_left, m_vp_right, m_vp_top, m_vp_bottom;
   std::pair<double, double> m_new_viewport_start;
   const std::map<char, std::string> m_modes;
