@@ -745,6 +745,11 @@ bool A2::keyInputEvent (
   if (action == GLFW_PRESS) {
     set<int> modeKeys = {GLFW_KEY_R, GLFW_KEY_T, GLFW_KEY_S, GLFW_KEY_O, GLFW_KEY_N, GLFW_KEY_P, GLFW_KEY_V};
     if (modeKeys.find(key) != modeKeys.end()) {
+      if (m_currentMode != 'V' && key == 'V') {
+        // record current point as starting pt
+        m_new_viewport_start.first = m_prevMouseX;
+        m_new_viewport_start.second = m_prevMouseY;
+      }
       m_currentMode = key;
       eventHandled = true;
     }
