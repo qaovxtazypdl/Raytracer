@@ -344,14 +344,15 @@ void A3::guiLogic()
 static void updateShaderUniforms(
     const ShaderProgram & shader,
     const GeometryNode & node,
-    const glm::mat4 & viewMatrix
+    const glm::mat4 & viewMatrix,
+    const glm::mat4 & accumulatedTrans
 ) {
 
   shader.enable();
   {
     //-- Set ModelView matrix:
     GLint location = shader.getUniformLocation("ModelView");
-    mat4 modelView = viewMatrix * node.trans;
+    mat4 modelView = viewMatrix * accumulatedTrans;
     glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(modelView));
     CHECK_GL_ERRORS;
 
@@ -395,13 +396,15 @@ void A3::draw() {
 
 void A3::renderSceneGraph(const SceneNode & root) {
   glBindVertexArray(m_vao_meshData);
-  renderSceneNode(&root);
+
+  renderSceneNode(&root, mat4(1.0));
+
   glBindVertexArray(0);
   CHECK_GL_ERRORS;
 }
 
 //----------------------------------------------------------------------------------------
-void A3::renderSceneNode(const SceneNode * root) {
+void A3::renderSceneNode(const SceneNode * root, mat4 accumulatedTrans) {
   // Bind the VAO once here, and reuse for all GeometryNode rendering below.
 
   // This is emphatically *not* how you should be drawing the scene graph in
@@ -416,11 +419,13 @@ void A3::renderSceneNode(const SceneNode * root) {
   // subclasses, that renders the subtree rooted at every node.  Or you
   // could put a set of mutually recursive functions in this class, which
   // walk down the tree from nodes of different types.
+  accumulatedTrans = accumulatedTrans * root->get_transform();
+
   if (root->m_nodeType == NodeType::GeometryNode) {
     //push the matrix down and draw
     const GeometryNode * geometryNode = static_cast<const GeometryNode *>(root);
 
-    updateShaderUniforms(m_shader, *geometryNode, m_view);
+    updateShaderUniforms(m_shader, *geometryNode, m_view, accumulatedTrans);
 
     // Get the BatchInfo corresponding to the GeometryNode's unique MeshId.
     BatchInfo batchInfo = m_batchInfoMap[geometryNode->meshId];
@@ -435,7 +440,7 @@ void A3::renderSceneNode(const SceneNode * root) {
   }
 
   for (auto it = root->children.begin(); it != root->children.end(); ++it) {
-    renderSceneNode(*it);
+    renderSceneNode(*it, accumulatedTrans);
   }
 }
 
