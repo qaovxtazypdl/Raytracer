@@ -9,6 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <set>
 
 struct LightSource {
 	glm::vec3 position;
@@ -50,6 +51,18 @@ protected:
 	void renderSceneGraph(const SceneNode & node);
   void renderSceneNode(const SceneNode * root, glm::mat4 accumulatedTrans);
 	void renderArcCircle();
+
+
+  // my stuff
+  void handleMouseMove(int buttonsDown, double xPos, double yPos);
+
+  int m_currentMode;
+  int m_buttonsDown;
+  int m_prevMouseX, m_prevMouseY;
+  int m_width, m_height;
+
+  // end my stuff
+
 
 	glm::mat4 m_perpsective;
 	glm::mat4 m_view;

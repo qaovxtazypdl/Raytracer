@@ -9,8 +9,11 @@ white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 yellow = gr.material({1.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 
+root_transforms = gr.node('root_transforms')
+
 rootnode = gr.node('root')
-rootnode:scale( 0.25, 0.25, 0.25 )
+root_transforms:add_child(rootnode)
+rootnode:scale( 0.25, 0.25, 0.32 )
 rootnode:translate(0.0, 0.0, -1.0)
 
 
@@ -127,11 +130,11 @@ tail_right:translate(0.5,-0.93,0.0)
 
 -- legs
 left_thigh:set_material(black)
-left_thigh:scale(0.3,0.3,1)
+left_thigh:scale(0.3,0.3,1.2)
 left_thigh:translate(0.32,0.15,-0.6)
 
 right_thigh:set_material(black)
-right_thigh:scale(0.3,0.3,1)
+right_thigh:scale(0.3,0.3,1.2)
 right_thigh:translate(-0.32,0.15,-0.6)
 
 left_leg:set_material(white)

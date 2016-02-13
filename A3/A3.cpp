@@ -29,7 +29,13 @@ A3::A3(const std::string & luaSceneFile)
     m_vbo_vertexPositions(0),
     m_vbo_vertexNormals(0),
     m_vao_arcCircle(0),
-    m_vbo_arcCircle(0)
+    m_vbo_arcCircle(0),
+    m_currentMode('P'),
+    m_buttonsDown(0),
+    m_prevMouseX(0),
+    m_prevMouseY(0),
+    m_width(1024),
+    m_height(768)
 {
 
 }
@@ -489,6 +495,44 @@ bool A3::cursorEnterWindowEvent (
   return eventHandled;
 }
 
+void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
+  double movementX = xPos - m_prevMouseX;
+  double movementY = -(yPos - m_prevMouseY);
+  //m_currentMode is the current
+  // for T, R, we need to take the current scaling into account. unapply the scaling, apply the transform, then reapply the scaling.
+  if (m_currentMode == 'P') {
+    const float diffx = movementX / m_width;
+    const float diffy = movementY / m_height;
+    if (buttonsDown & 0x1) {
+      //left
+      m_rootNode->translate(vec3(diffx, diffy, 0));
+    }
+    if (buttonsDown & 0x4) {
+      //mid
+      m_rootNode->translate(vec3(0, 0, diffy));
+    }
+    if (buttonsDown & 0x2) {
+      //right
+      float aspect = float(m_width)/float(m_height);
+      float r = aspect > 1.0 ? m_height / 2 : m_width / 2;
+      float centerX = m_width / 2;
+      float centerY = m_height / 2;
+
+      float xsqAndysq_new = (xPos-centerX)*(xPos-centerX) + (yPos-centerY)*(yPos-centerY);
+      float xsqAndysq = (m_prevMouseX-centerX)*(m_prevMouseX-centerX) + (m_prevMouseY-centerY)*(m_prevMouseY-centerY);
+      if (!(xsqAndysq_new > r*r || xsqAndysq > r*r)) {
+        vec3 newPos(xPos-centerX, yPos-centerY, sqrt(r*r - xsqAndysq_new));
+        vec3 oldPos(m_prevMouseX-centerX, m_prevMouseY-centerY, sqrt(r*r - xsqAndysq));
+        vec3 normal = cross(newPos, oldPos);
+
+        float angle = dot(newPos, oldPos) / (length(newPos) * length(oldPos));
+
+        m_rootNode->rotate(acos(angle) * 180 / PI, normal);
+      }
+    }
+  }
+}
+
 //----------------------------------------------------------------------------------------
 /*
  * Event handler.  Handles mouse cursor movement events.
@@ -499,7 +543,20 @@ bool A3::mouseMoveEvent (
 ) {
   bool eventHandled(false);
 
-  // Fill in with event handling code...
+  if (!ImGui::IsMouseHoveringAnyWindow()) {
+    // Put some code here to handle rotations.  Probably need to
+    // check whether we're *dragging*, not just moving the mouse.
+    // Probably need some instance variables to track the current
+    // rotation amount, and maybe the previous X position (so
+    // that you can rotate relative to the *change* in X.
+    if (m_buttonsDown) {
+      handleMouseMove(m_buttonsDown, xPos, yPos);
+      eventHandled = true;
+    }
+
+    m_prevMouseX = xPos;
+    m_prevMouseY = yPos;
+  }
 
   return eventHandled;
 }
@@ -515,7 +572,21 @@ bool A3::mouseButtonInputEvent (
 ) {
   bool eventHandled(false);
 
-  // Fill in with event handling code...
+  if (actions == 0) {
+    //release
+    m_buttonsDown &= ~(0x1 << button);
+    eventHandled = true;
+  }
+
+  if (!ImGui::IsMouseHoveringAnyWindow()) {
+    // The user clicked in the window.  If it's the left
+    // mouse button, initiate a rotation.
+    if (actions == 1) {
+      //hold
+      m_buttonsDown |= (0x1 << button);
+      eventHandled = true;
+    }
+  }
 
   return eventHandled;
 }
@@ -545,6 +616,10 @@ bool A3::windowResizeEvent (
 ) {
   bool eventHandled(false);
   initPerspectiveMatrix();
+
+  m_width = width;
+  m_height = height;
+
   return eventHandled;
 }
 
@@ -560,8 +635,17 @@ bool A3::keyInputEvent (
   bool eventHandled(false);
 
   if( action == GLFW_PRESS ) {
+    set<int> modeKeys = {GLFW_KEY_P};
     if( key == GLFW_KEY_M ) {
       show_gui = !show_gui;
+      eventHandled = true;
+    }
+    if (modeKeys.find(key) != modeKeys.end()) {
+      m_currentMode = key;
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_Q) {
+      glfwSetWindowShouldClose(m_window, GL_TRUE);
       eventHandled = true;
     }
   }
