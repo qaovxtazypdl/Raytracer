@@ -107,12 +107,17 @@ right_wing:scale(1.56,0.27,0.4)
 right_wing:rotate('z', 15)
 
 left_wing_outer:set_material(red)
-left_wing_outer:translate(-1.7,0.0,0.0)
-left_wing_outer:rotate('z', 30)
+left_wing_outer:scale(1,0.2,0.4)
+left_wing_outer:rotate('z', 50)
+left_wing_outer:translate(-1.4,-0.75,0.0)
+left_wing_outer:scale(1.2,1/0.3,1/0.4)
 
 right_wing_outer:set_material(red)
-right_wing_outer:translate(1.7,0.0,0.0)
-right_wing_outer:rotate('z', -30)
+right_wing_outer:scale(1,0.2,0.4)
+right_wing_outer:rotate('z', -50)
+right_wing_outer:translate(1.4,-0.75,0.0)
+right_wing_outer:scale(1.2,1/0.3,1/0.4)
+
 
 -- abdomen
 abdomen:set_material(blue)
