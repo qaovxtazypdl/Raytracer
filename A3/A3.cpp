@@ -514,7 +514,7 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
     if (buttonsDown & 0x2) {
       //right
       float aspect = float(m_width)/float(m_height);
-      float r = aspect > 1.0 ? m_height / 2 : m_width / 2;
+      float r = aspect > 1.0 ? m_height / 4 : m_width / 4;
       float centerX = m_width / 2;
       float centerY = m_height / 2;
 
@@ -523,11 +523,10 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
       if (!(xsqAndysq_new > r*r || xsqAndysq > r*r)) {
         vec3 newPos(xPos-centerX, yPos-centerY, sqrt(r*r - xsqAndysq_new));
         vec3 oldPos(m_prevMouseX-centerX, m_prevMouseY-centerY, sqrt(r*r - xsqAndysq));
-        vec3 normal = cross(newPos, oldPos);
+        vec3 normal = normalize(cross(newPos, oldPos));
+        float angle = acos(dot(newPos, oldPos) / (length(newPos) * length(oldPos))) * 180 / PI;
 
-        float angle = dot(newPos, oldPos) / (length(newPos) * length(oldPos));
-
-        m_rootNode->rotate(acos(angle) * 180 / PI, normal);
+        m_rootNode->rotate(-angle, normal);
       }
     }
   }
