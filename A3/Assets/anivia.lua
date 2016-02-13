@@ -6,6 +6,8 @@ red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10)
+black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
+yellow = gr.material({1.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 
 rootnode = gr.node('root')
 rootnode:scale( 0.25, 0.25, 0.25 )
@@ -18,8 +20,8 @@ left_thigh = gr.mesh('sphere', 'left_thigh')
 right_thigh = gr.mesh('sphere', 'right_thigh')
 left_leg = gr.mesh('sphere', 'left_leg')
 right_leg = gr.mesh('sphere', 'right_leg')
-left_talons = gr.mesh('sphere', 'left_talons')
-right_talons = gr.mesh('sphere', 'abdomen')
+left_talons = gr.mesh('cube', 'left_talons')
+right_talons = gr.mesh('cube', 'abdomen')
 shoulder = gr.mesh('sphere', 'shoulder')
 left_wing = gr.mesh('sphere', 'left_wing')
 right_wing = gr.mesh('sphere', 'right_wing')
@@ -32,25 +34,6 @@ tail_left = gr.mesh('cube', 'tail_left')
 tail_right = gr.mesh('cube', 'tail_right')
 tail_mid = gr.mesh('cube', 'tail_mid')
 
-
---torso:scale(0.0,0.0,0.0)
---abdomen:scale(0.0,0.0,0.0)
-left_thigh:scale(0.0,0.0,0.0)
-right_thigh:scale(0.0,0.0,0.0)
-left_leg:scale(0.0,0.0,0.0)
-right_leg:scale(0.0,0.0,0.0)
-left_talons:scale(0.0,0.0,0.0)
-right_talons:scale(0.0,0.0,0.0)
---shoulder:scale(0.0,0.0,0.0)
---left_wing:scale(0.0,0.0,0.0)
---right_wing:scale(0.0,0.0,0.0)
---left_wing_outer:scale(0.0,0.0,0.0)
---right_wing_outer:scale(0.0,0.0,0.0)
---neck:scale(0.0,0.0,0.0)
---head:scale(0.0,0.0,0.0)
---tail_left:scale(0.0,0.0,0.0)
---tail_right:scale(0.0,0.0,0.0)
---tail_mid:scale(0.0,0.0,0.0)
 
 rootnode:add_child(torso)
 
@@ -88,8 +71,8 @@ neck:scale(0.57,0.35,0.50)
 neck:translate(0.0,0.75,0.0)
 
 head:set_material(white)
-head:scale(1.34,1.34,1.01)
-head:translate(0.0,1.3,0.0)
+head:scale(1.12,1.34,1.5)
+head:translate(0.0,1.4,0.0)
 
 -- shoulder
 shoulder:set_material(green)
@@ -141,6 +124,33 @@ tail_right:set_material(red)
 tail_right:scale(0.4,1.15,0.6)
 tail_right:rotate('z', 18)
 tail_right:translate(0.5,-0.93,0.0)
+
+-- legs
+left_thigh:set_material(black)
+left_thigh:scale(0.3,0.3,1)
+left_thigh:translate(0.32,0.15,-0.6)
+
+right_thigh:set_material(black)
+right_thigh:scale(0.3,0.3,1)
+right_thigh:translate(-0.32,0.15,-0.6)
+
+left_leg:set_material(white)
+left_leg:scale(0.65,0.65,1)
+left_leg:translate(0,0,-0.5)
+
+right_leg:set_material(white)
+right_leg:scale(0.65,0.65,1)
+right_leg:translate(0,0,-0.5)
+
+left_talons:set_material(yellow)
+left_talons:scale(1,2.3,0.15)
+left_talons:translate(0,0.5,-0.94)
+
+right_talons:set_material(yellow)
+right_talons:scale(1,2.3,0.15)
+right_talons:translate(0,0.5,-0.94)
+
+
 
 
 return rootnode
