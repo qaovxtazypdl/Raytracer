@@ -25,7 +25,7 @@ sphereMesh:translate(0.0, 0.5, -5.0)
 sphereMesh:set_material(gr.material({0.4, 0.4, 0.8}, {0.8, 0.8, 0.8}, 50.0))
 
 -- Add the sphereMesh GeometryNode to the child list of rootnode.
-cubeMesh:add_child(sphereMesh)
+rootNode:add_child(sphereMesh)
 
 
 -- Return the root with all of it's childern.  The SceneNode A3::m_rootNode will be set
