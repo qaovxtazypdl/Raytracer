@@ -443,6 +443,7 @@ void A3::renderSceneNode(const SceneNode * root, mat4 accumulatedTrans) {
   } else if (root->m_nodeType == NodeType::JointNode) {
     //just push the matrix down
     const JointNode * jointNode = static_cast<const JointNode *>(root);
+    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
   }
 
   for (auto it = root->children.begin(); it != root->children.end(); ++it) {
