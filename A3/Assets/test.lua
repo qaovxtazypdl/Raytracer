@@ -19,80 +19,69 @@ rootnode:translate(0.0, 0.0, -1.0)
 
 
 torso = gr.mesh('sphere', 'torso')
+left_thigh = gr.mesh('sphere', 'left_thigh')
+left_thigh_j = gr.joint('left_thigh_j', {-20,-20,20}, {0,0,0})
+right_thigh = gr.mesh('sphere', 'right_thigh')
+right_thigh_j = gr.joint('right_thigh_j', {-20,-20,20}, {0,0,0})
+left_leg = gr.mesh('sphere', 'left_leg')
+left_leg_j = gr.joint('left_leg_j', {-20,-20,20}, {0,0,0})
+right_leg = gr.mesh('sphere', 'right_leg')
+right_leg_j = gr.joint('right_leg_j', {-20,-20,20}, {0,0,0})
+left_talons = gr.mesh('cube', 'left_talons')
+left_talons_j = gr.joint('left_talons_j', {-20,-20,20}, {0,0,0})
+right_talons = gr.mesh('cube', 'abdomen')
+right_talons_j = gr.joint('right_talons_j', {-20,-20,20}, {0,0,0})
+abdomen = gr.mesh('sphere', 'abdomen')
+abdomen_j = gr.joint('abdomen_j', {-10,0,10}, {-24,0,24})
 
---wings are problematic once again
-shoulder = gr.mesh('sphere', 'shoulder')
-shoulder_j = gr.joint('shoulder_j', {-10,0,10}, {-24,0,24})
-right_wing = gr.mesh('sphere', 'right_wing')
-right_wing_j = gr.joint('right_wing_j', {-10,0,10}, {-40,0,40})
-right_wing_outer = gr.mesh('cube', 'right_wing_outer')
-right_wing_outer_j = gr.joint('right_wing_outer_j', {-10,0,10}, {-40,-0,40})
-right_wing_o = gr.mesh('sphere', 'right_wing')
-right_wing_j_o = gr.joint('right_wing_j', {-10,0,10}, {-40,0,40})
-right_wing_outer_o = gr.mesh('cube', 'right_wing_outer')
-right_wing_outer_j_o = gr.joint('right_wing_outer_j', {-10,0,10}, {-40,-0,40})
+torso:add_child(abdomen_j)
 
-rootnode:add_child(torso)
+abdomen:add_child(left_thigh_j)
+abdomen:add_child(right_thigh_j)
+left_thigh:add_child(left_leg_j)
+right_thigh:add_child(right_leg_j)
+left_leg:add_child(left_talons_j)
+right_leg:add_child(right_talons_j)
 
-torso:add_child(shoulder_j)
 
-shoulder:add_child(right_wing_j)
-right_wing:add_child(right_wing_outer_j)
-shoulder:add_child(right_wing_j_o)
-right_wing_o:add_child(right_wing_outer_j_o)
-
-shoulder_j:add_child(shoulder)
-
-right_wing_j:add_child(right_wing)
-right_wing_outer_j:add_child(right_wing_outer)
-
-right_wing_j_o:add_child(right_wing_o)
-right_wing_outer_j_o:add_child(right_wing_outer_o)
-
--- start modelling
 torso:set_material(blue)
 torso:scale(0.25,0.5,0.18)
 
--- shoulder
-shoulder:set_material(green)
-shoulder:scale(1/0.25,1/0.5,1/0.18)
-shoulder:scale(0.27,0.14,0.13)
-shoulder:translate(0.0,0.30,0.0)
-
-right_wing:set_material(blue)
-right_wing:scale(0.421,0.07,0.065)
-right_wing:translate(0.38,0.0,0.0)
-right_wing:rotate('z', 0)
-right_wing:translate(0.25,0,0.0)
-right_wing:scale(1/0.27,1/0.14,1/0.13)
---right_wing:scale(0.421,0.07,0.065)
---right_wing:rotate('z', 15)
-right_wing_o:set_material(blue)
-right_wing_o:scale(0.421,0.07,0.065)
-right_wing_o:translate(0.38,0.0,0.0)
-right_wing_o:rotate('z', 90)
-right_wing_o:translate(0.25,0,0.0)
-right_wing_o:scale(1/0.27,1/0.14,1/0.13)
+abdomen:set_material(blue)
+abdomen:scale(0.213,0.3,0.18)
+abdomen:translate(0.0,-0.33,0.0)
+abdomen_j:scale(1/0.25,1/0.5,1/0.18)
 
 
-right_wing_outer:set_material(red)
-right_wing_outer:scale(1,0.5,0.5)
---right_wing_outer:rotate('z', -50)
-right_wing_outer:translate(1.75,-0.1,0.0)
-right_wing_outer:scale(1.2,1/0.5,1/0.5)
+left_thigh:set_material(black)
+left_thigh:scale(0.064,0.09,0.216)
+left_thigh:translate(0.0682,0.045,-0.108)
+left_thigh_j:scale(1/0.213,1/0.3,1/0.18)
 
+right_thigh:set_material(black)
+right_thigh:scale(0.064,0.09,0.216)
+right_thigh:translate(-0.0682,0.045,-0.108)
+right_thigh_j:scale(1/0.213,1/0.3,1/0.18)
 
+left_leg:set_material(white)
+left_leg:scale(0.0416,0.0585,0.216)
+left_leg:translate(0,0,-0.108)
+left_leg_j:scale(1/0.064,1/0.09,1/0.216)
 
---right_wing_o:scale(0.421,0.07,0.065)
---right_wing_o:rotate('z', 15)
+right_leg:set_material(white)
+right_leg:scale(0.0416,0.0585,0.216)
+right_leg:translate(0,0,-0.108)
+right_leg_j:scale(1/0.064,1/0.09,1/0.216)
 
-right_wing_outer_o:set_material(red)
-right_wing_outer_o:scale(1,0.5,0.5)
---right_wing_outer_o:rotate('z', -50)
-right_wing_outer_o:translate(1.75,-0.1,0.0)
-right_wing_outer_o:scale(1.2,1/0.5,1/0.5)
+left_talons:set_material(yellow)
+left_talons:scale(0.0416,0.135,0.0324)
+left_talons:translate(0,0.0292,-0.20)
+left_talons_j:scale(1/0.0416,1/0.0585,1/0.216)
 
-
+right_talons:set_material(yellow)
+right_talons:scale(0.0416,0.135,0.0324)
+right_talons:translate(0,0.0292,-0.20)
+right_talons_j:scale(1/0.0416,1/0.0585,1/0.216)
 
 
 
