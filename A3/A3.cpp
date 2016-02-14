@@ -425,10 +425,10 @@ void A3::renderSceneNode(const SceneNode * root, mat4 accumulatedTrans) {
   // subclasses, that renders the subtree rooted at every node.  Or you
   // could put a set of mutually recursive functions in this class, which
   // walk down the tree from nodes of different types.
-  accumulatedTrans = accumulatedTrans * root->get_transform();
 
   if (root->m_nodeType == NodeType::GeometryNode) {
     //push the matrix down and draw
+    accumulatedTrans = accumulatedTrans * root->get_transform();
     const GeometryNode * geometryNode = static_cast<const GeometryNode *>(root);
 
     updateShaderUniforms(m_shader, *geometryNode, m_view, accumulatedTrans);
@@ -443,7 +443,9 @@ void A3::renderSceneNode(const SceneNode * root, mat4 accumulatedTrans) {
   } else if (root->m_nodeType == NodeType::JointNode) {
     //just push the matrix down
     const JointNode * jointNode = static_cast<const JointNode *>(root);
-    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
+    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform() * root->get_transform();
+  } else {
+    accumulatedTrans = accumulatedTrans * root->get_transform();
   }
 
   for (auto it = root->children.begin(); it != root->children.end(); ++it) {
