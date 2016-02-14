@@ -21,6 +21,7 @@ rootNode:add_child(cubeMesh)
 -- Create a GeometryNode with MeshId = 'sphere', and name = 'head'.
 sphereMesh = gr.mesh('sphere', 'name-of-sphere')
 sphereMesh:scale(0.5, 0.5, 0.5)
+sphereMesh:rotate('z', 90)
 sphereMesh:translate(0.0, 0.5, -5.0)
 sphereMesh:set_material(gr.material({0.4, 0.4, 0.8}, {0.8, 0.8, 0.8}, 50.0))
 
