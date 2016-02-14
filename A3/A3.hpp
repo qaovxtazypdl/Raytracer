@@ -58,9 +58,10 @@ protected:
 
   int m_currentMode;
   int m_buttonsDown;
-  int m_prevMouseX, m_prevMouseY;
+  double m_prevMouseX, m_prevMouseY;
   int m_width, m_height;
 
+  bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
   // end my stuff
 
 

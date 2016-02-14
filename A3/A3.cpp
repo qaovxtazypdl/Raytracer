@@ -15,8 +15,6 @@ using namespace std;
 
 using namespace glm;
 
-static bool show_gui = true;
-
 const size_t CIRCLE_PTS = 48;
 
 //----------------------------------------------------------------------------------------
@@ -35,7 +33,12 @@ A3::A3(const std::string & luaSceneFile)
     m_prevMouseX(0),
     m_prevMouseY(0),
     m_width(1024),
-    m_height(768)
+    m_height(768),
+    show_gui(true),
+    draw_circle(true),
+    use_z_buffer(true),
+    cull_back(false),
+    cull_front(false)
 {
 
 }
@@ -391,13 +394,32 @@ static void updateShaderUniforms(
  * Called once per frame, after guiLogic().
  */
 void A3::draw() {
+  if (cull_back || cull_front) {
+    glEnable( GL_CULL_FACE );
+    if (cull_back && cull_front) {
+      glCullFace(GL_FRONT_AND_BACK);
+    } else if (cull_back) {
+      glCullFace(GL_BACK);
+    } else {
+      glCullFace(GL_FRONT);
+    }
+  } else {
+    glDisable( GL_CULL_FACE );
+  }
 
-  glEnable( GL_DEPTH_TEST );
+
+  if (use_z_buffer) {
+    glEnable( GL_DEPTH_TEST );
+  }
+
   renderSceneGraph(*m_rootNode);
 
 
   glDisable( GL_DEPTH_TEST );
-  renderArcCircle();
+
+  if (draw_circle) {
+    renderArcCircle();
+  }
 }
 
 void A3::renderSceneGraph(const SceneNode & root) {
@@ -499,6 +521,7 @@ bool A3::cursorEnterWindowEvent (
 void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
   double movementX = xPos - m_prevMouseX;
   double movementY = -(yPos - m_prevMouseY);
+
   //m_currentMode is the current
   // for T, R, we need to take the current scaling into account. unapply the scaling, apply the transform, then reapply the scaling.
   if (m_currentMode == 'P') {
@@ -522,8 +545,8 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
       float xsqAndysq_new = (xPos-centerX)*(xPos-centerX) + (yPos-centerY)*(yPos-centerY);
       float xsqAndysq = (m_prevMouseX-centerX)*(m_prevMouseX-centerX) + (m_prevMouseY-centerY)*(m_prevMouseY-centerY);
       if (!(xsqAndysq_new > r*r || xsqAndysq > r*r)) {
-        vec3 newPos(xPos-centerX, yPos-centerY, sqrt(r*r - xsqAndysq_new));
-        vec3 oldPos(m_prevMouseX-centerX, m_prevMouseY-centerY, sqrt(r*r - xsqAndysq));
+        vec3 newPos(xPos-centerX, centerY-yPos, sqrt(r*r - xsqAndysq_new));
+        vec3 oldPos(m_prevMouseX-centerX, centerY-m_prevMouseY, sqrt(r*r - xsqAndysq));
         vec3 normal = normalize(cross(newPos, oldPos));
         float angle = acos(dot(newPos, oldPos) / (length(newPos) * length(oldPos))) * 180 / PI;
 
@@ -638,6 +661,22 @@ bool A3::keyInputEvent (
     set<int> modeKeys = {GLFW_KEY_P};
     if( key == GLFW_KEY_M ) {
       show_gui = !show_gui;
+      eventHandled = true;
+    }
+    if( key == GLFW_KEY_C) {
+      draw_circle = !draw_circle;
+      eventHandled = true;
+    }
+    if( key == GLFW_KEY_Z) {
+      use_z_buffer = !use_z_buffer;
+      eventHandled = true;
+    }
+    if( key == GLFW_KEY_B) {
+      cull_back = !cull_back;
+      eventHandled = true;
+    }
+    if( key == GLFW_KEY_F) {
+      cull_front = !cull_front;
       eventHandled = true;
     }
     if (modeKeys.find(key) != modeKeys.end()) {
