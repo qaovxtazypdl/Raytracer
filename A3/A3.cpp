@@ -334,9 +334,11 @@ void A3::guiLogic()
   ImGui::Begin("Properties", &showDebugWindow, ImVec2(100,100), opacity,
       windowFlags);
 
-
     // Add more gui elements here here ...
-
+    ImGui::Checkbox("Use Z-Buffer", &use_z_buffer);
+    ImGui::Checkbox("Cull Front Faces", &cull_front);
+    ImGui::Checkbox("Cull Back Faces", &cull_back);
+    ImGui::Checkbox("Show Trackball Circle", &draw_circle);
 
     // Create Button, and check if it was clicked:
     if( ImGui::Button( "Quit Application" ) ) {
