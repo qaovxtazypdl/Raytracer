@@ -153,7 +153,7 @@ abdomen_j:scale(1/0.25,1/0.5,1/0.18)
 tail:set_material(white)
 tail:scale(0.285,0.27,0.063)
 tail:rotate('x', 45)
-tail:translate(0.0,-0.24,0.0)
+tail:translate(0.0,-0.54,0.0)
 tail_j:scale(1/0.213,1/0.3,1/0.18)
 
 tail_mid:set_material(red)
