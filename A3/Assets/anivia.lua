@@ -7,6 +7,7 @@ blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 white = gr.material({1.0, 1.0, 1.0}, {0.1, 0.1, 0.1}, 10)
 black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
+orange = gr.material({1.0, 0.45, 0.0}, {0.1, 0.1, 0.1}, 10)
 yellow = gr.material({1.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 
 root_transforms = gr.node('root_transforms')
@@ -106,37 +107,37 @@ tail_right_j:add_child(tail_right)
 tail_mid_j:add_child(tail_mid)
 
 -- start modelling
-torso:set_material(blue)
+torso:set_material(black)
 torso:scale(0.25,0.4,0.18)
 
 -- shoulder
-shoulder:set_material(green)
+shoulder:set_material(white)
 shoulder:scale(0.27,0.14,0.13)
 shoulder:translate(0.0,0.15,0.0)
 shoulder_j:scale(1/0.25,1/0.4,1/0.18)
 
-left_wing:set_material(blue)
+left_wing:set_material(black)
 left_wing:scale(0.421,0.07,0.065)
 left_wing:translate(-0.38,0.0,0.0)
 left_wing:rotate('z', -15)
 left_wing_j:translate(-0.25,0,0.0)
 left_wing_j:scale(1/0.27,1/0.14,1/0.13)
 
-left_wing_outer:set_material(red)
+left_wing_outer:set_material(black)
 left_wing_outer:scale(0.421, 0.06, 0.055)
 left_wing_outer:translate(-0.38,0.0,0.0)
 left_wing_outer:rotate('z', 15)
 left_wing_outer_j:translate(-0.40,0,0.0)
 left_wing_outer_j:scale(1/0.421,1/0.07,1/0.065)
 
-right_wing:set_material(blue)
+right_wing:set_material(black)
 right_wing:scale(0.421,0.07,0.065)
 right_wing:translate(0.38,0.0,0.0)
 right_wing:rotate('z', 15)
 right_wing_j:translate(0.25,0,0.0)
 right_wing_j:scale(1/0.27,1/0.14,1/0.13)
 
-right_wing_outer:set_material(red)
+right_wing_outer:set_material(black)
 right_wing_outer:scale(0.421, 0.06, 0.055)
 right_wing_outer:translate(0.38,0.0,0.0)
 right_wing_outer:rotate('z', -15)
@@ -145,32 +146,32 @@ right_wing_outer_j:scale(1/0.421,1/0.07,1/0.065)
 
 
 -- abdomen
-abdomen:set_material(blue)
+abdomen:set_material(black)
 abdomen:scale(0.213,0.4,0.18)
 abdomen:translate(0.0,-0.19,0.0)
 abdomen_j:translate(0.0,-0.13,0.02)
 abdomen_j:scale(1/0.25,1/0.4,1/0.18)
 
-tail:set_material(white)
+tail:set_material(yellow)
 tail:scale(0.285,0.27,0.063)
 tail:translate(0.0,-0.24,0.0)
 tail_j:translate(0.0,-0.1,0.0)
 tail_j:scale(1/0.213,1/0.4,1/0.18)
 
-tail_mid:set_material(red)
-tail_mid:scale(0.154,0.359,0.0378)
+tail_mid:set_material(orange)
+tail_mid:scale(0.114,0.211,0.0378)
 tail_mid:translate(0.0,-0.15,0.0)
 tail_mid_j:translate(0.0,-0.08,0.0)
 tail_mid_j:scale(1/0.285,1/0.27,1/0.063)
 
-tail_left:set_material(red)
+tail_left:set_material(orange)
 tail_left:scale(0.114,0.311,0.0378)
 tail_left:translate(0,-0.134,0.0)
 tail_left:rotate('z', -18)
 tail_left_j:translate(-0.142,-0.08,0.0)
 tail_left_j:scale(1/0.285,1/0.27,1/0.063)
 
-tail_right:set_material(red)
+tail_right:set_material(orange)
 tail_right:scale(0.114,0.311,0.0378)
 tail_right:translate(0,-0.134,0.0)
 tail_right:rotate('z', 18)
@@ -628,7 +629,7 @@ l_feathel_sec1_row2_5:set_material(yellow)
 l_feathel_sec1_row2_5:rotate('z',36)
 l_feathel_sec1_row2_5:scale(0.55,1.7,0.10) --e
 l_feathel_sec1_row2_5:rotate('y', 3)
-l_feathel_sec1_row2_5:translate(0.48,-1.19,-0.007) --e
+l_feathel_sec1_row2_5:translate(0.48,-1.19,-0.017) --e
 l_feathel_sec1_row2_5:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_0:set_material(yellow)
@@ -681,7 +682,25 @@ l_feathel_sec2_row2_6:translate(-0.34,-0.10,-0.005) --e
 l_feathel_sec2_row2_6:scale(1/0.6, 1/1.9, 1/0.16)
 
 
-
 -- tail extra feathers
+tail_feather_middle = gr.mesh('cube', 'tail_feather_middle')
+tail_feather_left = gr.mesh('cube', 'tail_feather_left')
+tail_feather_right = gr.mesh('cube', 'tail_feather_right')
+
+tail_mid:add_child(tail_feather_middle)
+tail_right:add_child(tail_feather_left)
+tail_left:add_child(tail_feather_right)
+
+tail_feather_middle:set_material(red)
+tail_feather_middle:rotate('z',45)
+tail_feather_middle:scale(1.5,1.7,0.34)
+
+tail_feather_left:set_material(red)
+tail_feather_left:rotate('z',45)
+tail_feather_left:scale(1.5,2.9,0.34)
+
+tail_feather_right:set_material(red)
+tail_feather_right:rotate('z',45)
+tail_feather_right:scale(1.5,2.9,0.34)
 
 return rootnode
