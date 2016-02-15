@@ -83,7 +83,7 @@ protected:
   bool m_isHeadSelected;
   JointNode *m_headNode;
   SceneNode *m_root_transform_node;
-  bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
+  bool m_show_gui, m_draw_circle, m_use_z_buffer, m_cull_back, m_cull_front;
   std::vector<JointNode *> m_joints;
   std::string m_undoRedoStatus;
   glm::mat4 m_puppet_posn, m_puppet_orientation;

@@ -1,0 +1,21 @@
+Compilation:
+=============
+No changes to default. Please note that I did add new files, so premake4 gmake is necessary
+
+Manual:
+=============
+I assumed that orientation rotation is global on the model.
+I assumed that we should be in false color mode for the entire duration of when we are in joint select/manipulation mode.
+
+I added a new undo/redo stack data structure in StateStack.hpp.
+JointNode now has a z component of rotation, which is only used for the head rotation. This is initialized at runtime.
+JointNode now has state variables to keep track of current rotation, and a setter of sort to apply changes to these variables.
+GeometryNode now has two vec3 color fields, set at runtime after lua script is loaded.
+  These are the colors that the node maps to for joint selection (deselected and selected colors)
+I added a vector containing all the JointNode *s in the loaded tree for easier iteration.
+
+My hierarchical model of the puppet (its a bird) centers the root at the "torso". There is a node above it that manipulates
+  its translation and orientation transformations, as well a node above that acting as the root, making scaling and z-transformations
+  to bring it into the viewing area. The torso has neck, shoulder and abdomen as its children. The neck as things such as
+  head, eyes, beak as it's descendants, the shoulder has the two wings and feathers, and the abdomen has the legs, claws, and tail
+  as its descendants. For a more detailed picture of this, please see hierarchy.png in this directory.

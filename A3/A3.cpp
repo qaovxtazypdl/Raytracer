@@ -32,11 +32,11 @@ A3::A3(const std::string & luaSceneFile)
     m_prevMouseY(0),
     m_width(1024),
     m_height(768),
-    show_gui(true),
-    draw_circle(false),
-    use_z_buffer(true),
-    cull_back(false),
-    cull_front(false),
+    m_show_gui(true),
+    m_draw_circle(false),
+    m_use_z_buffer(true),
+    m_cull_back(false),
+    m_cull_front(false),
     m_isHeadSelected(false),
     m_headNode(NULL),
     m_root_transform_node(NULL),
@@ -420,7 +420,7 @@ void A3::resetAll() {
  */
 void A3::guiLogic()
 {
-  if( !show_gui ) {
+  if( !m_show_gui ) {
     return;
   }
 
@@ -469,10 +469,10 @@ void A3::guiLogic()
     }
     if (ImGui::BeginMenu("Options"))
     {
-      ImGui::Checkbox("C -     Show Trackball Circle", &draw_circle);
-      ImGui::Checkbox("Z -              Use Z-Buffer", &use_z_buffer);
-      ImGui::Checkbox("B -           Cull Back Faces", &cull_back);
-      ImGui::Checkbox("F -          Cull Front Faces", &cull_front);
+      ImGui::Checkbox("C -     Show Trackball Circle", &m_draw_circle);
+      ImGui::Checkbox("Z -              Use Z-Buffer", &m_use_z_buffer);
+      ImGui::Checkbox("B -           Cull Back Faces", &m_cull_back);
+      ImGui::Checkbox("F -          Cull Front Faces", &m_cull_front);
 
       ImGui::PushID('P');
       ImGui::Text("   P - Position/Orientation Mode");
@@ -556,11 +556,11 @@ static void updateShaderUniforms(
  * Called once per frame, after guiLogic().
  */
 void A3::draw() {
-  if (cull_back || cull_front) {
+  if (m_cull_back || m_cull_front) {
     glEnable( GL_CULL_FACE );
-    if (cull_back && cull_front) {
+    if (m_cull_back && m_cull_front) {
       glCullFace(GL_FRONT_AND_BACK);
-    } else if (cull_back) {
+    } else if (m_cull_back) {
       glCullFace(GL_BACK);
     } else {
       glCullFace(GL_FRONT);
@@ -570,7 +570,7 @@ void A3::draw() {
   }
 
 
-  if (use_z_buffer) {
+  if (m_use_z_buffer) {
     glEnable( GL_DEPTH_TEST );
   }
 
@@ -579,7 +579,7 @@ void A3::draw() {
 
   glDisable( GL_DEPTH_TEST );
 
-  if (draw_circle) {
+  if (m_draw_circle) {
     renderArcCircle();
   }
 }
@@ -888,23 +888,23 @@ bool A3::keyInputEvent (
 
   if( action == GLFW_PRESS ) {
     if( key == GLFW_KEY_M ) {
-      show_gui = !show_gui;
+      m_show_gui = !m_show_gui;
       eventHandled = true;
     }
     if( key == GLFW_KEY_C) {
-      draw_circle = !draw_circle;
+      m_draw_circle = !m_draw_circle;
       eventHandled = true;
     }
     if( key == GLFW_KEY_Z) {
-      use_z_buffer = !use_z_buffer;
+      m_use_z_buffer = !m_use_z_buffer;
       eventHandled = true;
     }
     if( key == GLFW_KEY_B) {
-      cull_back = !cull_back;
+      m_cull_back = !m_cull_back;
       eventHandled = true;
     }
     if( key == GLFW_KEY_F) {
-      cull_front = !cull_front;
+      m_cull_front = !m_cull_front;
       eventHandled = true;
     }
     if ( key == GLFW_KEY_P) {
