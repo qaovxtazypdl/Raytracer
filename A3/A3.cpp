@@ -833,7 +833,7 @@ bool A3::mouseButtonInputEvent (
       m_buttonsDown |= (0x1 << button);
 
       // handle picking if mode is j
-      if (m_currentMode == 'J') {
+      if (m_currentMode == 'J' && button == 0) {
         pickJoint(m_prevMouseX, m_prevMouseY);
       }
       eventHandled = true;

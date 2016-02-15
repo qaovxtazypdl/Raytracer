@@ -17,8 +17,6 @@ public:
 
     m_stack.push_back(state);
     m_undo_ptr++;
-
-    std::cout << m_undo_ptr << " " << m_stack.size() << std::endl;
   }
 
   bool undo_state() {
@@ -26,7 +24,6 @@ public:
 
     m_undo_ptr--;
 
-    std::cout << m_undo_ptr << " " << m_stack.size() << std::endl;
     return true;
   }
 
@@ -35,15 +32,12 @@ public:
 
     m_undo_ptr++;
 
-    std::cout << m_undo_ptr << " " << m_stack.size() << std::endl;
     return true;
   }
 
   void reset_state() {
     m_undo_ptr = 0;
     m_stack.erase(m_stack.begin() + 1, m_stack.end());
-
-    std::cout << m_undo_ptr << " " << m_stack.size() << std::endl;
   }
 
   T get_current_state() {
