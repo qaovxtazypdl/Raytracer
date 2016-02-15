@@ -31,7 +31,7 @@ left_leg_j = gr.joint('left_leg_j', {-20,-10,20}, {0,0,0})
 right_leg = gr.mesh('sphere', 'right_leg')
 right_leg_j = gr.joint('right_leg_j', {-20,10,20}, {0,0,0})
 left_talons = gr.mesh('cube', 'left_talons')
-left_talons_j = gr.joint('left_talons_j', {-110,-90,10}, {0,0,0})
+left_talons_j = gr.joint('left_talons_j', {-110,0,10}, {0,0,0})
 right_talons = gr.mesh('cube', 'abdomen')
 right_talons_j = gr.joint('right_talons_j', {-110,0,10}, {0,0,0})
 
@@ -216,13 +216,13 @@ right_leg_j:translate(0.0,0.0,-0.08)
 right_leg_j:scale(1/0.064,1/0.09,1/0.216)
 
 left_talons:set_material(yellow)
-left_talons:scale(0.0416,0.135,0.0324)
+left_talons:scale(0.0116,0.135,0.0324)
 left_talons:translate(0,0.06,0)
 left_talons_j:translate(0,0.02,-0.19)
 left_talons_j:scale(1/0.0416,1/0.0585,1/0.216)
 
 right_talons:set_material(yellow)
-right_talons:scale(0.0416,0.135,0.0324)
+right_talons:scale(0.0116,0.135,0.0324)
 right_talons:translate(0,0.06,0)
 right_talons_j:translate(0,0.02,-0.19)
 right_talons_j:scale(1/0.0416,1/0.0585,1/0.216)
@@ -702,5 +702,77 @@ tail_feather_left:scale(1.5,2.9,0.34)
 tail_feather_right:set_material(red)
 tail_feather_right:rotate('z',45)
 tail_feather_right:scale(1.5,2.9,0.34)
+
+-- talons
+l_talon_l = gr.mesh('cube', 'l_talon_l')
+l_talon_r = gr.mesh('cube', 'l_talon_r')
+r_talon_l = gr.mesh('cube', 'r_talon_l')
+r_talon_r = gr.mesh('cube', 'r_talon_r')
+
+left_talons:add_child(l_talon_l)
+left_talons:add_child(l_talon_r)
+right_talons:add_child(r_talon_l)
+right_talons:add_child(r_talon_r)
+
+l_talon_l:set_material(yellow)
+l_talon_l:scale(0.0116,0.135,0.0324)
+l_talon_l:translate(0,0.06,0)
+l_talon_l:rotate('z', 15)
+l_talon_l:translate(0,-0.06,0)
+l_talon_l:scale(1/0.0116,1/0.135,1/0.0324)
+
+l_talon_r:set_material(yellow)
+l_talon_r:scale(0.0116,0.135,0.0324)
+l_talon_r:translate(0,0.06,0)
+l_talon_r:rotate('z', -15)
+l_talon_r:translate(0,-0.06,0)
+l_talon_r:scale(1/0.0116,1/0.135,1/0.0324)
+
+
+r_talon_l:set_material(yellow)
+r_talon_l:scale(0.0116,0.135,0.0324)
+r_talon_l:translate(0,0.06,0)
+r_talon_l:rotate('z', 15)
+r_talon_l:translate(0,-0.06,0)
+r_talon_l:scale(1/0.0116,1/0.135,1/0.0324)
+
+r_talon_r:set_material(yellow)
+r_talon_r:scale(0.0116,0.135,0.0324)
+r_talon_r:translate(0,0.06,0)
+r_talon_r:rotate('z', -15)
+r_talon_r:translate(0,-0.06,0)
+r_talon_r:scale(1/0.0116,1/0.135,1/0.0324)
+
+--head/neck features
+left_eye = gr.mesh('sphere', 'left_eye')
+right_eye = gr.mesh('sphere', 'right_eye')
+beak = gr.mesh('cube', 'beak')
+neck_marker = gr.mesh('sphere', 'neck_marker')
+
+head:add_child(left_eye)
+head:add_child(right_eye)
+head:add_child(beak)
+neck:add_child(neck_marker)
+
+left_eye:set_material(black)
+left_eye:scale(0.02, 0.04, 0.02)
+left_eye:translate(-0.1,0.09,0.077)
+left_eye:scale(1/0.145,1/0.238,1/0.145)
+
+right_eye:set_material(black)
+right_eye:scale(0.02, 0.04, 0.02)
+right_eye:translate(0.1,0.09,0.077)
+right_eye:scale(1/0.145,1/0.238,1/0.145)
+
+beak:set_material(yellow)
+beak:rotate('z',45)
+beak:scale(0.1,0.2,0.035)
+beak:translate(0,0.26,-0.06)
+beak:scale(1/0.145,1/0.238,1/0.145)
+
+neck_marker:set_material(blue)
+neck_marker:scale(0.01, 0.035, 0.01)
+neck_marker:translate(0,0.05,0.09)
+neck_marker:scale(1/0.123,1/0.155,1/0.09)
 
 return rootnode
