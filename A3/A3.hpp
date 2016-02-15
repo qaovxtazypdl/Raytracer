@@ -70,6 +70,7 @@ protected:
   void undoJointManipulation();
   void redoJointManipulation();
 
+  void updatePositionAndOrientation();
   void resetPosition();
   void resetOrientation();
   void resetJoints();

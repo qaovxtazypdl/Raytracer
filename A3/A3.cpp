@@ -386,13 +386,20 @@ void A3::redoJointManipulation() {
   }
 }
 
+void A3::updatePositionAndOrientation() {
+  if (m_root_transform_node != NULL) {
+    m_root_transform_node->set_transform(m_puppet_posn * m_puppet_orientation);
+  }
+}
 
 void A3::resetPosition() {
-
+  m_puppet_posn = mat4(1.0f);
+  updatePositionAndOrientation();
 }
 
 void A3::resetOrientation() {
-
+  m_puppet_orientation = mat4(1.0f);
+  updatePositionAndOrientation();
 }
 
 void A3::resetJoints() {
@@ -747,7 +754,7 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
     }
 
     if (buttonsDown != 0) {
-      m_root_transform_node->set_transform(m_puppet_posn * m_puppet_orientation);
+      updatePositionAndOrientation();
     }
   } else if (m_currentMode == 'J') {
     if (buttonsDown & 0x4) {
