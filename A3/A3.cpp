@@ -39,7 +39,10 @@ A3::A3(const std::string & luaSceneFile)
     cull_front(false),
     m_isHeadSelected(false),
     m_headNode(NULL),
-    m_undoRedoStatus("OK")
+    m_root_transform_node(NULL),
+    m_undoRedoStatus("OK"),
+    m_puppet_posn(1.0f),
+    m_puppet_orientation(1.0f)
 {
 }
 
@@ -137,6 +140,10 @@ void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
         geometryNode->falseColor = vec3(0.0f,0.0f,0.0f);
         geometryNode->falseColorSel = vec3(0.0f,0.0f,0.0f);
       }
+    }
+
+    if (root->m_name == "root_transforms") {
+      m_root_transform_node = root;
     }
   }
 
@@ -389,11 +396,14 @@ void A3::resetOrientation() {
 }
 
 void A3::resetJoints() {
-
+  m_states.reset_state();
+  setCurrentJointState(m_states.get_current_state());
 }
 
 void A3::resetAll() {
-
+  resetPosition();
+  resetOrientation();
+  resetJoints();
 }
 
 
@@ -706,17 +716,16 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
   double SCALE = 100.0 / m_height;
 
   //m_currentMode is the current
-  // for T, R, we need to take the current scaling into account. unapply the scaling, apply the transform, then reapply the scaling.
   if (m_currentMode == 'P') {
     const float diffx = movementX / m_width;
     const float diffy = movementY / m_height;
     if (buttonsDown & 0x1) {
       //left
-      m_rootNode->translate(vec3(diffx, diffy, 0));
+      m_puppet_posn = glm::translate(vec3(diffx * 4, diffy * 4, 0)) * m_puppet_posn;
     }
     if (buttonsDown & 0x4) {
       //mid
-      m_rootNode->translate(vec3(0, 0, diffy));
+      m_puppet_posn = glm::translate(vec3(0, 0, diffy * 4)) * m_puppet_posn;
     }
     if (buttonsDown & 0x2) {
       //right
@@ -733,8 +742,12 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
         vec3 normal = normalize(cross(newPos, oldPos));
         float angle = acos(dot(newPos, oldPos) / (length(newPos) * length(oldPos))) * 180 / PI;
 
-        m_rootNode->rotate(-angle, normal);
+        m_puppet_orientation = glm::rotate(degreesToRadians(-angle), normal) * m_puppet_orientation;
       }
+    }
+
+    if (buttonsDown != 0) {
+      m_root_transform_node->set_transform(m_puppet_posn * m_puppet_orientation);
     }
   } else if (m_currentMode == 'J') {
     if (buttonsDown & 0x4) {

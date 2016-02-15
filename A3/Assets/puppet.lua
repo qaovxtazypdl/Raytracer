@@ -11,12 +11,13 @@ black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 orange = gr.material({1.0, 0.45, 0.0}, {0.1, 0.1, 0.1}, 10)
 yellow = gr.material({1.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 
-root_transforms = gr.node('root_transforms')
 
 rootnode = gr.node('root')
-root_transforms:add_child(rootnode)
 rootnode:scale( 0.25, 0.25, 0.25 )
 rootnode:translate(0.0, 0.0, -1.0)
+
+root_transforms = gr.node('root_transforms')
+rootnode:add_child(root_transforms)
 
 
 torso = gr.mesh('sphere', 'torso')
@@ -63,7 +64,7 @@ tail_right_j = gr.joint('tail_right_j', {-30,0,30}, {0,0,0})
 tail_mid = gr.mesh('cube', 'tail_mid')
 tail_mid_j = gr.joint('tail_mid_j', {-30,0,30}, {0,0,0})
 
-rootnode:add_child(torso)
+root_transforms:add_child(torso)
 
 torso:add_child(neck_j)
 torso:add_child(shoulder_j)

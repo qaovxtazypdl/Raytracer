@@ -11,6 +11,7 @@
 #include "StateStack.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 #include <memory>
 #include <set>
 #include <string>
@@ -80,9 +81,11 @@ protected:
   int m_width, m_height;
   bool m_isHeadSelected;
   JointNode *m_headNode;
+  SceneNode *m_root_transform_node;
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
   std::vector<JointNode *> m_joints;
   std::string m_undoRedoStatus;
+  glm::mat4 m_puppet_posn, m_puppet_orientation;
 
   StateStack<std::vector<std::vector<double>>> m_states;
   // end my stuff
