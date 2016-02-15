@@ -39,7 +39,7 @@ A3::A3(const std::string & luaSceneFile)
     cull_front(false),
     m_isHeadSelected(false),
     m_headNode(NULL),
-    m_undoRedoErrorMessage("")
+    m_undoRedoStatus("OK")
 {
 }
 
@@ -362,21 +362,38 @@ void A3::appLogic()
 
 
 void A3::undoJointManipulation() {
-  m_undoRedoErrorMessage = "";
+  m_undoRedoStatus = "OK";
   if (m_states.undo_state()) {
     setCurrentJointState(m_states.get_current_state());
   } else {
-    m_undoRedoErrorMessage = "Unable to undo any further!";
+    m_undoRedoStatus = "Unable to undo any further!";
   }
 }
 
 void A3::redoJointManipulation() {
-  m_undoRedoErrorMessage = "";
+  m_undoRedoStatus = "OK";
   if (m_states.redo_state()) {
     setCurrentJointState(m_states.get_current_state());
   } else {
-    m_undoRedoErrorMessage = "Unable to redo any further!";
+    m_undoRedoStatus = "Unable to redo any further!";
   }
+}
+
+
+void A3::resetPosition() {
+
+}
+
+void A3::resetOrientation() {
+
+}
+
+void A3::resetJoints() {
+
+}
+
+void A3::resetAll() {
+
 }
 
 
@@ -404,6 +421,22 @@ void A3::guiLogic()
   {
     if (ImGui::BeginMenu("Application"))
     {
+      if( ImGui::Button( "I -       Reset Position" ) ) {
+        resetPosition();
+      }
+      if( ImGui::Button( "O -    Reset Orientation" ) ) {
+        resetOrientation();
+      }
+      if( ImGui::Button( "N -         Reset Joints" ) ) {
+        resetJoints();
+      }
+      if( ImGui::Button( "A -            Reset All" ) ) {
+        resetAll();
+      }
+      if( ImGui::Button( "Q -                 Quit" ) ) {
+        glfwSetWindowShouldClose(m_window, GL_TRUE);
+      }
+
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Edit"))
@@ -413,17 +446,16 @@ void A3::guiLogic()
       }
 
       if( ImGui::Button( "R -    Redo" ) ) {
-        undoJointManipulation();
+        redoJointManipulation();
       }
-
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Options"))
     {
-      ImGui::Checkbox("Z -              Use Z-Buffer", &use_z_buffer);
-      ImGui::Checkbox("F -          Cull Front Faces", &cull_front);
-      ImGui::Checkbox("B -           Cull Back Faces", &cull_back);
       ImGui::Checkbox("C -     Show Trackball Circle", &draw_circle);
+      ImGui::Checkbox("Z -              Use Z-Buffer", &use_z_buffer);
+      ImGui::Checkbox("B -           Cull Back Faces", &cull_back);
+      ImGui::Checkbox("F -          Cull Front Faces", &cull_front);
 
       ImGui::PushID('P');
       ImGui::Text("   P - Position/Orientation Mode");
@@ -447,19 +479,8 @@ void A3::guiLogic()
 
   ImGui::Begin("Properties", &showDebugWindow, ImVec2(100,100), opacity,
       windowFlags);
-
-    // Add more gui elements here here ...
-
-
-    // Create Button, and check if it was clicked:
-    if( ImGui::Button( "Quit Application" ) ) {
-      glfwSetWindowShouldClose(m_window, GL_TRUE);
-    }
-
-
-
     ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
-
+    ImGui::Text( "Undo/Redo Status: %s", m_undoRedoStatus.c_str());
   ImGui::End();
 }
 
@@ -876,6 +897,7 @@ bool A3::keyInputEvent (
       toggleFalseColorTo(true);
       eventHandled = true;
     }
+
     if (key == GLFW_KEY_U) {
       undoJointManipulation();
       eventHandled = true;
@@ -886,15 +908,19 @@ bool A3::keyInputEvent (
     }
 
     if (key == GLFW_KEY_I) {
+      resetPosition();
       eventHandled = true;
     }
     if (key == GLFW_KEY_O) {
+      resetOrientation();
       eventHandled = true;
     }
     if (key == GLFW_KEY_N) {
+      resetJoints();
       eventHandled = true;
     }
     if (key == GLFW_KEY_A) {
+      resetAll();
       eventHandled = true;
     }
     if (key == GLFW_KEY_Q) {

@@ -69,6 +69,11 @@ protected:
   void undoJointManipulation();
   void redoJointManipulation();
 
+  void resetPosition();
+  void resetOrientation();
+  void resetJoints();
+  void resetAll();
+
   int m_currentMode;
   int m_buttonsDown;
   double m_prevMouseX, m_prevMouseY;
@@ -77,7 +82,7 @@ protected:
   JointNode *m_headNode;
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
   std::vector<JointNode *> m_joints;
-  std::string m_undoRedoErrorMessage;
+  std::string m_undoRedoStatus;
 
   StateStack<std::vector<std::vector<double>>> m_states;
   // end my stuff
