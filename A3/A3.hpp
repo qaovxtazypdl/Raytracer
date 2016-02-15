@@ -65,7 +65,8 @@ protected:
   int m_buttonsDown;
   double m_prevMouseX, m_prevMouseY;
   int m_width, m_height;
-
+  bool m_isHeadSelected;
+  JointNode *m_headNode;
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
   std::vector<JointNode *> m_joints;
   // end my stuff

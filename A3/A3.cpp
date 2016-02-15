@@ -38,7 +38,9 @@ A3::A3(const std::string & luaSceneFile)
     draw_circle(false),
     use_z_buffer(true),
     cull_back(false),
-    cull_front(false)
+    cull_front(false),
+    m_isHeadSelected(false),
+    m_headNode(NULL)
 {
 
 }
@@ -110,6 +112,11 @@ void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
         m_joints.push_back(parentJoint);
         geometryNode->falseColor = nodeColor;
         geometryNode->falseColorSel = vec3(255,255,255 - root->m_nodeId);
+
+        if (root->m_name == "head") {
+          m_headNode = parentJoint;
+          m_headNode->set_joint_z(-60,0,60);
+        }
       } else {
         geometryNode->falseColor = vec3(0.0f,0.0f,0.0f);
         geometryNode->falseColorSel = vec3(0.0f,0.0f,0.0f);
@@ -561,9 +568,15 @@ void A3::pickJoint(double x, double y) {
     vec3 curColorSel = static_cast<GeometryNode *>((*it)->children.front())->falseColorSel;
     if ((int)(curColor[0]) == (int)(r*255) && (int)(curColor[1]) == (int)(g*255) && (int)(curColor[2]) == (int)(b*255)) {
       (*it)->children.front()->isSelected = true;
+      if ((*it)->children.front()->m_name == "head") {
+        m_isHeadSelected = true;
+      }
     }
     if ((int)(curColorSel[0]) == (int)(r*255) && (int)(curColorSel[1]) == (int)(g*255) && (int)(curColorSel[2]) == (int)(b*255)) {
       (*it)->children.front()->isSelected = false;
+      if ((*it)->children.front()->m_name == "head") {
+        m_isHeadSelected = false;
+      }
     }
   }
 }
@@ -605,6 +618,7 @@ bool A3::cursorEnterWindowEvent (
 void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
   double movementX = xPos - m_prevMouseX;
   double movementY = -(yPos - m_prevMouseY);
+  double SCALE = 100.0 / m_height;
 
   //m_currentMode is the current
   // for T, R, we need to take the current scaling into account. unapply the scaling, apply the transform, then reapply the scaling.
@@ -635,6 +649,21 @@ void A3::handleMouseMove(int buttonsDown, double xPos, double yPos) {
         float angle = acos(dot(newPos, oldPos) / (length(newPos) * length(oldPos))) * 180 / PI;
 
         m_rootNode->rotate(-angle, normal);
+      }
+    }
+  } else if (m_currentMode == 'J') {
+    if (buttonsDown & 0x4) {
+      //mid
+      for (auto it = m_joints.begin(); it != m_joints.end(); ++it) {
+        if ((*it)->children.front()->isSelected) {
+          (*it)->rotate_joint(movementY * SCALE);
+        }
+      }
+    }
+    if (buttonsDown & 0x2) {
+      //right - rotate head left to right...
+      if (m_isHeadSelected) {
+        m_headNode->rotate_z(movementY * SCALE);
       }
     }
   }
