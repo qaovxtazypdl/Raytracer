@@ -6,7 +6,8 @@ GeometryNode::GeometryNode(
 		const std::string & name
 )
 	: SceneNode(name),
-	  meshId(meshId)
+	  meshId(meshId),
+    falseColor(0.0f,0.0f,0.0f)
 {
 	m_nodeType = NodeType::GeometryNode;
 }

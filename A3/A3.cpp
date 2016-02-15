@@ -35,7 +35,7 @@ A3::A3(const std::string & luaSceneFile)
     m_width(1024),
     m_height(768),
     show_gui(true),
-    draw_circle(true),
+    draw_circle(false),
     use_z_buffer(true),
     cull_back(false),
     cull_front(false)
@@ -99,6 +99,27 @@ void A3::init()
   // this point.
 }
 
+void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
+  if (parent != NULL) {
+    if (root->m_nodeType == NodeType::GeometryNode) {
+      GeometryNode * geometryNode = static_cast<GeometryNode *>(root);
+      if (parent->m_nodeType == NodeType::JointNode) {
+        JointNode * parentJoint = static_cast<JointNode *>(parent);
+        unsigned int nodeId = root->m_nodeId * 500000;
+        vec3 nodeColor = vec3(nodeId / (256*256) % 256, nodeId / (256) % 256, nodeId % 256);
+        m_jointMap[parentJoint] = pair<vec3,bool>({nodeColor,false});
+        geometryNode->falseColor = nodeColor;
+      } else {
+        geometryNode->falseColor = vec3(0.0f,0.0f,0.0f);
+      }
+    }
+  }
+
+  for (auto it = root->children.begin(); it != root->children.end(); ++it) {
+    processNodeHierarchy(root, *it);
+  }
+}
+
 //----------------------------------------------------------------------------------------
 void A3::processLuaSceneFile(const std::string & filename) {
   // This version of the code treats the Lua file as an Asset,
@@ -113,6 +134,8 @@ void A3::processLuaSceneFile(const std::string & filename) {
   if (!m_rootNode) {
     std::cerr << "Could not open " << filename << std::endl;
   }
+
+  processNodeHierarchy(NULL, m_rootNode.get());
 }
 
 //----------------------------------------------------------------------------------------
@@ -335,15 +358,32 @@ void A3::guiLogic()
       windowFlags);
 
     // Add more gui elements here here ...
-    ImGui::Checkbox("Use Z-Buffer", &use_z_buffer);
-    ImGui::Checkbox("Cull Front Faces", &cull_front);
-    ImGui::Checkbox("Cull Back Faces", &cull_back);
-    ImGui::Checkbox("Show Trackball Circle", &draw_circle);
+    ImGui::Checkbox("Z -          Use Z-Buffer", &use_z_buffer);
+    ImGui::Checkbox("F -      Cull Front Faces", &cull_front);
+    ImGui::Checkbox("B -       Cull Back Faces", &cull_back);
+    ImGui::Checkbox("C - Show Trackball Circle", &draw_circle);
 
     // Create Button, and check if it was clicked:
     if( ImGui::Button( "Quit Application" ) ) {
       glfwSetWindowShouldClose(m_window, GL_TRUE);
     }
+
+    ImGui::PushID(1);
+    ImGui::Text("P - Position/Orientation Mode");
+    ImGui::SameLine();
+    if( ImGui::RadioButton( "##Col", &m_currentMode, 'P' ) ) {
+      toggleFalseColorTo(false);
+    }
+    ImGui::PopID();
+
+    ImGui::PushID(2);
+    ImGui::Text("J -               Joints Mode");
+    ImGui::SameLine();
+    if( ImGui::RadioButton( "##Col", &m_currentMode, 'J' ) ) {
+      toggleFalseColorTo(true);
+    }
+    ImGui::PopID();
+
 
     ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
@@ -371,6 +411,11 @@ static void updateShaderUniforms(
     location = shader.getUniformLocation("NormalMatrix");
     mat3 normalMatrix = glm::transpose(glm::inverse(mat3(modelView)));
     glUniformMatrix3fv(location, 1, GL_FALSE, value_ptr(normalMatrix));
+    CHECK_GL_ERRORS;
+
+    //-- Set false color:
+    location = shader.getUniformLocation("falseColor");
+    glUniform4f(location, node.falseColor[0]/255, node.falseColor[1]/255, node.falseColor[2]/255, 1.0);
     CHECK_GL_ERRORS;
 
     //-- Set Material values:
@@ -497,6 +542,21 @@ void A3::renderArcCircle() {
   CHECK_GL_ERRORS;
 }
 
+void A3::pickJoint(double x, double y) {
+
+}
+
+void A3::toggleFalseColorTo(bool state) {
+  m_shader.enable();
+
+  GLint location = m_shader.getUniformLocation("useFalseShading");
+  glUniform1i(location, state?1:0);
+  CHECK_GL_ERRORS;
+
+  m_shader.disable();
+}
+
+
 //----------------------------------------------------------------------------------------
 /*
  * Called once, after program is signaled to terminate.
@@ -609,6 +669,11 @@ bool A3::mouseButtonInputEvent (
     if (actions == 1) {
       //hold
       m_buttonsDown |= (0x1 << button);
+
+      // handle picking if mode is j
+      if (m_currentMode == 'J') {
+        pickJoint(m_prevMouseX, m_prevMouseY);
+      }
       eventHandled = true;
     }
   }
@@ -660,7 +725,6 @@ bool A3::keyInputEvent (
   bool eventHandled(false);
 
   if( action == GLFW_PRESS ) {
-    set<int> modeKeys = {GLFW_KEY_P};
     if( key == GLFW_KEY_M ) {
       show_gui = !show_gui;
       eventHandled = true;
@@ -681,8 +745,14 @@ bool A3::keyInputEvent (
       cull_front = !cull_front;
       eventHandled = true;
     }
-    if (modeKeys.find(key) != modeKeys.end()) {
+    if ( key == GLFW_KEY_P) {
       m_currentMode = key;
+      toggleFalseColorTo(false);
+      eventHandled = true;
+    }
+    if ( key == GLFW_KEY_J) {
+      m_currentMode = key;
+      toggleFalseColorTo(true);
       eventHandled = true;
     }
     if (key == GLFW_KEY_Q) {

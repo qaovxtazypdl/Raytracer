@@ -6,10 +6,12 @@
 #include "cs488-framework/MeshConsolidator.hpp"
 
 #include "SceneNode.hpp"
+#include "JointNode.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
 #include <set>
+#include <map>
 
 struct LightSource {
 	glm::vec3 position;
@@ -55,6 +57,9 @@ protected:
 
   // my stuff
   void handleMouseMove(int buttonsDown, double xPos, double yPos);
+  void processNodeHierarchy(SceneNode *parent, SceneNode *root);
+  void pickJoint(double x, double y);
+  void toggleFalseColorTo(bool state);
 
   int m_currentMode;
   int m_buttonsDown;
@@ -62,6 +67,7 @@ protected:
   int m_width, m_height;
 
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
+  std::map<const JointNode *, std::pair<glm::vec3,bool>> m_jointMap;
   // end my stuff
 
 

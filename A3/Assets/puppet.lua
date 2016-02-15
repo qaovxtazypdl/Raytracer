@@ -776,4 +776,17 @@ neck_marker:scale(0.01, 0.035, 0.01)
 neck_marker:translate(0,0.05,0.09)
 neck_marker:scale(1/0.123,1/0.155,1/0.09)
 
+--belly
+belly_abdomen = gr.mesh('sphere', 'belly_abdomen')
+belly_torso = gr.mesh('sphere', 'belly_torso')
+
+torso:add_child(belly_torso)
+abdomen:add_child(belly_abdomen)
+
+belly_torso:set_material(blue)
+belly_torso:translate(0,0,-0.001)
+
+belly_abdomen:set_material(white)
+belly_abdomen:translate(0,0,-0.001)
+
 return rootnode
