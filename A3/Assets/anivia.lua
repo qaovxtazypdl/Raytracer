@@ -259,36 +259,42 @@ right_wing_outer:add_child(r_feather_sec2_row1_5)
 r_feather_sec1_row1_0:set_material(white)
 r_feather_sec1_row1_0:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_0:scale(0.6,1.9,0.16) --e
+r_feather_sec1_row1_0:rotate('y', 2)
 r_feather_sec1_row1_0:translate(-0.48,-0.19,0.001) --e
 r_feather_sec1_row1_0:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_1:set_material(white)
 r_feather_sec1_row1_1:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_1:scale(0.6,1.7,0.16) --e
+r_feather_sec1_row1_1:rotate('y', -5)
 r_feather_sec1_row1_1:translate(-0.32,-0.17,-0.012) --e
 r_feather_sec1_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_2:set_material(white)
 r_feather_sec1_row1_2:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_2:scale(0.6,1.6,0.16) --e
+r_feather_sec1_row1_2:rotate('y', 1)
 r_feather_sec1_row1_2:translate(-0.16,-0.165,-0.005) --e
 r_feather_sec1_row1_2:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_3:set_material(white)
 r_feather_sec1_row1_3:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_3:scale(0.6,1.5,0.16) --e
+r_feather_sec1_row1_3:rotate('y', -8)
 r_feather_sec1_row1_3:translate(0,-0.16,0.003) --e
 r_feather_sec1_row1_3:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_4:set_material(white)
 r_feather_sec1_row1_4:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_4:scale(0.6,1.4,0.16) --e
+r_feather_sec1_row1_4:rotate('y', 4)
 r_feather_sec1_row1_4:translate(0.16,-0.16,-0.02) --e
 r_feather_sec1_row1_4:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_5:set_material(white)
 r_feather_sec1_row1_5:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_5:scale(0.6,1.3,0.16) --e
+r_feather_sec1_row1_5:rotate('y', -9)
 r_feather_sec1_row1_5:translate(0.32,-0.16,0.01) --e
 r_feather_sec1_row1_5:scale(1/0.421, 1/0.06, 1/0.055)
 
@@ -296,30 +302,35 @@ r_feather_sec1_row1_5:scale(1/0.421, 1/0.06, 1/0.055)
 r_feather_sec2_row1_1:set_material(white)
 r_feather_sec2_row1_1:scale(0.25,0.25,0.25)
 r_feather_sec2_row1_1:scale(0.6,1.5,0.16) --e
+r_feather_sec2_row1_1:rotate('y', 0)
 r_feather_sec2_row1_1:translate(-0.32,-0.16,-0.012) --e
 r_feather_sec2_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec2_row1_2:set_material(white)
 r_feather_sec2_row1_2:scale(0.25,0.25,0.25)
 r_feather_sec2_row1_2:scale(0.6,1.5,0.16) --e
+r_feather_sec2_row1_2:rotate('y', -1)
 r_feather_sec2_row1_2:translate(-0.16,-0.16,-0.018) --e
 r_feather_sec2_row1_2:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec2_row1_3:set_material(white)
 r_feather_sec2_row1_3:scale(0.25,0.25,0.25)
 r_feather_sec2_row1_3:scale(0.6,1.3,0.16) --e
+r_feather_sec2_row1_3:rotate('y', 2)
 r_feather_sec2_row1_3:translate(0,-0.13,0.01) --e
 r_feather_sec2_row1_3:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec2_row1_4:set_material(white)
 r_feather_sec2_row1_4:scale(0.25,0.25,0.25)
 r_feather_sec2_row1_4:scale(0.6,1.1,0.16) --e
+r_feather_sec2_row1_4:rotate('y', -7)
 r_feather_sec2_row1_4:translate(0.16,-0.11,-0.003) --e
 r_feather_sec2_row1_4:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec2_row1_5:set_material(white)
 r_feather_sec2_row1_5:scale(0.25,0.25,0.25)
 r_feather_sec2_row1_5:scale(0.6,0.9,0.16) --e
+r_feather_sec2_row1_5:rotate('y', -4)
 r_feather_sec2_row1_5:translate(0.32,-0.09,0.012) --e
 r_feather_sec2_row1_5:scale(1/0.421, 1/0.06, 1/0.055)
 
@@ -352,68 +363,79 @@ left_wing_outer:add_child(l_feathel_sec2_row1_5)
 l_feathel_sec1_row1_0:set_material(white)
 l_feathel_sec1_row1_0:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_0:scale(0.6,1.9,0.16) --e
-l_feathel_sec1_row1_0:translate(0.48,-0.19,0.004) --e
+l_feathel_sec1_row1_0:rotate('y', -6)
+l_feathel_sec1_row1_0:translate(0.48,-0.19,-0.001) --e
 l_feathel_sec1_row1_0:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_1:set_material(white)
 l_feathel_sec1_row1_1:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_1:scale(0.6,1.7,0.16) --e
-l_feathel_sec1_row1_1:translate(0.32,-0.17,0.008) --e
+l_feathel_sec1_row1_1:rotate('y', 6)
+l_feathel_sec1_row1_1:translate(0.32,-0.17,0.003) --e
 l_feathel_sec1_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_2:set_material(white)
 l_feathel_sec1_row1_2:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_2:scale(0.6,1.6,0.16) --e
-l_feathel_sec1_row1_2:translate(0.16,-0.165,0.012) --e
+l_feathel_sec1_row1_2:rotate('y', 7)
+l_feathel_sec1_row1_2:translate(0.16,-0.165,-0.012) --e
 l_feathel_sec1_row1_2:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_3:set_material(white)
 l_feathel_sec1_row1_3:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_3:scale(0.6,1.5,0.16) --e
-l_feathel_sec1_row1_3:translate(0,-0.16,0.019) --e
+l_feathel_sec1_row1_3:rotate('y', 8)
+l_feathel_sec1_row1_3:translate(0,-0.16,-0.001) --e
 l_feathel_sec1_row1_3:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_4:set_material(white)
 l_feathel_sec1_row1_4:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_4:scale(0.6,1.4,0.16) --e
-l_feathel_sec1_row1_4:translate(-0.16,-0.16,-0.006) --e
+l_feathel_sec1_row1_4:rotate('y', -8)
+l_feathel_sec1_row1_4:translate(-0.16,-0.16,-0.012) --e
 l_feathel_sec1_row1_4:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_5:set_material(white)
 l_feathel_sec1_row1_5:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_5:scale(0.6,1.3,0.16) --e
-l_feathel_sec1_row1_5:translate(-0.32,-0.16,-0.001) --e
+l_feathel_sec1_row1_5:rotate('y', -5)
+l_feathel_sec1_row1_5:translate(-0.32,-0.16,-0.009) --e
 l_feathel_sec1_row1_5:scale(1/0.421, 1/0.06, 1/0.055)
 
 
 l_feathel_sec2_row1_1:set_material(white)
 l_feathel_sec2_row1_1:scale(0.25,0.25,0.25)
 l_feathel_sec2_row1_1:scale(0.6,1.5,0.16) --e
+l_feathel_sec2_row1_1:rotate('y', 2)
 l_feathel_sec2_row1_1:translate(0.32,-0.16,-0.004) --e
 l_feathel_sec2_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec2_row1_2:set_material(white)
 l_feathel_sec2_row1_2:scale(0.25,0.25,0.25)
 l_feathel_sec2_row1_2:scale(0.6,1.5,0.16) --e
-l_feathel_sec2_row1_2:translate(0.16,-0.16,-0.018) --e
+l_feathel_sec2_row1_2:rotate('y', -3)
+l_feathel_sec2_row1_2:translate(0.16,-0.16,-0.001) --e
 l_feathel_sec2_row1_2:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec2_row1_3:set_material(white)
 l_feathel_sec2_row1_3:scale(0.25,0.25,0.25)
 l_feathel_sec2_row1_3:scale(0.6,1.3,0.16) --e
-l_feathel_sec2_row1_3:translate(0,-0.13,0.014) --e
+l_feathel_sec2_row1_3:rotate('y', -5)
+l_feathel_sec2_row1_3:translate(0,-0.13,-0.005) --e
 l_feathel_sec2_row1_3:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec2_row1_4:set_material(white)
 l_feathel_sec2_row1_4:scale(0.25,0.25,0.25)
 l_feathel_sec2_row1_4:scale(0.6,1.1,0.16) --e
-l_feathel_sec2_row1_4:translate(-0.16,-0.11,-0.007) --e
+l_feathel_sec2_row1_4:rotate('y', 2)
+l_feathel_sec2_row1_4:translate(-0.16,-0.11,-0.013) --e
 l_feathel_sec2_row1_4:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec2_row1_5:set_material(white)
 l_feathel_sec2_row1_5:scale(0.25,0.25,0.25)
 l_feathel_sec2_row1_5:scale(0.6,0.9,0.16) --e
-l_feathel_sec2_row1_5:translate(-0.32,-0.09,0.013) --e
+l_feathel_sec2_row1_5:rotate('y', 3)
+l_feathel_sec2_row1_5:translate(-0.32,-0.09,0.002) --e
 l_feathel_sec2_row1_5:scale(1/0.421, 1/0.06, 1/0.055)
 
 
@@ -450,79 +472,92 @@ r_feather_sec2_row1_5:add_child(r_feather_sec2_row2_6)
 r_feather_sec1_row2_0:set_material(yellow)
 r_feather_sec1_row2_0:rotate('z',36)
 r_feather_sec1_row2_0:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_0:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_0:rotate('y', 2)
+r_feather_sec1_row2_0:translate(-0.48,-1.19,0) --e
 r_feather_sec1_row2_0:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec1_row2_1:set_material(yellow)
 r_feather_sec1_row2_1:rotate('z',36)
 r_feather_sec1_row2_1:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_1:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_1:rotate('y', -3)
+r_feather_sec1_row2_1:translate(-0.48,-1.19,0.005) --e
 r_feather_sec1_row2_1:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec1_row2_2:set_material(yellow)
 r_feather_sec1_row2_2:rotate('z',36)
 r_feather_sec1_row2_2:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_2:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_2:rotate('y', 8)
+r_feather_sec1_row2_2:translate(-0.48,-1.19,-0.009) --e
 r_feather_sec1_row2_2:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec1_row2_3:set_material(yellow)
 r_feather_sec1_row2_3:rotate('z',36)
 r_feather_sec1_row2_3:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_3:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_3:rotate('y', 1)
+r_feather_sec1_row2_3:translate(-0.48,-1.19,-0.007) --e
 r_feather_sec1_row2_3:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec1_row2_4:set_material(yellow)
 r_feather_sec1_row2_4:rotate('z',36)
 r_feather_sec1_row2_4:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_4:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_4:rotate('y', -10)
+r_feather_sec1_row2_4:translate(-0.48,-1.19,-0.004) --e
 r_feather_sec1_row2_4:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec1_row2_5:set_material(yellow)
 r_feather_sec1_row2_5:rotate('z',36)
 r_feather_sec1_row2_5:scale(0.55,1.7,0.10) --e
-r_feather_sec1_row2_5:translate(-0.48,-1.19,0.004) --e
+r_feather_sec1_row2_5:rotate('y', -8)
+r_feather_sec1_row2_5:translate(-0.48,-1.19,-0.014) --e
 r_feather_sec1_row2_5:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_0:set_material(yellow)
 r_feather_sec2_row2_0:rotate('z',36)
 r_feather_sec2_row2_0:scale(0.52,1.7,0.10) --e
-r_feather_sec2_row2_0:translate(0,-1.29,0.004) --e
+r_feather_sec2_row2_0:rotate('y', 10)
+r_feather_sec2_row2_0:translate(0,-1.29,-0.002) --e
 r_feather_sec2_row2_0:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_1:set_material(yellow)
 r_feather_sec2_row2_1:rotate('z',36)
 r_feather_sec2_row2_1:scale(0.52,1.7,0.10) --e
-r_feather_sec2_row2_1:translate(0.48,-1.19,0.004) --e
+r_feather_sec2_row2_1:rotate('y', -5)
+r_feather_sec2_row2_1:translate(0.48,-1.19,0.002) --e
 r_feather_sec2_row2_1:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_2:set_material(yellow)
 r_feather_sec2_row2_2:rotate('z',36)
 r_feather_sec2_row2_2:scale(0.52,1.7,0.10) --e
+r_feather_sec2_row2_2:rotate('y', 2)
 r_feather_sec2_row2_2:translate(0.48,-1.19,0.004) --e
 r_feather_sec2_row2_2:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_3:set_material(yellow)
 r_feather_sec2_row2_3:rotate('z',36)
 r_feather_sec2_row2_3:scale(0.52,1.7,0.10) --e
-r_feather_sec2_row2_3:translate(0.46,-1.19,0.004) --e
+r_feather_sec2_row2_3:rotate('y', -3)
+r_feather_sec2_row2_3:translate(0.46,-1.19,0) --e
 r_feather_sec2_row2_3:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_4:set_material(yellow)
 r_feather_sec2_row2_4:rotate('z',36)
 r_feather_sec2_row2_4:scale(0.52,1.7,0.10) --e
-r_feather_sec2_row2_4:translate(0.42,-1.19,0.004) --e
+r_feather_sec2_row2_4:rotate('y', -5)
+r_feather_sec2_row2_4:translate(0.42,-1.19,-0.005) --e
 r_feather_sec2_row2_4:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_5:set_material(yellow)
 r_feather_sec2_row2_5:rotate('z',36)
 r_feather_sec2_row2_5:scale(0.52,1.7,0.10) --e
-r_feather_sec2_row2_5:translate(0.34,-1.19,0.004) --e
+r_feather_sec2_row2_5:rotate('y', 2)
+r_feather_sec2_row2_5:translate(0.34,-1.19,-0.012) --e
 r_feather_sec2_row2_5:scale(1/0.6, 1/1.9, 1/0.16)
 
 r_feather_sec2_row2_6:set_material(yellow)
 r_feather_sec2_row2_6:rotate('z',50)
 r_feather_sec2_row2_6:scale(1.06,1.0,0.10) --e
-r_feather_sec2_row2_6:translate(0.34,-0.10,0.004) --e
+r_feather_sec2_row2_6:rotate('y', -5)
+r_feather_sec2_row2_6:translate(0.34,-0.10,-0.008) --e
 r_feather_sec2_row2_6:scale(1/0.6, 1/1.9, 1/0.16)
 
 --left feather tips
@@ -557,79 +592,92 @@ l_feathel_sec2_row1_5:add_child(l_feathel_sec2_row2_6)
 l_feathel_sec1_row2_0:set_material(yellow)
 l_feathel_sec1_row2_0:rotate('z',36)
 l_feathel_sec1_row2_0:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_0:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_0:rotate('y', -3)
+l_feathel_sec1_row2_0:translate(0.48,-1.19,-0.008) --e
 l_feathel_sec1_row2_0:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec1_row2_1:set_material(yellow)
 l_feathel_sec1_row2_1:rotate('z',36)
 l_feathel_sec1_row2_1:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_1:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_1:rotate('y', 10)
+l_feathel_sec1_row2_1:translate(0.48,-1.19,-0.012) --e
 l_feathel_sec1_row2_1:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec1_row2_2:set_material(yellow)
 l_feathel_sec1_row2_2:rotate('z',36)
 l_feathel_sec1_row2_2:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_2:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_2:rotate('y', -4)
+l_feathel_sec1_row2_2:translate(0.48,-1.19,-0.002) --e
 l_feathel_sec1_row2_2:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec1_row2_3:set_material(yellow)
 l_feathel_sec1_row2_3:rotate('z',36)
 l_feathel_sec1_row2_3:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_3:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_3:rotate('y', -6)
+l_feathel_sec1_row2_3:translate(0.48,-1.19,-0.015) --e
 l_feathel_sec1_row2_3:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec1_row2_4:set_material(yellow)
 l_feathel_sec1_row2_4:rotate('z',36)
 l_feathel_sec1_row2_4:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_4:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_4:rotate('y', 7)
+l_feathel_sec1_row2_4:translate(0.48,-1.19,-0.004) --e
 l_feathel_sec1_row2_4:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec1_row2_5:set_material(yellow)
 l_feathel_sec1_row2_5:rotate('z',36)
 l_feathel_sec1_row2_5:scale(0.55,1.7,0.10) --e
-l_feathel_sec1_row2_5:translate(0.48,-1.19,0.004) --e
+l_feathel_sec1_row2_5:rotate('y', 3)
+l_feathel_sec1_row2_5:translate(0.48,-1.19,-0.007) --e
 l_feathel_sec1_row2_5:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_0:set_material(yellow)
 l_feathel_sec2_row2_0:rotate('z',36)
 l_feathel_sec2_row2_0:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_0:translate(0,-1.29,0.004) --e
+l_feathel_sec2_row2_0:rotate('y', 8)
+l_feathel_sec2_row2_0:translate(0,-1.29,0.002) --e
 l_feathel_sec2_row2_0:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_1:set_material(yellow)
 l_feathel_sec2_row2_1:rotate('z',36)
 l_feathel_sec2_row2_1:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_1:translate(-0.48,-1.19,0.004) --e
+l_feathel_sec2_row2_1:rotate('y', 0)
+l_feathel_sec2_row2_1:translate(-0.48,-1.19,-0.012) --e
 l_feathel_sec2_row2_1:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_2:set_material(yellow)
 l_feathel_sec2_row2_2:rotate('z',36)
 l_feathel_sec2_row2_2:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_2:translate(-0.48,-1.19,0.004) --e
+l_feathel_sec2_row2_2:rotate('y', -3)
+l_feathel_sec2_row2_2:translate(-0.48,-1.19,-0.010) --e
 l_feathel_sec2_row2_2:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_3:set_material(yellow)
 l_feathel_sec2_row2_3:rotate('z',36)
 l_feathel_sec2_row2_3:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_3:translate(-0.46,-1.19,0.004) --e
+l_feathel_sec2_row2_3:rotate('y', 5)
+l_feathel_sec2_row2_3:translate(-0.46,-1.19,-0.008) --e
 l_feathel_sec2_row2_3:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_4:set_material(yellow)
 l_feathel_sec2_row2_4:rotate('z',36)
 l_feathel_sec2_row2_4:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_4:translate(-0.42,-1.19,0.004) --e
+l_feathel_sec2_row2_4:rotate('y', 1)
+l_feathel_sec2_row2_4:translate(-0.42,-1.19,0) --e
 l_feathel_sec2_row2_4:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_5:set_material(yellow)
 l_feathel_sec2_row2_5:rotate('z',36)
 l_feathel_sec2_row2_5:scale(0.52,1.7,0.10) --e
-l_feathel_sec2_row2_5:translate(-0.34,-1.19,0.004) --e
+l_feathel_sec2_row2_5:rotate('y', -9)
+l_feathel_sec2_row2_5:translate(-0.34,-1.19,-0.012) --e
 l_feathel_sec2_row2_5:scale(1/0.6, 1/1.9, 1/0.16)
 
 l_feathel_sec2_row2_6:set_material(yellow)
 l_feathel_sec2_row2_6:rotate('z',50)
 l_feathel_sec2_row2_6:scale(1.06,1.0,0.10) --e
-l_feathel_sec2_row2_6:translate(-0.34,-0.10,0.004) --e
+l_feathel_sec2_row2_6:rotate('y', 6)
+l_feathel_sec2_row2_6:translate(-0.34,-0.10,-0.005) --e
 l_feathel_sec2_row2_6:scale(1/0.6, 1/1.9, 1/0.16)
 
 
