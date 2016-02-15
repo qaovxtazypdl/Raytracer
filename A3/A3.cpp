@@ -134,7 +134,7 @@ void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
 
         if (root->m_name == "head") {
           m_headNode = parentJoint;
-          m_headNode->set_joint_z(-60,0,60);
+          m_headNode->set_joint_z(-45,0,45);
         }
       } else {
         geometryNode->falseColor = vec3(0.0f,0.0f,0.0f);
@@ -322,7 +322,7 @@ void A3::initViewMatrix() {
 //----------------------------------------------------------------------------------------
 void A3::initLightSources() {
   // World-space position
-  m_light.position = vec3(2.0f, 0.0f, 2.0f);
+  m_light.position = vec3(2.0f, 0.1f, 2.0f);
   m_light.rgbIntensity = vec3(0.8f); // White light
 }
 

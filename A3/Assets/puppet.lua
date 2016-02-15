@@ -25,44 +25,44 @@ torso = gr.mesh('sphere', 'torso')
 
 --same problem as wings
 left_thigh = gr.mesh('sphere', 'left_thigh')
-left_thigh_j = gr.joint('left_thigh_j', {-20,-10,20}, {0,0,0})
+left_thigh_j = gr.joint('left_thigh_j', {-30,-10,20}, {0,0,0})
 right_thigh = gr.mesh('sphere', 'right_thigh')
-right_thigh_j = gr.joint('right_thigh_j', {-20,10,20}, {0,0,0})
+right_thigh_j = gr.joint('right_thigh_j', {-30,10,20}, {0,0,0})
 left_leg = gr.mesh('sphere', 'left_leg')
-left_leg_j = gr.joint('left_leg_j', {-20,-10,20}, {0,0,0})
+left_leg_j = gr.joint('left_leg_j', {-46,-10,30}, {0,0,0})
 right_leg = gr.mesh('sphere', 'right_leg')
-right_leg_j = gr.joint('right_leg_j', {-20,10,20}, {0,0,0})
+right_leg_j = gr.joint('right_leg_j', {-46,10,30}, {0,0,0})
 left_talons = gr.mesh('cube', 'left_talons')
-left_talons_j = gr.joint('left_talons_j', {-110,0,10}, {0,0,0})
+left_talons_j = gr.joint('left_talons_j', {-100,-25,10}, {0,0,0})
 right_talons = gr.mesh('cube', 'abdomen')
-right_talons_j = gr.joint('right_talons_j', {-110,0,10}, {0,0,0})
+right_talons_j = gr.joint('right_talons_j', {-100,0,10}, {0,0,0})
 
 neck = gr.mesh('sphere', 'neck')
-neck_j = gr.joint('neck_j', {0,0,0}, {-90,0,90})
+neck_j = gr.joint('neck_j', {0,0,0}, {-45,0,45})
 head = gr.mesh('sphere', 'head')
-head_j = gr.joint('head_j', {-50,0,50}, {0,0,0})
+head_j = gr.joint('head_j', {-45,0,25}, {0,0,0})
 
 shoulder = gr.mesh('sphere', 'shoulder')
-shoulder_j = gr.joint('shoulder_j', {-10,0,10}, {-24,0,24})
+shoulder_j = gr.joint('shoulder_j', {0,0,0}, {-24,0,24})
 left_wing = gr.mesh('sphere', 'left_wing')
-left_wing_j = gr.joint('left_wing_j', {-10,0,10}, {-30,0,30})
+left_wing_j = gr.joint('left_wing_j', {0,0,0}, {-30,0,30})
 right_wing = gr.mesh('sphere', 'right_wing')
-right_wing_j = gr.joint('right_wing_j', {-10,0,10}, {-30,0,30})
+right_wing_j = gr.joint('right_wing_j', {0,0,0}, {-30,0,30})
 left_wing_outer = gr.mesh('sphere', 'left_wing_outer')
-left_wing_outer_j = gr.joint('left_wing_outer_j', {-10,0,10}, {-30,0,30})
+left_wing_outer_j = gr.joint('left_wing_outer_j', {0,0,0}, {-30,0,30})
 right_wing_outer = gr.mesh('sphere', 'right_wing_outer')
-right_wing_outer_j = gr.joint('right_wing_outer_j', {-10,0,10}, {-30,0,30})
+right_wing_outer_j = gr.joint('right_wing_outer_j', {0,0,0}, {-30,0,30})
 
 abdomen = gr.mesh('sphere', 'abdomen')
-abdomen_j = gr.joint('abdomen_j', {-55,0,30}, {-20,0,20})
+abdomen_j = gr.joint('abdomen_j', {-30,0,30}, {0,0,0})
 tail = gr.mesh('cube', 'tail')
-tail_j = gr.joint('tail_j', {-45,-10,30}, {-10,0,10})
+tail_j = gr.joint('tail_j', {-26,-10,20}, {0,0,0})
 tail_left = gr.mesh('cube', 'tail_left')
-tail_left_j = gr.joint('tail_left_j', {-30,0,30}, {0,0,0})
+tail_left_j = gr.joint('tail_left_j', {-32,0,15}, {0,0,0})
 tail_right = gr.mesh('cube', 'tail_right')
-tail_right_j = gr.joint('tail_right_j', {-30,0,30}, {0,0,0})
+tail_right_j = gr.joint('tail_right_j', {-32,0,15}, {0,0,0})
 tail_mid = gr.mesh('cube', 'tail_mid')
-tail_mid_j = gr.joint('tail_mid_j', {-30,0,30}, {0,0,0})
+tail_mid_j = gr.joint('tail_mid_j', {-40,0,40}, {0,0,0})
 
 root_transforms:add_child(torso)
 
@@ -114,7 +114,7 @@ torso:scale(0.25,0.4,0.18)
 
 -- shoulder
 shoulder:set_material(white)
-shoulder:scale(0.27,0.14,0.13)
+shoulder:scale(0.27,0.10,0.10)
 shoulder:translate(0.0,0.15,0.0)
 shoulder_j:scale(1/0.25,1/0.4,1/0.18)
 
@@ -168,14 +168,16 @@ tail_mid_j:scale(1/0.285,1/0.27,1/0.063)
 
 tail_left:set_material(orange)
 tail_left:scale(0.114,0.311,0.0378)
-tail_left:translate(0,-0.134,0.0)
+tail_left:translate(0,-0.234,0.0)
+tail_left:rotate('y', -10)
 tail_left:rotate('z', -18)
 tail_left_j:translate(-0.142,-0.08,0.0)
 tail_left_j:scale(1/0.285,1/0.27,1/0.063)
 
 tail_right:set_material(orange)
 tail_right:scale(0.114,0.311,0.0378)
-tail_right:translate(0,-0.134,0.0)
+tail_right:translate(0,-0.234,0.0)
+tail_right:rotate('y', 10)
 tail_right:rotate('z', 18)
 tail_right_j:translate(0.142,-0.08,0.0)
 tail_right_j:scale(1/0.285,1/0.27,1/0.063)
@@ -207,13 +209,13 @@ right_thigh_j:scale(1/0.213,1/0.4,1/0.18)
 
 left_leg:set_material(white)
 left_leg:scale(0.0416,0.0585,0.216)
-left_leg:translate(0,0,-0.108)
+left_leg:translate(0,0,-0.138)
 left_leg_j:translate(0.0,0.0,-0.08)
 left_leg_j:scale(1/0.064,1/0.09,1/0.216)
 
 right_leg:set_material(white)
 right_leg:scale(0.0416,0.0585,0.216)
-right_leg:translate(0,0,-0.108)
+right_leg:translate(0,0,-0.138)
 right_leg_j:translate(0.0,0.0,-0.08)
 right_leg_j:scale(1/0.064,1/0.09,1/0.216)
 
@@ -270,7 +272,7 @@ r_feather_sec1_row1_1:set_material(white)
 r_feather_sec1_row1_1:scale(0.25,0.25,0.25)
 r_feather_sec1_row1_1:scale(0.6,1.7,0.16) --e
 r_feather_sec1_row1_1:rotate('y', -5)
-r_feather_sec1_row1_1:translate(-0.32,-0.17,-0.012) --e
+r_feather_sec1_row1_1:translate(-0.32,-0.18,-0.012) --e
 r_feather_sec1_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 r_feather_sec1_row1_2:set_material(white)
@@ -367,14 +369,14 @@ l_feathel_sec1_row1_0:set_material(white)
 l_feathel_sec1_row1_0:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_0:scale(0.6,1.9,0.16) --e
 l_feathel_sec1_row1_0:rotate('y', -6)
-l_feathel_sec1_row1_0:translate(0.48,-0.19,-0.001) --e
+l_feathel_sec1_row1_0:translate(0.48,-0.194,-0.001) --e
 l_feathel_sec1_row1_0:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_1:set_material(white)
 l_feathel_sec1_row1_1:scale(0.25,0.25,0.25)
 l_feathel_sec1_row1_1:scale(0.6,1.7,0.16) --e
 l_feathel_sec1_row1_1:rotate('y', 6)
-l_feathel_sec1_row1_1:translate(0.32,-0.17,0.003) --e
+l_feathel_sec1_row1_1:translate(0.32,-0.184,0.003) --e
 l_feathel_sec1_row1_1:scale(1/0.421, 1/0.06, 1/0.055)
 
 l_feathel_sec1_row1_2:set_material(white)
@@ -699,11 +701,11 @@ tail_feather_middle:scale(1.5,1.7,0.34)
 
 tail_feather_left:set_material(red)
 tail_feather_left:rotate('z',45)
-tail_feather_left:scale(1.5,2.9,0.34)
+tail_feather_left:scale(1.5,2.67,0.34)
 
 tail_feather_right:set_material(red)
 tail_feather_right:rotate('z',45)
-tail_feather_right:scale(1.5,2.9,0.34)
+tail_feather_right:scale(1.5,2.67,0.34)
 
 -- talons
 l_talon_l = gr.mesh('cube', 'l_talon_l')
