@@ -61,8 +61,8 @@ void JointNode::rotate_z(double diff) {
 
 
 const glm::mat4 JointNode::get_joint_transform() const {
-  glm::mat4 rot_matrix_x = glm::rotate(degreesToRadians(current_x_rot), glm::vec3(1,0,0));
-  glm::mat4 rot_matrix_y = glm::rotate(degreesToRadians(current_y_rot), glm::vec3(0,1,0));
-  glm::mat4 rot_matrix_z = glm::rotate(degreesToRadians(current_z_rot), glm::vec3(0,0,1));
+  glm::mat4 rot_matrix_x = glm::rotate(degreesToRadians((float)current_x_rot), glm::vec3(1,0,0));
+  glm::mat4 rot_matrix_y = glm::rotate(degreesToRadians((float)current_y_rot), glm::vec3(0,1,0));
+  glm::mat4 rot_matrix_z = glm::rotate(degreesToRadians((float)current_z_rot), glm::vec3(0,0,1));
   return rot_matrix_x * rot_matrix_y * rot_matrix_z;
 }

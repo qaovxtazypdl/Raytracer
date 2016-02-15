@@ -7,10 +7,14 @@
 
 #include "SceneNode.hpp"
 #include "JointNode.hpp"
+#include "GeometryNode.hpp"
+#include "StateStack.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
 #include <set>
+#include <string>
+#include <vector>
 #include <map>
 
 struct LightSource {
@@ -54,12 +58,16 @@ protected:
   void renderSceneNode(const SceneNode * root, glm::mat4 accumulatedTrans);
 	void renderArcCircle();
 
-
   // my stuff
   void handleMouseMove(int buttonsDown, double xPos, double yPos);
   void processNodeHierarchy(SceneNode *parent, SceneNode *root);
   void pickJoint(double x, double y);
   void toggleFalseColorTo(bool state);
+
+  std::vector<std::vector<double>> getCurrentJointState();
+  void setCurrentJointState(std::vector<std::vector<double>> newState);
+  void undoJointManipulation();
+  void redoJointManipulation();
 
   int m_currentMode;
   int m_buttonsDown;
@@ -69,6 +77,9 @@ protected:
   JointNode *m_headNode;
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
   std::vector<JointNode *> m_joints;
+  std::string m_undoRedoErrorMessage;
+
+  StateStack<std::vector<std::vector<double>>> m_states;
   // end my stuff
 
 

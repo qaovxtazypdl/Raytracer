@@ -4,8 +4,6 @@ using namespace std;
 
 #include "cs488-framework/GlErrorCheck.hpp"
 #include "cs488-framework/MathUtils.hpp"
-#include "GeometryNode.hpp"
-#include "JointNode.hpp"
 
 #include <imgui/imgui.h>
 
@@ -40,9 +38,9 @@ A3::A3(const std::string & luaSceneFile)
     cull_back(false),
     cull_front(false),
     m_isHeadSelected(false),
-    m_headNode(NULL)
+    m_headNode(NULL),
+    m_undoRedoErrorMessage("")
 {
-
 }
 
 //----------------------------------------------------------------------------------------
@@ -101,6 +99,24 @@ void A3::init()
   // this point.
 }
 
+vector<vector<double>> A3::getCurrentJointState() {
+  vector<vector<double>> result;
+  for (int i = 0; i < m_joints.size(); i++) {
+    JointNode *node = m_joints[i];
+    result.push_back(vector<double>({node->current_x_rot, node->current_y_rot, node->current_z_rot}));
+  }
+  return result;
+}
+
+void A3::setCurrentJointState(vector<vector<double>> newState) {
+  for (int i = 0; i < m_joints.size(); i++) {
+    JointNode *node = m_joints[i];
+    node->current_x_rot = newState[i][0];
+    node->current_y_rot = newState[i][1];
+    node->current_z_rot = newState[i][2];
+  }
+}
+
 void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
   if (parent != NULL) {
     if (root->m_nodeType == NodeType::GeometryNode) {
@@ -145,6 +161,7 @@ void A3::processLuaSceneFile(const std::string & filename) {
   }
 
   processNodeHierarchy(NULL, m_rootNode.get());
+  m_states.initialize(getCurrentJointState());
 }
 
 //----------------------------------------------------------------------------------------
@@ -343,6 +360,26 @@ void A3::appLogic()
   uploadCommonSceneUniforms();
 }
 
+
+void A3::undoJointManipulation() {
+  m_undoRedoErrorMessage = "";
+  if (m_states.undo_state()) {
+    setCurrentJointState(m_states.get_current_state());
+  } else {
+    m_undoRedoErrorMessage = "Unable to undo any further!";
+  }
+}
+
+void A3::redoJointManipulation() {
+  m_undoRedoErrorMessage = "";
+  if (m_states.redo_state()) {
+    setCurrentJointState(m_states.get_current_state());
+  } else {
+    m_undoRedoErrorMessage = "Unable to redo any further!";
+  }
+}
+
+
 //----------------------------------------------------------------------------------------
 /*
  * Called once per frame, after appLogic(), but before the draw() method.
@@ -363,35 +400,62 @@ void A3::guiLogic()
   ImGuiWindowFlags windowFlags(ImGuiWindowFlags_AlwaysAutoResize);
   float opacity(0.5f);
 
+  if (ImGui::BeginMainMenuBar())
+  {
+    if (ImGui::BeginMenu("Application"))
+    {
+      ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Edit"))
+    {
+      if( ImGui::Button( "U -    Undo" ) ) {
+        undoJointManipulation();
+      }
+
+      if( ImGui::Button( "R -    Redo" ) ) {
+        undoJointManipulation();
+      }
+
+      ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Options"))
+    {
+      ImGui::Checkbox("Z -              Use Z-Buffer", &use_z_buffer);
+      ImGui::Checkbox("F -          Cull Front Faces", &cull_front);
+      ImGui::Checkbox("B -           Cull Back Faces", &cull_back);
+      ImGui::Checkbox("C -     Show Trackball Circle", &draw_circle);
+
+      ImGui::PushID('P');
+      ImGui::Text("   P - Position/Orientation Mode");
+      ImGui::SameLine();
+      if( ImGui::RadioButton( "##Col", &m_currentMode, 'P' ) ) {
+        toggleFalseColorTo(false);
+      }
+      ImGui::PopID();
+
+      ImGui::PushID('J');
+      ImGui::Text("   J -               Joints Mode");
+      ImGui::SameLine();
+      if( ImGui::RadioButton( "##Col", &m_currentMode, 'J' ) ) {
+        toggleFalseColorTo(true);
+      }
+      ImGui::PopID();
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+  }
+
   ImGui::Begin("Properties", &showDebugWindow, ImVec2(100,100), opacity,
       windowFlags);
 
     // Add more gui elements here here ...
-    ImGui::Checkbox("Z -          Use Z-Buffer", &use_z_buffer);
-    ImGui::Checkbox("F -      Cull Front Faces", &cull_front);
-    ImGui::Checkbox("B -       Cull Back Faces", &cull_back);
-    ImGui::Checkbox("C - Show Trackball Circle", &draw_circle);
+
 
     // Create Button, and check if it was clicked:
     if( ImGui::Button( "Quit Application" ) ) {
       glfwSetWindowShouldClose(m_window, GL_TRUE);
     }
 
-    ImGui::PushID(1);
-    ImGui::Text("P - Position/Orientation Mode");
-    ImGui::SameLine();
-    if( ImGui::RadioButton( "##Col", &m_currentMode, 'P' ) ) {
-      toggleFalseColorTo(false);
-    }
-    ImGui::PopID();
-
-    ImGui::PushID(2);
-    ImGui::Text("J -               Joints Mode");
-    ImGui::SameLine();
-    if( ImGui::RadioButton( "##Col", &m_currentMode, 'J' ) ) {
-      toggleFalseColorTo(true);
-    }
-    ImGui::PopID();
 
 
     ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
@@ -711,6 +775,12 @@ bool A3::mouseButtonInputEvent (
   if (actions == 0) {
     //release
     m_buttonsDown &= ~(0x1 << button);
+
+    if (m_currentMode == 'J' && (button == 1 || button == 2)) {
+      //push new state onto stack
+      m_states.push_state(getCurrentJointState());
+    }
+
     eventHandled = true;
   }
 
@@ -804,6 +874,27 @@ bool A3::keyInputEvent (
     if ( key == GLFW_KEY_J) {
       m_currentMode = key;
       toggleFalseColorTo(true);
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_U) {
+      undoJointManipulation();
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_R) {
+      redoJointManipulation();
+      eventHandled = true;
+    }
+
+    if (key == GLFW_KEY_I) {
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_O) {
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_N) {
+      eventHandled = true;
+    }
+    if (key == GLFW_KEY_A) {
       eventHandled = true;
     }
     if (key == GLFW_KEY_Q) {

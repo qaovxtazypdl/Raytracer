@@ -20,6 +20,6 @@ public:
 		double min, init, max;
 	};
 
-  float current_x_rot, current_y_rot, current_z_rot;
+  double current_x_rot, current_y_rot, current_z_rot;
 	JointRange m_joint_x, m_joint_y, m_joint_z;
 };
