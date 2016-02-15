@@ -34,8 +34,6 @@ furTailInner = furFeathersRow2
 furTailInner = gr.material({0.7,0.4,0.1}, {1.0, 1.0, 0.0}, 22)
 
 
-
-
 rootnode = gr.node('root')
 rootnode:scale( 0.25, 0.25, 0.25 )
 rootnode:translate(0.0, 0.0, -1.0)
@@ -49,17 +47,17 @@ torso = gr.mesh('sphere', 'torso')
 
 --same problem as wings
 left_thigh = gr.mesh('sphere', 'left_thigh')
-left_thigh_j = gr.joint('left_thigh_j', {-30,-10,20}, {0,0,0})
+left_thigh_j = gr.joint('left_thigh_j', {-30,-30,20}, {0,0,0})
 right_thigh = gr.mesh('sphere', 'right_thigh')
-right_thigh_j = gr.joint('right_thigh_j', {-30,10,20}, {0,0,0})
+right_thigh_j = gr.joint('right_thigh_j', {-30,-30,20}, {0,0,0})
 left_leg = gr.mesh('sphere', 'left_leg')
-left_leg_j = gr.joint('left_leg_j', {-46,-10,30}, {0,0,0})
+left_leg_j = gr.joint('left_leg_j', {-46,-30,30}, {0,0,0})
 right_leg = gr.mesh('sphere', 'right_leg')
-right_leg_j = gr.joint('right_leg_j', {-46,10,30}, {0,0,0})
+right_leg_j = gr.joint('right_leg_j', {-46,-30,30}, {0,0,0})
 left_talons = gr.mesh('cube', 'left_talons')
-left_talons_j = gr.joint('left_talons_j', {-100,-25,10}, {0,0,0})
+left_talons_j = gr.joint('left_talons_j', {-100,-90,10}, {0,0,0})
 right_talons = gr.mesh('cube', 'abdomen')
-right_talons_j = gr.joint('right_talons_j', {-100,0,10}, {0,0,0})
+right_talons_j = gr.joint('right_talons_j', {-100,-90,10}, {0,0,0})
 
 neck = gr.mesh('sphere', 'neck')
 neck_j = gr.joint('neck_j', {0,0,0}, {-45,0,45})
@@ -70,15 +68,15 @@ beak_fixed = gr.mesh('cube', 'beak')
 beak_j = gr.joint('head_j', {-25,0,0}, {0,0,0})
 
 shoulder = gr.mesh('sphere', 'shoulder')
-shoulder_j = gr.joint('shoulder_j', {0,0,0}, {-14,0,14})
+shoulder_j = gr.joint('shoulder_j', {0,0,0}, {-18,0,18})
 left_wing = gr.mesh('sphere', 'left_wing')
-left_wing_j = gr.joint('left_wing_j', {0,0,0}, {-40,0,40})
+left_wing_j = gr.joint('left_wing_j', {0,0,0}, {-40,15,40})
 right_wing = gr.mesh('sphere', 'right_wing')
-right_wing_j = gr.joint('right_wing_j', {0,0,0}, {-40,0,40})
+right_wing_j = gr.joint('right_wing_j', {0,0,0}, {-40,-15,40})
 left_wing_outer = gr.mesh('sphere', 'left_wing_outer')
-left_wing_outer_j = gr.joint('left_wing_outer_j', {0,0,0}, {-30,0,30})
+left_wing_outer_j = gr.joint('left_wing_outer_j', {0,0,0}, {-32,-35,32})
 right_wing_outer = gr.mesh('sphere', 'right_wing_outer')
-right_wing_outer_j = gr.joint('right_wing_outer_j', {0,0,0}, {-30,0,30})
+right_wing_outer_j = gr.joint('right_wing_outer_j', {0,0,0}, {-32,35,32})
 
 abdomen = gr.mesh('sphere', 'abdomen')
 abdomen_j = gr.joint('abdomen_j', {-30,0,30}, {0,0,0})
