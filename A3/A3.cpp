@@ -105,12 +105,14 @@ void A3::processNodeHierarchy(SceneNode *parent, SceneNode *root) {
       GeometryNode * geometryNode = static_cast<GeometryNode *>(root);
       if (parent->m_nodeType == NodeType::JointNode) {
         JointNode * parentJoint = static_cast<JointNode *>(parent);
-        unsigned int nodeId = root->m_nodeId * 500000;
+        unsigned int nodeId = (root->m_nodeId - 1) * 468731;
         vec3 nodeColor = vec3(nodeId / (256*256) % 256, nodeId / (256) % 256, nodeId % 256);
-        m_jointMap[parentJoint] = pair<vec3,bool>({nodeColor,false});
+        m_joints.push_back(parentJoint);
         geometryNode->falseColor = nodeColor;
+        geometryNode->falseColorSel = vec3(255,255,255 - root->m_nodeId);
       } else {
         geometryNode->falseColor = vec3(0.0f,0.0f,0.0f);
+        geometryNode->falseColorSel = vec3(0.0f,0.0f,0.0f);
       }
     }
   }
@@ -415,7 +417,11 @@ static void updateShaderUniforms(
 
     //-- Set false color:
     location = shader.getUniformLocation("falseColor");
-    glUniform4f(location, node.falseColor[0]/255, node.falseColor[1]/255, node.falseColor[2]/255, 1.0);
+    if (!node.isSelected) {
+      glUniform4f(location, node.falseColor[0]/255.0f, node.falseColor[1]/255.0f, node.falseColor[2]/255.0f, 1.0f);
+    } else {
+      glUniform4f(location, node.falseColorSel[0]/255.0f, node.falseColorSel[1]/255.0f, node.falseColorSel[2]/255.0f, 1.0f);
+    }
     CHECK_GL_ERRORS;
 
     //-- Set Material values:
@@ -543,7 +549,23 @@ void A3::renderArcCircle() {
 }
 
 void A3::pickJoint(double x, double y) {
+  float r = 0.0f, g = 0.0f, b = 0.0f;
+  //get the joint node
+  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_RED, GL_FLOAT, &r);
+  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_GREEN, GL_FLOAT, &g);
+  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_BLUE, GL_FLOAT, &b);
 
+  //check against base colors
+  for (auto it = m_joints.begin(); it != m_joints.end(); ++it) {
+    vec3 curColor = static_cast<GeometryNode *>((*it)->children.front())->falseColor;
+    vec3 curColorSel = static_cast<GeometryNode *>((*it)->children.front())->falseColorSel;
+    if ((int)(curColor[0]) == (int)(r*255) && (int)(curColor[1]) == (int)(g*255) && (int)(curColor[2]) == (int)(b*255)) {
+      (*it)->children.front()->isSelected = true;
+    }
+    if ((int)(curColorSel[0]) == (int)(r*255) && (int)(curColorSel[1]) == (int)(g*255) && (int)(curColorSel[2]) == (int)(b*255)) {
+      (*it)->children.front()->isSelected = false;
+    }
+  }
 }
 
 void A3::toggleFalseColorTo(bool state) {

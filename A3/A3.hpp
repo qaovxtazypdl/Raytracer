@@ -67,7 +67,7 @@ protected:
   int m_width, m_height;
 
   bool show_gui, draw_circle, use_z_buffer, cull_back, cull_front;
-  std::map<const JointNode *, std::pair<glm::vec3,bool>> m_jointMap;
+  std::vector<JointNode *> m_joints;
   // end my stuff
 
 

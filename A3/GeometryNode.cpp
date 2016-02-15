@@ -7,7 +7,8 @@ GeometryNode::GeometryNode(
 )
 	: SceneNode(name),
 	  meshId(meshId),
-    falseColor(0.0f,0.0f,0.0f)
+    falseColor(0.0f,0.0f,0.0f),
+    falseColorSel(0.0f,0.0f,0.0f)
 {
 	m_nodeType = NodeType::GeometryNode;
 }
