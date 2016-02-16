@@ -5,9 +5,9 @@ No changes to default. Please note that I did add new files, so premake4 gmake i
 Manual:
 =============
 I assumed that orientation rotation is global on the model.
+I put the GUI elements inside a top-of-screen menu.
 I assumed that we should be in false color mode for the entire duration of when we are in joint select/manipulation mode.
-
-When selecting joints, black means not a valid selection, white means already selected, and any other color should be selectable nodes.
+  When selecting joints, black means not a valid selection, white means already selected, and any other color should be selectable nodes.
 
 I added a new undo/redo stack data structure in StateStack.hpp.
 JointNode now has a z component of rotation, which is only used for the head rotation. This is initialized at runtime.
