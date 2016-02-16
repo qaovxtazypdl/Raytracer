@@ -3,13 +3,6 @@
 -- its a plane
 -- just kidding, it's just a bird
 
-red = gr.material({1.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
-blue = gr.material({0.0, 0.0, 1.0}, {0.1, 0.1, 0.1}, 10)
-green = gr.material({0.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
-white = gr.material({1.0, 1.0, 1.0}, {0.3, 0.3, 0.3}, 20)
-black = gr.material({0.0, 0.0, 0.0}, {0.1, 0.1, 0.1}, 10)
-orange = gr.material({1.0, 0.45, 0.0}, {0.1, 0.1, 0.1}, 10)
-yellow = gr.material({1.0, 1.0, 0.0}, {0.1, 0.1, 0.1}, 10)
 
 furUpperTop = gr.material({0.3,0.3,1.0}, {0.1,0.4,0.9}, 18)
 furLowerTop = gr.material({0.65,0.65,1.0}, {0.1,0.4,0.9}, 18)
@@ -21,8 +14,8 @@ furBeak = gr.material({1.0, 0.45, 0.0}, {1.0, 0.45, 0.12}, 60)
 furThigh = gr.material({0.14, 0.05, 0.04}, {0.1, 0.1, 0.1}, 8)
 furLeg = gr.material({0.64, 0.64, 0.64}, {0.42, 0.21, 0.21}, 5)
 furTalon = gr.material({0.8, 0.33, 0.11}, {1.0, 0.45, 0.12}, 78)
-furEye = gr.material({0.09, 0.19, 0.09}, {0.8, 1.0, 0.8}, 100)
-
+furEye = gr.material({0.09, 0.19, 0.09}, {0.8, 1.0, 0.8}, 30)
+furNeckMarker = gr.material({0.0,0.0,1.0}, {0.0,0.0,1.0}, 10)
 furInnerWing = gr.material({0.09, 0.19, 0.89}, {0.2, 0.6, 0.95}, 30)
 furOuterWing = gr.material({0.65, 0.03, 0.33}, {0.85, 0.75, 0.02}, 40)
 furFeathersRow1 = gr.material({0.0,0.78,0.25}, {1.0, 1.0, 0}, 12)
@@ -806,7 +799,7 @@ right_eye:scale(0.02, 0.04, 0.02)
 right_eye:translate(0.1,0.09,0.077)
 right_eye:scale(1/0.145,1/0.238,1/0.145)
 
-neck_marker:set_material(blue)
+neck_marker:set_material(furNeckMarker)
 neck_marker:scale(0.01, 0.035, 0.01)
 neck_marker:translate(0,0.05,0.09)
 neck_marker:scale(1/0.123,1/0.155,1/0.09)
