@@ -20,7 +20,6 @@ furInnerWing = gr.material({0.09, 0.19, 0.89}, {0.2, 0.6, 0.95}, 30)
 furOuterWing = gr.material({0.65, 0.03, 0.33}, {0.85, 0.75, 0.02}, 40)
 furFeathersRow1 = gr.material({0.0,0.78,0.25}, {1.0, 1.0, 0}, 12)
 furFeathersRow2 = gr.material({0.99,0.8,0.0}, {1.0, 0.12, 0.35}, 12)
-
 furTailOuter = gr.material({0.99,0.0,0.0}, {1.0, 0.57, 0.12}, 32)
 furTailMid = gr.material({0.87,0.0,0.45}, {0.0, 0.12, 1.0}, 22)
 furTailInner = furFeathersRow2
@@ -135,7 +134,7 @@ torso:scale(0.25,0.4,0.18)
 
 -- shoulder
 shoulder:set_material(furUpperTop)
-shoulder:scale(0.27,0.10,0.10)
+shoulder:scale(0.27,0.12,0.12)
 shoulder:translate(0.0,0.15,0.0)
 shoulder_j:scale(1/0.25,1/0.4,1/0.18)
 
@@ -144,14 +143,14 @@ left_wing:scale(0.421,0.07,0.065)
 left_wing:translate(-0.38,0.0,0.0)
 left_wing:rotate('z', -15)
 left_wing_j:translate(-0.25,0,0.0)
-left_wing_j:scale(1/0.27,1/0.14,1/0.13)
+left_wing_j:scale(1/0.27,1/0.14,1/0.14)
 
 right_wing:set_material(furInnerWing)
 right_wing:scale(0.421,0.07,0.065)
 right_wing:translate(0.38,0.0,0.0)
 right_wing:rotate('z', 15)
 right_wing_j:translate(0.25,0,0.0)
-right_wing_j:scale(1/0.27,1/0.14,1/0.13)
+right_wing_j:scale(1/0.27,1/0.14,1/0.14)
 
 left_wing_outer:set_material(furOuterWing)
 left_wing_outer:scale(0.421, 0.06, 0.055)
