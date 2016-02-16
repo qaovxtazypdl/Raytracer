@@ -7,6 +7,8 @@ Manual:
 I assumed that orientation rotation is global on the model.
 I assumed that we should be in false color mode for the entire duration of when we are in joint select/manipulation mode.
 
+When selecting joints, black means not a valid selection, white means already selected, and any other color should be selectable nodes.
+
 I added a new undo/redo stack data structure in StateStack.hpp.
 JointNode now has a z component of rotation, which is only used for the head rotation. This is initialized at runtime.
 JointNode now has state variables to keep track of current rotation, and a setter of sort to apply changes to these variables.
