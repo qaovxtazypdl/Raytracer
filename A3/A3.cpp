@@ -658,11 +658,16 @@ void A3::renderArcCircle() {
 }
 
 void A3::pickJoint(double x, double y) {
+  double xpos, ypos;
+  glfwGetCursorPos( m_window, &xpos, &ypos );
+
   float r = 0.0f, g = 0.0f, b = 0.0f;
-  //get the joint node
-  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_RED, GL_FLOAT, &r);
-  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_GREEN, GL_FLOAT, &g);
-  glReadPixels((int)x, (int)(m_height - y), 1, 1, GL_BLUE, GL_FLOAT, &b);
+  xpos = xpos * double(m_framebufferWidth) / double(m_windowWidth);
+  ypos = (m_windowHeight - ypos) * double(m_framebufferHeight) / double(m_windowHeight);
+
+  glReadPixels(xpos, ypos, 1, 1, GL_RED, GL_FLOAT, &r);
+  glReadPixels(xpos, ypos, 1, 1, GL_GREEN, GL_FLOAT, &g);
+  glReadPixels(xpos, ypos, 1, 1, GL_BLUE, GL_FLOAT, &b);
 
   //check against base colors
   for (auto it = m_joints.begin(); it != m_joints.end(); ++it) {

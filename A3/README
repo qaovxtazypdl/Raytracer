@@ -8,6 +8,7 @@ I assumed that orientation rotation is global on the model.
 I put the GUI elements inside a top-of-screen menu.
 I assumed that we should be in false color mode for the entire duration of when we are in joint select/manipulation mode.
   When selecting joints, black means not a valid selection, white means already selected, and any other color should be selectable nodes.
+  I realized after implementing selection that we are given an example, and I don't want to change my solution, as it kinda works
 
 I added a new undo/redo stack data structure in StateStack.hpp.
 JointNode now has a z component of rotation, which is only used for the head rotation. This is initialized at runtime.
@@ -21,3 +22,5 @@ My hierarchical model of the puppet (its a bird) centers the root at the "torso"
   to bring it into the viewing area. The torso has neck, shoulder and abdomen as its children. The neck as things such as
   head, eyes, beak as it's descendants, the shoulder has the two wings and feathers, and the abdomen has the legs, claws, and tail
   as its descendants. For a more detailed picture of this, please see hierarchy.png in this directory.
+
+Tested on gl07.student.cs
