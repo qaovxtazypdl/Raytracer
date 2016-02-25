@@ -76,8 +76,8 @@ void PickingExample::init()
 
 	for( size_t idx = 0; idx < 100; ++idx ) {
 		glm::mat4 T = glm::translate( glm::mat4(), glm::vec3(
-			(distribution(generator) - 0.5) * 5.0, 
-			(distribution(generator) - 0.5) * 5.0, 
+			(distribution(generator) - 0.5) * 5.0,
+			(distribution(generator) - 0.5) * 5.0,
 			distribution(generator) * -5.0 - 5.0 ) );
 		glm::vec3 col( distribution(generator), distribution(generator), distribution(generator) );
 
@@ -417,6 +417,9 @@ bool PickingExample::mouseButtonInputEvent (
 		// the window in this case.
 		ypos = m_windowHeight - ypos;
 		ypos *= double(m_framebufferHeight) / double(m_windowHeight);
+
+  cout << m_framebufferHeight << " " << m_windowHeight << endl;
+
 
 		GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
 		// A bit ugly -- don't want to swap the just-drawn false colours

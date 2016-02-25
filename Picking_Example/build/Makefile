@@ -65,7 +65,7 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/Main.o \
-	$(OBJDIR)/picking.o \
+	$(OBJDIR)/PickingExample.o \
 
 RESOURCES := \
 
@@ -129,7 +129,7 @@ $(OBJDIR)/Main.o: ../Main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/picking.o: ../picking.cpp
+$(OBJDIR)/PickingExample.o: ../PickingExample.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
