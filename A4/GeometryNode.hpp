@@ -6,7 +6,7 @@
 
 class GeometryNode : public SceneNode {
 public:
-	GeometryNode( const std::string & name, Primitive *prim, 
+	GeometryNode( const std::string & name, Primitive *prim,
 		Material *mat = nullptr );
 
 	void setMaterial( Material *material );

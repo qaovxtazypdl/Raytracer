@@ -1,2 +1,5 @@
 raytrace:
 
+spheres:
+fields: kd ks ke
+methods: checkHit

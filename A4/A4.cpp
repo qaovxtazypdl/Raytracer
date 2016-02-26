@@ -1,4 +1,6 @@
 #include <glm/ext.hpp>
+#include <vector>
+#include <limits>
 
 #include "A4.hpp"
 
@@ -31,10 +33,57 @@ vec4 ray_direction(double nx, double ny, double w, double h, double d, uint x, u
   return normalize(p - vec4(eye, 1.0f));
 }
 
+
+pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir) {
+  double min_t = std::numeric_limits<double>::infinity();
+  GeometryNode * minNode = NULL;
+  IntersectionInfo intersectionInfo;
+
+  for (GeometryNode * node : nodes) {
+    IntersectionInfo intersect = node->m_primitive->checkRayIntersection(ray_origin, ray_dir);
+    if (intersect.didIntersect && intersect.intersect_t < min_t) {
+      //update max
+      min_t = intersect.intersect_t;
+      minNode = node;
+      intersectionInfo = intersect;
+    }
+  }
+
+  return pair<GeometryNode *, IntersectionInfo>(minNode, intersectionInfo);
+}
+
 //origin is point
 //direction is vector
-void trace(const vec4 &origin, const vec4 &direction) {
+vec3 trace(SceneNode *root, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient) {
+  double k_e = 0.15;
 
+  vector<GeometryNode *> nodes;
+  for (SceneNode * scene : root->children) {
+    nodes.push_back(dynamic_cast<GeometryNode *>(scene));
+  }
+
+  pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir);
+
+  if (result.first != NULL) {
+    //HIT!
+    vec3 color = k_e * ambient;
+
+    vec4 point = ray_origin +  result.second.intersect_t * ray_dir;
+    vec4 normal = result.second.normal;
+
+    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
+
+    if (length(mat.m_kd) > 0) {
+      //diffuse
+    }
+
+    if (length(mat.m_ks) > 0) {
+      //specular
+    }
+    return color;
+  } else {
+    return background;
+  }
 }
 
 void A4_Render(
@@ -78,24 +127,20 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = nx/ny * h;
 
+  cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
+      if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
+        cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
+      }
       //for each pixel, find world coordinates
-      //vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
+      vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
+      vec3 pixelColor = trace(root, vec4(eye, 1.0f), ray_dir, vec3(0,150,0), ambient);
 
-
-      //find ray direction and origin
-
-      /*
-			// Red: increasing from top to bottom
-			image(x, y, 0) = (double)y / h;
-			// Green: increasing from left to right
-			image(x, y, 1) = (double)x / w;
-			// Blue: in lower-left and upper-right corners
-			image(x, y, 2) = ((y < h/2 && x < w/2)
-						  || (y >= h/2 && x >= w/2)) ? 1.0 : 0.0;*/
+      for (int i = 0; i < 3; i++) {
+        image(x, y, i) = pixelColor[i];
+      }
 		}
 	}
-
-  cout << to_string(ray_direction(ny, nx, w, h, d, 0, 0, eye, view, up)) << endl;
+  cout << "Progress: 100" << endl;
 }

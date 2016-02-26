@@ -3,6 +3,10 @@
 #include <glm/glm.hpp>
 
 #include "SceneNode.hpp"
+#include "GeometryNode.hpp"
+#include "Primitive.hpp"
+#include "Material.hpp"
+#include "PhongMaterial.hpp"
 #include "Light.hpp"
 #include "Image.hpp"
 
