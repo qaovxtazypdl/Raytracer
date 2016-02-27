@@ -1,5 +1,3 @@
-optimize triagnel routine and fix bug
-mesh/cube collision
 background
 
 advanced:
@@ -10,6 +8,8 @@ scene
 
 
 bugs:
+cube and mesh not working / optimize triangle routines
+
 phong shading coefficients
 falloff of light
 non square screen

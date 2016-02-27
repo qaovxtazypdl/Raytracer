@@ -64,8 +64,8 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
     if (result.first == NULL) {
       //falloff
       double multiplier = dot(normal, normalize(l_dir));
-      if (multiplier > 0)
-        color += multiplier * light->colour;
+      //if (multiplier > 0)
+      color += multiplier * light->colour;
     }
   }
 
@@ -89,19 +89,21 @@ vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const ve
     vec3 color = k_e * ambient;
     vec4 point = ray_origin +  result.second.intersect_t * ray_dir;
     vec4 normal = result.second.normal;
+    /*
 cout << endl;
 cout << result.first->m_name << endl;
 cout << result.second.component << endl;
 cout << result.second.intersect_t << " " + to_string(result.second.normal)<< endl;
 cout << to_string(ray_origin) + " " + to_string(ray_dir) << endl;
 cout << depth << " 1 " << to_string(color) << endl;
+*/
 
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
 
     if (length(mat.m_kd) > 0) {
       //diffuse
       color += mat.m_kd * directLight(nodes, mat.m_shininess, point, normal, lights);
-cout << depth << " 2 " << to_string(color) << endl;
+//cout << depth << " 2 " << to_string(color) << endl;
     }
 
     if (length(mat.m_ks) > 0) {
@@ -109,7 +111,7 @@ cout << depth << " 2 " << to_string(color) << endl;
       vec4 reflDirection = ggReflection(ray_dir, normal);
 
       color += mat.m_ks * trace(nodes, point, reflDirection, background, ambient, lights, depth+1);
-cout << depth << " 3 " << to_string(color) << endl;
+//cout << depth << " 3 " << to_string(color) << endl;
     }
     return color;
   } else {
@@ -169,8 +171,8 @@ void A4_Render(
       if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      if (!(x == 119 && y == 256) && !(x == 129 && y == 266)) continue;
-      cout << x << " " << y << endl;
+      //if (!(x == 119 && y == 256) && !(x == 129 && y == 266)) continue;
+      //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 
@@ -178,7 +180,7 @@ void A4_Render(
       pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {
-        image(x, y, i) = pixelColor[i];
+        image(x, ny - y - 1, i) = pixelColor[i];
       }
 		}
 	}
