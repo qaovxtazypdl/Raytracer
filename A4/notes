@@ -1,9 +1,12 @@
-raytrace:
-
-cube collision
+mesh/cube collision
 phong shading coefficients
 falloff of light
 
+advanced:
+hierachy
+bounding volumes
+extra feature (supersampling?)
+scene
 
 
 
@@ -12,6 +15,17 @@ falloff of light
 
 
 
-hacks:
-"backface light culling"
-color min with vec(1 1 1)
+
+hacks - should fix:
+==================================
+"backface light culling"/shitty epsilon sphere
+color min with vec(1 1 1)/crappy color addition of lighting as well
+
+
+
+
+
+
+
+
+

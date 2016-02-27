@@ -65,8 +65,7 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
       //falloff
       //HACK - this might not work in general case.
       double multiplier = dot(normal, normalize(l_dir));
-      if (multiplier > 0)
-        color += multiplier * light->colour;
+      color += multiplier * light->colour;
     }
   }
 

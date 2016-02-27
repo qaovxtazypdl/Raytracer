@@ -5,7 +5,7 @@
 using namespace glm;
 using namespace std;
 
-const double EPSILON = 1E-10;
+const double EPSILON = -1E-2;
 
 Primitive::~Primitive()
 {
