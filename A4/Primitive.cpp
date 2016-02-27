@@ -72,7 +72,7 @@ IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_o
     vec3 R = a-v1;
     vec3 x = v2-v1;
     vec3 y = v3-v1;
-    vec3 z = a-b;
+    vec3 z = vec3(-ray_dir[0], -ray_dir[1], -ray_dir[2]);
 
     //intersect
     mat3 A = mat3(x,y,z);

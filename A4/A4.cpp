@@ -168,7 +168,7 @@ void A4_Render(
   double d = 100;
   double h = 2*d*tan(fovy*PI/180/2);
   double w = nx/ny * h;
-  int supersampleScale = 3;
+  int supersampleScale = 1;
 
   vector<GeometryNode *> nodes;
   for (SceneNode * scene : root->children) {
