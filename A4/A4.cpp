@@ -76,10 +76,16 @@ vec4 ggReflection(const vec4 &v, const vec4 &n) {
   return v - 2 * n * (dot(v,n));
 }
 
+
+vec3 getBackgroundColor(const vec4 &ray_dir) {
+  vec4 normalized_dir = max(vec4(0,0,0,0), (1.0f/1.7f) * (0.7f + normalize(ray_dir)));
+  return vec3(normalized_dir[1],normalized_dir[0],normalized_dir[2]);
+}
+
 //origin is point
 //direction is vector
-vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
-  if (depth >= 10) return background;
+vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
+  if (depth >= 10) return getBackgroundColor(ray_dir);
 
   double k_e = 0.15;
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
@@ -110,12 +116,12 @@ cout << depth << " 1 " << to_string(color) << endl;
       //specular
       vec4 reflDirection = ggReflection(ray_dir, normal);
 
-      color += mat.m_ks * trace(nodes, point, reflDirection, background, ambient, lights, depth+1);
+      color += mat.m_ks * trace(nodes, point, reflDirection, ambient, lights, depth+1);
 //cout << depth << " 3 " << to_string(color) << endl;
     }
     return color;
   } else {
-    return background;
+    return getBackgroundColor(ray_dir);
   }
 }
 
@@ -168,7 +174,7 @@ void A4_Render(
   cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
-      if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
+      if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
       //if (!(x == 119 && y == 256) && !(x == 129 && y == 266)) continue;
@@ -176,7 +182,7 @@ void A4_Render(
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 
-      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,0.5f,0), ambient, lights, 0);
+      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, ambient, lights, 0);
       pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {
