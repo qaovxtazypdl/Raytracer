@@ -57,10 +57,11 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
   vec3 color;
 
   for (Light * light : lights) {
-    pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, light.position - point, 1.0);
+    vec4 l_dir = vec4(light->position, 1.0f) - point;
+    pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, l_dir, 1.0);
     if (result.first == NULL) {
-      //no intersection => full color
-      color += vec3(0.0f);
+      //falloff
+      color += dot(normal, l_dir) * light->colour;
     }
   }
 
@@ -157,6 +158,7 @@ void A4_Render(
       }
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
+
       vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,150,0), ambient, lights);
 
       for (int i = 0; i < 3; i++) {

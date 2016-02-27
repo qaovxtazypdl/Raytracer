@@ -1,5 +1,5 @@
 raytrace:
 
-spheres:
-fields: kd ks ke
-methods: checkHit
+cube collision
+phong shading coefficients
+falloff of light

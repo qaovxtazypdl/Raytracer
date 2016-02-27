@@ -1,6 +1,9 @@
 #include "Primitive.hpp"
+#include <iostream>
+#include <glm/ext.hpp>
 
 using namespace glm;
+using namespace std;
 
 Primitive::~Primitive()
 {
@@ -24,7 +27,25 @@ NonhierBox::~NonhierBox()
 
 
 IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
-  return IntersectionInfo();
+  //m_pos;
+  //m_radius;
+  vec4 a = ray_origin;
+  vec4 b = ray_dir + ray_origin;
+  vec4 c = vec4(m_pos, 1.0f);
+
+  double roots[2];
+  size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-m_radius*m_radius, roots);
+
+  if (numRoots != 2) {
+    return IntersectionInfo();
+  } else {
+    double t = std::min(roots[0], roots[1]);
+    if (t > max_t || t < 0) {
+      return IntersectionInfo();
+    } else {
+      return IntersectionInfo(t, normalize((ray_origin + (float)t * ray_dir) - c));
+    }
+  }
 }
 
 
