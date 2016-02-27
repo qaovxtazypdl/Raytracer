@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <iostream>
 #include "polyroots.hpp"
 
 class IntersectionInfo {
@@ -13,7 +14,7 @@ public:
     intersect_t(intersect_t), normal(normal), didIntersect(true)
   {}
 
-  IntersectionInfo() : didIntersect(false) {}
+  IntersectionInfo() : didIntersect(false), intersect_t(0) {}
 };
 
 class Primitive {

@@ -3,3 +3,14 @@ raytrace:
 cube collision
 phong shading coefficients
 falloff of light
+
+
+
+
+
+
+
+
+
+hacks:
+"backface light culling"

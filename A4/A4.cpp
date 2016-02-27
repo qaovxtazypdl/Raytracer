@@ -44,6 +44,7 @@ pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nod
     IntersectionInfo intersect = node->m_primitive->checkRayIntersection(ray_origin, ray_dir, max_t);
     if (intersect.didIntersect && intersect.intersect_t < min_t) {
       //update max
+
       min_t = intersect.intersect_t;
       minNode = node;
       intersectionInfo = intersect;
@@ -59,9 +60,13 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
   for (Light * light : lights) {
     vec4 l_dir = vec4(light->position, 1.0f) - point;
     pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, l_dir, 1.0);
+
     if (result.first == NULL) {
       //falloff
-      color += dot(normal, l_dir) * light->colour;
+      //HACK - this might not work in general case.
+      double multiplier = dot(normal, normalize(l_dir));
+      if (multiplier > 0)
+        color += multiplier * light->colour;
     }
   }
 
@@ -76,13 +81,11 @@ vec4 ggReflection(const vec4 &v, const vec4 &n) {
 //direction is vector
 vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient, const std::list<Light *> &lights) {
   double k_e = 0.15;
-
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
     //HIT!
     vec3 color = k_e * ambient;
-
     vec4 point = ray_origin +  result.second.intersect_t * ray_dir;
     vec4 normal = result.second.normal;
 
@@ -153,16 +156,22 @@ void A4_Render(
   cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
+
       if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 
-      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,150,0), ambient, lights);
+      //if ((x == 657 || x == 660) && y == 331 )
+      {
+      //cout << x << " " <<y << endl;
+      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,0.5f,0), ambient, lights);
+      pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {
         image(x, y, i) = pixelColor[i];
+      }
       }
 		}
 	}

@@ -5,6 +5,8 @@
 using namespace glm;
 using namespace std;
 
+const double EPSILON = 1E-10;
+
 Primitive::~Primitive()
 {
 }
@@ -40,7 +42,9 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     return IntersectionInfo();
   } else {
     double t = std::min(roots[0], roots[1]);
-    if (t > max_t || t < 0) {
+    //cout << "TEE    :      " << t << endl;
+
+    if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
       return IntersectionInfo(t, normalize((ray_origin + (float)t * ray_dir) - c));
