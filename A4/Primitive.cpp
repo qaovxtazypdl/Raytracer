@@ -42,8 +42,6 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     return IntersectionInfo();
   } else {
     double t = std::min(roots[0], roots[1]);
-    //cout << "TEE    :      " << t << endl;
-
     if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
