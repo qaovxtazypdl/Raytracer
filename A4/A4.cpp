@@ -163,15 +163,11 @@ void A4_Render(
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 
-      //if ((x == 657 || x == 660) && y == 331 )
-      {
-      //cout << x << " " <<y << endl;
       vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,0.5f,0), ambient, lights);
       pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {
         image(x, y, i) = pixelColor[i];
-      }
       }
 		}
 	}
