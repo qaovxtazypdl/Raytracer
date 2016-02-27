@@ -11,7 +11,7 @@ double PI = 3.1415926535897932384;
 double INF = std::numeric_limits<double>::infinity();
 
 //fovy radians
-vec4 ray_direction(double nx, double ny, double w, double h, double d, uint x, uint y, const vec3 &eye, const vec3 &view, const vec3 &up) {
+vec4 ray_direction(double nx, double ny, double w, double h, double d, float x, float y, const vec3 &eye, const vec3 &view, const vec3 &up) {
   vec4 p(x, y, 0, 1);
 
   //translate_1  -n_x/2, -n_y/2 d
@@ -168,6 +168,7 @@ void A4_Render(
   double d = 100;
   double h = 2*d*tan(fovy*PI/180/2);
   double w = nx/ny * h;
+  int supersampleScale = 3;
 
   vector<GeometryNode *> nodes;
   for (SceneNode * scene : root->children) {
@@ -183,9 +184,15 @@ void A4_Render(
       //if (!(x == 179 && y == ny - 293 - 1)) continue;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
-      vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
+      vec3 pixelColor;
 
-      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, ambient, lights, 0);
+      for (int a = -supersampleScale/2; a <= supersampleScale/2; a++) {
+        for (int b = -supersampleScale/2; b <= supersampleScale/2; b++) {
+          vec4 ray_dir = ray_direction(ny, nx, w, h, d, x + 0.5f + (float)a/(supersampleScale/2+1), y + 0.5f + (float)b/(supersampleScale/2+1), eye, view, up);
+          pixelColor += (1.0f/(supersampleScale * supersampleScale)) * trace(nodes, vec4(eye, 1.0f), ray_dir, ambient, lights, 0);
+        }
+      }
+
       pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {
