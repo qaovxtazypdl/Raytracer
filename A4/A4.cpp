@@ -8,6 +8,7 @@ using namespace std;
 using namespace glm;
 
 double PI = 3.1415926535897932384;
+double INF = std::numeric_limits<double>::infinity();
 
 //fovy radians
 vec4 ray_direction(double nx, double ny, double w, double h, double d, uint x, uint y, const vec3 &eye, const vec3 &view, const vec3 &up) {
@@ -34,13 +35,13 @@ vec4 ray_direction(double nx, double ny, double w, double h, double d, uint x, u
 }
 
 
-pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir) {
-  double min_t = std::numeric_limits<double>::infinity();
+pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, double max_t) {
+  double min_t = INF;
   GeometryNode * minNode = NULL;
   IntersectionInfo intersectionInfo;
 
   for (GeometryNode * node : nodes) {
-    IntersectionInfo intersect = node->m_primitive->checkRayIntersection(ray_origin, ray_dir);
+    IntersectionInfo intersect = node->m_primitive->checkRayIntersection(ray_origin, ray_dir, max_t);
     if (intersect.didIntersect && intersect.intersect_t < min_t) {
       //update max
       min_t = intersect.intersect_t;
@@ -52,17 +53,30 @@ pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nod
   return pair<GeometryNode *, IntersectionInfo>(minNode, intersectionInfo);
 }
 
-//origin is point
-//direction is vector
-vec3 trace(SceneNode *root, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient) {
-  double k_e = 0.15;
+vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
+  vec3 color;
 
-  vector<GeometryNode *> nodes;
-  for (SceneNode * scene : root->children) {
-    nodes.push_back(dynamic_cast<GeometryNode *>(scene));
+  for (Light * light : lights) {
+    pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, light.position - point, 1.0);
+    if (result.first == NULL) {
+      //no intersection => full color
+      color += vec3(0.0f);
+    }
   }
 
-  pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir);
+  return color;
+}
+
+vec4 ggReflection(const vec4 &v, const vec4 &n) {
+  return v - 2 * n * (dot(v,n));
+}
+
+//origin is point
+//direction is vector
+vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient, const std::list<Light *> &lights) {
+  double k_e = 0.15;
+
+  pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
     //HIT!
@@ -75,10 +89,13 @@ vec3 trace(SceneNode *root, const vec4 &ray_origin, const vec4 &ray_dir, const v
 
     if (length(mat.m_kd) > 0) {
       //diffuse
+      color += mat.m_kd * directLight(nodes, mat.m_shininess, point, normal, lights);
     }
 
     if (length(mat.m_ks) > 0) {
       //specular
+      vec4 reflDirection = ggReflection(ray_dir, normal);
+      color += mat.m_ks * trace(nodes, point, reflDirection, background, ambient, lights);
     }
     return color;
   } else {
@@ -127,6 +144,11 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = nx/ny * h;
 
+  vector<GeometryNode *> nodes;
+  for (SceneNode * scene : root->children) {
+    nodes.push_back(dynamic_cast<GeometryNode *>(scene));
+  }
+
   cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
@@ -135,7 +157,7 @@ void A4_Render(
       }
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
-      vec3 pixelColor = trace(root, vec4(eye, 1.0f), ray_dir, vec3(0,150,0), ambient);
+      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,150,0), ambient, lights);
 
       for (int i = 0; i < 3; i++) {
         image(x, y, i) = pixelColor[i];

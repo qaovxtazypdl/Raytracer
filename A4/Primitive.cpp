@@ -23,11 +23,11 @@ NonhierBox::~NonhierBox()
 }
 
 
-IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir) {
+IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
   return IntersectionInfo();
 }
 
 
-IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir) {
+IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
   return IntersectionInfo();
 }
