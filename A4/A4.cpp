@@ -64,7 +64,8 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
     if (result.first == NULL) {
       //falloff
       double multiplier = dot(normal, normalize(l_dir));
-      color += multiplier * light->colour;
+      if (multiplier > 0)
+        color += multiplier * light->colour;
     }
   }
 
