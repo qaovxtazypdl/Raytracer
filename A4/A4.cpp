@@ -160,6 +160,7 @@ void A4_Render(
       if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
+      //if (x != nx/2 || y != ny/2) continue;
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 

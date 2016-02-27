@@ -25,10 +25,11 @@ struct Triangle
 class Mesh : public Primitive {
 public:
   Mesh( const std::string& fname );
-  
+  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t);
+
 private:
 	std::vector<glm::vec3> m_vertices;
 	std::vector<Triangle> m_faces;
 
-    friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
+  friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
 };

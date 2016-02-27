@@ -1,4 +1,5 @@
 mesh/cube collision
+background
 
 advanced:
 hierachy
@@ -10,8 +11,7 @@ scene
 bugs:
 phong shading coefficients
 falloff of light
-
-
+non square screen
 
 
 
@@ -21,6 +21,7 @@ hacks - should fix:
 ==================================
 "backface light culling"/shitty epsilon sphere
 color min with vec(1 1 1)/crappy color addition of lighting as well
+assets directory hardcodr
 
 
 
