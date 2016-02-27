@@ -63,7 +63,6 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
 
     if (result.first == NULL) {
       //falloff
-      //HACK - this might not work in general case.
       double multiplier = dot(normal, normalize(l_dir));
       color += multiplier * light->colour;
     }
@@ -78,7 +77,9 @@ vec4 ggReflection(const vec4 &v, const vec4 &n) {
 
 //origin is point
 //direction is vector
-vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient, const std::list<Light *> &lights) {
+vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &background, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
+  if (depth >= 10) return background;
+
   double k_e = 0.15;
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
@@ -98,7 +99,8 @@ vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const ve
     if (length(mat.m_ks) > 0) {
       //specular
       vec4 reflDirection = ggReflection(ray_dir, normal);
-      color += mat.m_ks * trace(nodes, point, reflDirection, background, ambient, lights);
+
+      color += mat.m_ks * trace(nodes, point, reflDirection, background, ambient, lights, depth+1);
     }
     return color;
   } else {
@@ -155,14 +157,13 @@ void A4_Render(
   cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
-
       if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
 
-      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,0.5f,0), ambient, lights);
+      vec3 pixelColor = trace(nodes, vec4(eye, 1.0f), ray_dir, vec3(0,0.5f,0), ambient, lights, 0);
       pixelColor = min(pixelColor, vec3(1.0f, 1.0f, 1.0f));
 
       for (int i = 0; i < 3; i++) {

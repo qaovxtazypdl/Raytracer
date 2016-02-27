@@ -1,6 +1,4 @@
 mesh/cube collision
-phong shading coefficients
-falloff of light
 
 advanced:
 hierachy
@@ -9,6 +7,9 @@ extra feature (supersampling?)
 scene
 
 
+bugs:
+phong shading coefficients
+falloff of light
 
 
 
