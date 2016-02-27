@@ -73,9 +73,6 @@ protected:
   std::vector<Triangle> m_faces;
 };
 
-using namespace std;
-using namespace glm;
-
 class NonhierBox : public TrianglesPrimitive {
 public:
   NonhierBox(const glm::vec3& pos, double size)
@@ -93,43 +90,21 @@ public:
 //front
       m_faces.push_back(Triangle(0,2,4));
       m_faces.push_back(Triangle(6,4,2));
-      std::cout << "front " << to_string(normalize(vec4(cross(m_vertices[4]-m_vertices[0], m_vertices[2]-m_vertices[0]), 0.0f))) << std::endl;
-      std::cout << "front " << to_string(normalize(vec4(cross(m_vertices[2]-m_vertices[6], m_vertices[4]-m_vertices[6]), 0.0f))) << std::endl;
-
 //back
       m_faces.push_back(Triangle(5,7,1));
       m_faces.push_back(Triangle(3,1,7));
-      std::cout << "back " << to_string(normalize(vec4(cross(m_vertices[1]-m_vertices[5], m_vertices[7]-m_vertices[5]), 0.0f))) << std::endl;
-      std::cout << "back " << to_string(normalize(vec4(cross(m_vertices[7]-m_vertices[3], m_vertices[1]-m_vertices[3]), 0.0f))) << std::endl;
-
-
 //top
       m_faces.push_back(Triangle(2,3,6));
       m_faces.push_back(Triangle(7,6,3));
-      std::cout << "top " << to_string(normalize(vec4(cross(m_vertices[3]-m_vertices[2], m_vertices[6]-m_vertices[2]), 0.0f))) << std::endl;
-      std::cout << "top " << to_string(normalize(vec4(cross(m_vertices[6]-m_vertices[7], m_vertices[3]-m_vertices[7]), 0.0f))) << std::endl;
-
 //bottom
       m_faces.push_back(Triangle(0,4,1));
       m_faces.push_back(Triangle(5,1,4));
-      std::cout << "bottom " << to_string(normalize(vec4(cross(m_vertices[4]-m_vertices[0], m_vertices[1]-m_vertices[0]), 0.0f))) << std::endl;
-      std::cout << "bottom " << to_string(normalize(vec4(cross(m_vertices[1]-m_vertices[5], m_vertices[4]-m_vertices[5]), 0.0f))) << std::endl;
-
 //left
       m_faces.push_back(Triangle(0,1,2));
       m_faces.push_back(Triangle(3,2,1));
-      std::cout << "left " << to_string(normalize(vec4(cross(m_vertices[1]-m_vertices[0], m_vertices[2]-m_vertices[0]), 0.0f))) << std::endl;
-      std::cout << "left " << to_string(normalize(vec4(cross(m_vertices[2]-m_vertices[3], m_vertices[1]-m_vertices[3]), 0.0f))) << std::endl;
-
 //right
       m_faces.push_back(Triangle(4,6,5));
       m_faces.push_back(Triangle(7,5,6));
-      std::cout << "right " << to_string(normalize(vec4(cross(m_vertices[6]-m_vertices[4], m_vertices[5]-m_vertices[4]), 0.0f))) << std::endl;
-      std::cout << "right " << to_string(normalize(vec4(cross(m_vertices[5]-m_vertices[7], m_vertices[6]-m_vertices[7]), 0.0f))) << std::endl;
-
-      cout << to_string(m_vertices[6]-m_vertices[4]) << endl;
-      cout << to_string(m_vertices[5]-m_vertices[4]) << endl;
-      cout << to_string(cross(m_vertices[5]-m_vertices[7], m_vertices[6]-m_vertices[7])) << endl;
   }
 
   virtual ~NonhierBox();
