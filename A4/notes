@@ -1,3 +1,4 @@
+optimize triagnel routine and fix bug
 mesh/cube collision
 background
 
@@ -14,12 +15,15 @@ falloff of light
 non square screen
 
 
+test case:
+light source behind triangle
+
 
 
 
 hacks - should fix:
 ==================================
-"backface light culling"/shitty epsilon sphere
+"backface light culling"/shitty epsilon sphere/discard roots in a better way
 color min with vec(1 1 1)/crappy color addition of lighting as well
 assets directory hardcodr
 
