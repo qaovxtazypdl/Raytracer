@@ -1,5 +1,3 @@
-background
-
 advanced:
 hierachy
 bounding volumes
@@ -9,9 +7,6 @@ scene
 
 bugs:
 cube and mesh not working / optimize triangle routines
-
-phong shading coefficients
-falloff of light
 non square screen
 
 
@@ -24,8 +19,7 @@ diffuse on back face
 hacks - should fix:
 ==================================
 "backface light culling"/shitty epsilon sphere/discard roots in a better way
-color min with vec(1 1 1)/crappy color addition of lighting as well
-assets directory hardcodr
+assets directory hardcoded
 
 
 

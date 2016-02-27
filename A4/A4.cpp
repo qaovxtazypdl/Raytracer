@@ -54,7 +54,11 @@ pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nod
   return pair<GeometryNode *, IntersectionInfo>(minNode, intersectionInfo);
 }
 
-vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
+vec4 ggReflection(const vec4 &v, const vec4 &n) {
+  return v - 2 * n * (dot(v,n));
+}
+
+vec3 directLight(const vector<GeometryNode *> &nodes, const PhongMaterial &mat, const vec4 &v_eye, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
   vec3 color;
 
   for (Light * light : lights) {
@@ -62,24 +66,27 @@ vec3 directLight(const vector<GeometryNode *> &nodes, double phongExponent, cons
     pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, l_dir, 1.0);
 
     if (result.first == NULL) {
-      //falloff
-      double multiplier = dot(normal, normalize(l_dir));
-      //if (multiplier > 0)
-      color += multiplier * light->colour;
+      double d = length(l_dir);
+      double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
+
+      vec4 reflDirection = ggReflection(l_dir, normal);
+
+      double l_dot_n = dot(normal, normalize(l_dir));
+      double r_dot_v = dot(v_eye, normalize(reflDirection));
+
+      if (l_dot_n > 0)
+      color += attenuation * mat.m_kd * l_dot_n * light->colour;
+      if (r_dot_v > 0)
+      color += attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * light->colour;
     }
   }
-
   return color;
-}
-
-vec4 ggReflection(const vec4 &v, const vec4 &n) {
-  return v - 2 * n * (dot(v,n));
 }
 
 
 vec3 getBackgroundColor(const vec4 &ray_dir) {
   vec4 normalized_dir = max(vec4(0,0,0,0), (1.0f/1.7f) * (0.7f + normalize(ray_dir)));
-  return vec3(normalized_dir[1],normalized_dir[0],normalized_dir[2]);
+  return vec3(normalized_dir[1]/2,normalized_dir[0]/2,normalized_dir[2]/2);
 }
 
 //origin is point
@@ -87,15 +94,16 @@ vec3 getBackgroundColor(const vec4 &ray_dir) {
 vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
-  double k_e = 0.15;
+  double k_a = 0.25;
+  vec3 k_emit = vec3(0.04,0.04,0.04);
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
-    //HIT!
-    vec3 color = k_e * ambient;
-    vec4 point = ray_origin +  result.second.intersect_t * ray_dir;
+    vec3 color = k_emit + k_a * ambient;
+    vec4 point = ray_origin + result.second.intersect_t * ray_dir;
     vec4 normal = result.second.normal;
-    /*
+
+/*
 cout << endl;
 cout << result.first->m_name << endl;
 cout << result.second.component << endl;
@@ -105,19 +113,14 @@ cout << depth << " 1 " << to_string(color) << endl;
 */
 
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
+    vec3 k_s = mat.m_ks;
+    vec3 k_d = mat.m_kd;
 
-    if (length(mat.m_kd) > 0) {
-      //diffuse
-      color += mat.m_kd * directLight(nodes, mat.m_shininess, point, normal, lights);
-//cout << depth << " 2 " << to_string(color) << endl;
-    }
+    color += k_d * directLight(nodes, mat, ray_dir, point, normal, lights);
 
-    if (length(mat.m_ks) > 0) {
-      //specular
+    if (length(k_s) > 0) {
       vec4 reflDirection = ggReflection(ray_dir, normal);
-
-      color += mat.m_ks * trace(nodes, point, reflDirection, ambient, lights, depth+1);
-//cout << depth << " 3 " << to_string(color) << endl;
+      color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
@@ -177,7 +180,7 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 119 && y == 256) && !(x == 129 && y == 266)) continue;
+      //if (!(x == 179 && y == ny - 293 - 1)) continue;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
       vec4 ray_dir = ray_direction(ny, nx, w, h, d, x, y, eye, view, up);
