@@ -190,7 +190,6 @@ void A4_Render(
       //if (!(x == 106 && y == ny - 141 - 1) && !(x == 121 && y == ny - 141 - 1)) continue;
       //cout << endl;
       //cout << x << " " << y << endl;
-      //for each pixel, find world coordinates
       vec3 pixelColor;
 
       for (int a = -supersampleScale/2; a <= supersampleScale/2; a++) {
