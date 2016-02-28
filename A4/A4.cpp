@@ -109,10 +109,6 @@ vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_orig
     vec4 point = result.second.point;
     vec4 normal = result.second.normal;
 
-//cout << depth<< endl;
-//cout << result.first->m_name << endl;
-//cout << result.second.component << endl;
-
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
     vec3 k_s = mat.m_ks;
     vec3 k_d = mat.m_kd;

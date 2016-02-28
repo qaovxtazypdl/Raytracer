@@ -78,8 +78,8 @@ IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_o
     mat3 A = mat3(x,y,z);
 
     double D = determinant(A);
-    if (abs(D) < EPSILON) {
-      return IntersectionInfo();
+    if (abs(D) < 1E-6) {
+      continue;
     }
 
     A[0] = R;
@@ -109,12 +109,8 @@ IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_o
     }
   }
 
-  /*if (max_t > 2) {
-    cout << min_t << endl;
-    cout << ray_origin + min_t*ray_dir << endl;
-  }*/
-
   if (foundOne) {
+    if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
     return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal, matched_comp);
   } else {
     return IntersectionInfo();
