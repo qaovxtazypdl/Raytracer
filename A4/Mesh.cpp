@@ -65,6 +65,10 @@ std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
 
 
 IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+  if (MACRO_RENDER_BOUNDING_BOX) {
+    return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
+  }
+
   if (!boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t).didIntersect) {
     return IntersectionInfo();
   }
@@ -74,7 +78,7 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
   bool foundOne = false;
   vec4 intersect_normal;
 
-  int i = 0, matched_comp = -1;
+  int i = 0;
   //return maximum intersection z
   for (Triangle tri : m_faces) {
     i++;
@@ -119,14 +123,13 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
         foundOne = true;
         min_t = t;
         intersect_normal = normalize(vec4(cross(v2-v1, v3-v1), 0.0f));
-        matched_comp = i;
       }
     }
   }
 
   if (foundOne) {
     if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
-    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal, matched_comp);
+    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal);
   } else {
     return IntersectionInfo();
   }

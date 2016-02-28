@@ -26,13 +26,12 @@ public:
   double intersect_t;
   glm::vec4 normal;
   glm::vec4 point;
-  int component;
 
-  IntersectionInfo(double intersect_t, const glm::vec4 &point, const glm::vec4 &normal, int component) :
-    intersect_t(intersect_t), normal(normal), didIntersect(true), component(component), point(point)
+  IntersectionInfo(double intersect_t, const glm::vec4 &point, const glm::vec4 &normal) :
+    intersect_t(intersect_t), normal(normal), didIntersect(true), point(point)
   {}
 
-  IntersectionInfo() : didIntersect(false), intersect_t(0), component(-1) {}
+  IntersectionInfo() : didIntersect(false), intersect_t(0) {}
 };
 
 class Primitive {

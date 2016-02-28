@@ -47,7 +47,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
-      return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + (float)t * ray_dir) - c), 1);
+      return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + (float)t * ray_dir) - c));
     }
   }
 }
@@ -64,9 +64,17 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, c
   double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
   double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
 
-  if (tmax < 0 || tmin > tmax || tmin < EPSILON) {
+  if (tmax < -EPSILON || tmin > tmax || (tmin < EPSILON && tmax < EPSILON)) {
     return IntersectionInfo();
   } else {
+    if (tmin < EPSILON && tmax > EPSILON) {
+      tmin = tmax;
+    }
+
+    if (tmin > max_t) {
+      return IntersectionInfo();
+    }
+
     vec4 normal;
     if (tmin == tx_first) normal = vec4(-1,0,0,0);
     else if (tmin == tx_second) normal = vec4(1,0,0,0);
@@ -75,7 +83,7 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, c
     else if (tmin == tz_first) normal = vec4(0,0,-1,0);
     else if (tmin == tz_second) normal = vec4(0,0,1,0);
 
-    return IntersectionInfo(tmin, tmin*ray_dir + ray_origin, normal, 0);
+    return IntersectionInfo(tmin, tmin*ray_dir + ray_origin, normal);
   }
 }
 
