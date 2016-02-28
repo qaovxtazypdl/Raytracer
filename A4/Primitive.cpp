@@ -47,7 +47,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
-      return IntersectionInfo(t, normalize((ray_origin + (float)t * ray_dir) - c), 1);
+      return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + (float)t * ray_dir) - c), 1);
     }
   }
 }
@@ -115,7 +115,7 @@ IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_o
   }*/
 
   if (foundOne) {
-    return IntersectionInfo(min_t, intersect_normal, matched_comp);
+    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal, matched_comp);
   } else {
     return IntersectionInfo();
   }

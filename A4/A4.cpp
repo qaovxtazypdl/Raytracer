@@ -1,6 +1,8 @@
-#include <glm/ext.hpp>
 #include <vector>
 #include <limits>
+#include <glm/gtx/transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include "A4.hpp"
 
@@ -35,19 +37,24 @@ vec4 ray_direction(double nx, double ny, double w, double h, double d, float x, 
 }
 
 
-pair<GeometryNode *, IntersectionInfo> testHit(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, double max_t) {
+pair<GeometryNode *, IntersectionInfo> testHit(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, double max_t) {
   double min_t = INF;
   GeometryNode * minNode = NULL;
   IntersectionInfo intersectionInfo;
 
-  for (GeometryNode * node : nodes) {
-    IntersectionInfo intersect = node->m_primitive->checkRayIntersection(ray_origin, ray_dir, max_t);
+  for (pair<GeometryNode *, mat4> node : nodes) {
+    mat4 T = node.second;
+    mat4 T_inv = inverse(T);
+
+    IntersectionInfo intersect = node.first->m_primitive->checkRayIntersection(/*T_inv */ ray_origin, /*T_inv */ ray_dir, max_t);
     if (intersect.didIntersect && intersect.intersect_t < min_t) {
       //update max
 
       min_t = intersect.intersect_t;
-      minNode = node;
+      minNode = node.first;
       intersectionInfo = intersect;
+      //intersectionInfo.normal = T * intersectionInfo.normal;
+      //intersectionInfo.point = T * intersectionInfo.point;
     }
   }
 
@@ -58,7 +65,7 @@ vec4 ggReflection(const vec4 &v, const vec4 &n) {
   return v - 2 * n * (dot(v,n));
 }
 
-vec3 directLight(const vector<GeometryNode *> &nodes, const PhongMaterial &mat, const vec4 &v_eye, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
+vec3 directLight(const vector<pair<GeometryNode *, mat4>> &nodes, const PhongMaterial &mat, const vec4 &v_eye, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
   vec3 color;
 
   for (Light * light : lights) {
@@ -91,7 +98,7 @@ vec3 getBackgroundColor(const vec4 &ray_dir) {
 
 //origin is point
 //direction is vector
-vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
+vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
   double k_a = 0.25;
@@ -99,7 +106,7 @@ vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const ve
 
   if (result.first != NULL) {
     vec3 color = k_a * ambient;
-    vec4 point = ray_origin + result.second.intersect_t * ray_dir;
+    vec4 point = result.second.point;
     vec4 normal = result.second.normal;
 
 //cout << depth<< endl;
@@ -119,6 +126,22 @@ vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const ve
     return color;
   } else {
     return getBackgroundColor(ray_dir);
+  }
+}
+
+
+void buildTreeCache(const SceneNode *root, mat4 accumulatedTrans, vector<pair<GeometryNode *, mat4>> &result) {
+  accumulatedTrans = accumulatedTrans * root->get_transform();
+  if (root->m_nodeType == NodeType::GeometryNode) {
+    GeometryNode * geometryNode = const_cast<GeometryNode *>(static_cast<const GeometryNode *>(root));
+    result.push_back(pair<GeometryNode *, mat4>(geometryNode, accumulatedTrans));
+  } else if (root->m_nodeType == NodeType::JointNode) {
+    const JointNode * jointNode = static_cast<const JointNode *>(root);
+    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
+  }
+
+  for (SceneNode * node : root->children) {
+    buildTreeCache(node, accumulatedTrans, result);
   }
 }
 
@@ -164,10 +187,8 @@ void A4_Render(
   double w = nx/ny * h;
   int supersampleScale = 1;
 
-  vector<GeometryNode *> nodes;
-  for (SceneNode * scene : root->children) {
-    nodes.push_back(dynamic_cast<GeometryNode *>(scene));
-  }
+  vector<pair<GeometryNode *, mat4>> nodes;
+  buildTreeCache(root, mat4(1.0f), nodes); //warning: mutable state function
 
   cout << "Progress: 0" << endl;
 	for (uint y = 0; y < ny; ++y) {

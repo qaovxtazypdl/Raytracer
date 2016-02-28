@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "SceneNode.hpp"
+#include "JointNode.hpp"
 #include "GeometryNode.hpp"
 #include "Primitive.hpp"
 #include "Material.hpp"
