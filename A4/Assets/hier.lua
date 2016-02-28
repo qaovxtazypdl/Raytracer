@@ -29,7 +29,7 @@ p2:translate(1.6, 0, -0.4)
 s = gr.sphere('s')
 arc:add_child(s)
 s:set_material(gold)
---s:scale(4, 0.6, 0.6)
+s:scale(4, 0.6, 0.6)
 s:translate(0, 4, 0)
 
 -- the floor

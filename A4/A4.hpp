@@ -1,6 +1,11 @@
 #pragma once
 
+#include <vector>
+#include <limits>
+#include <iostream>
+#include <glm/gtx/transform.hpp>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include "SceneNode.hpp"
 #include "JointNode.hpp"
@@ -10,6 +15,18 @@
 #include "PhongMaterial.hpp"
 #include "Light.hpp"
 #include "Image.hpp"
+
+struct HierarchicalNodeInfo {
+  GeometryNode *geoNode;
+  glm::mat4 mat;
+  glm::mat4 inv;
+  glm::mat3 invTranspose;
+
+  HierarchicalNodeInfo(GeometryNode *geoNode, glm::mat4 mat) : geoNode(geoNode), mat(mat) {
+    inv = glm::inverse(mat);
+    invTranspose = glm::transpose(glm::inverse(glm::mat3(mat)));
+  }
+};
 
 void A4_Render(
 		// What to render

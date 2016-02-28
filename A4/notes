@@ -3,7 +3,6 @@ scene - make scene - easy
 
 
 bugs:
-shading on scaled spheres (so specific)
 non square screen
 mesh/sphere stability
 phong implementation/multiplying k_d in multiple times

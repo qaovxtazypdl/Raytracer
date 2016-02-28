@@ -1,9 +1,3 @@
-#include <vector>
-#include <limits>
-#include <glm/gtx/transform.hpp>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-
 #include "A4.hpp"
 
 using namespace std;
@@ -37,23 +31,24 @@ vec4 ray_direction(double nx, double ny, double w, double h, double d, float x, 
 }
 
 
-pair<GeometryNode *, IntersectionInfo> testHit(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, double max_t) {
+pair<GeometryNode *, IntersectionInfo> testHit(const vector<HierarchicalNodeInfo> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, double max_t) {
   double min_t = INF;
   GeometryNode * minNode = NULL;
   IntersectionInfo intersectionInfo;
 
-  for (pair<GeometryNode *, mat4> node : nodes) {
-    mat4 T = node.second;
-    mat4 T_inv = inverse(T);
+  for (HierarchicalNodeInfo node : nodes) {
+    mat4 T = node.mat;
+    mat4 T_inv = node.inv;
+    mat3 T_invtrans = node.invTranspose;
 
-    IntersectionInfo intersect = node.first->m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, max_t);
+    IntersectionInfo intersect = node.geoNode->m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, max_t);
     if (intersect.didIntersect && intersect.intersect_t < min_t) {
       //update max
 
       min_t = intersect.intersect_t;
-      minNode = node.first;
+      minNode = node.geoNode;
       intersectionInfo = intersect;
-      intersectionInfo.normal = normalize(T * intersectionInfo.normal);
+      intersectionInfo.normal = normalize(vec4(T_invtrans * vec3(intersectionInfo.normal), 0.0f));
       intersectionInfo.point = T * intersectionInfo.point;
     }
   }
@@ -65,7 +60,7 @@ vec4 ggReflection(const vec4 &v, const vec4 &n) {
   return v - 2 * n * (dot(v,n));
 }
 
-vec3 directLight(const vector<pair<GeometryNode *, mat4>> &nodes, const PhongMaterial &mat, const vec4 &v_eye, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
+vec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial &mat, const vec4 &v_eye, const vec4 &point, const vec4 &normal, const std::list<Light *> &lights) {
   vec3 color;
 
   for (Light * light : lights) {
@@ -80,13 +75,7 @@ vec3 directLight(const vector<pair<GeometryNode *, mat4>> &nodes, const PhongMat
 
       double l_dot_n = dot(normal, normalize(l_dir));
       double r_dot_v = dot(v_eye, normalize(reflDirection));
-/*
-      cout << normal << endl;
-      cout << normalize(l_dir) << endl;
-cout << endl;
-      cout << v_eye << endl;
-      cout << normalize(reflDirection) << endl;
-*/
+
       if (l_dot_n > 0)
         color += attenuation * mat.m_kd * l_dot_n * light->colour;
       if (r_dot_v > 0)
@@ -104,7 +93,7 @@ vec3 getBackgroundColor(const vec4 &ray_dir) {
 
 //origin is point
 //direction is vector
-vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
+vec3 trace(const vector<HierarchicalNodeInfo> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
   double k_a = 0.25;
@@ -132,11 +121,11 @@ vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_orig
 }
 
 
-void buildTreeCache(const SceneNode *root, mat4 accumulatedTrans, vector<pair<GeometryNode *, mat4>> &result) {
+void buildTreeCache(const SceneNode *root, mat4 accumulatedTrans, vector<HierarchicalNodeInfo> &result) {
   accumulatedTrans = accumulatedTrans * root->get_transform();
   if (root->m_nodeType == NodeType::GeometryNode) {
     GeometryNode * geometryNode = const_cast<GeometryNode *>(static_cast<const GeometryNode *>(root));
-    result.push_back(pair<GeometryNode *, mat4>(geometryNode, accumulatedTrans));
+    result.push_back(HierarchicalNodeInfo(geometryNode, accumulatedTrans));
   } else if (root->m_nodeType == NodeType::JointNode) {
     const JointNode * jointNode = static_cast<const JointNode *>(root);
     accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
@@ -189,7 +178,7 @@ void A4_Render(
   double w = nx/ny * h;
   int supersampleScale = 1;
 
-  vector<pair<GeometryNode *, mat4>> nodes;
+  vector<HierarchicalNodeInfo> nodes;
   buildTreeCache(root, mat4(1.0f), nodes); //warning: mutable state function
 
   cout << "Progress: 0" << endl;
@@ -198,7 +187,7 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 76 && y == ny - 76 - 1)) continue;
+      //if (!(x == 106 && y == ny - 141 - 1) && !(x == 121 && y == ny - 141 - 1)) continue;
       //cout << endl;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
