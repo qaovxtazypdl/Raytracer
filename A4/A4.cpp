@@ -80,7 +80,13 @@ vec3 directLight(const vector<pair<GeometryNode *, mat4>> &nodes, const PhongMat
 
       double l_dot_n = dot(normal, normalize(l_dir));
       double r_dot_v = dot(v_eye, normalize(reflDirection));
-
+/*
+      cout << normal << endl;
+      cout << normalize(l_dir) << endl;
+cout << endl;
+      cout << v_eye << endl;
+      cout << normalize(reflDirection) << endl;
+*/
       if (l_dot_n > 0)
         color += attenuation * mat.m_kd * l_dot_n * light->colour;
       if (r_dot_v > 0)
@@ -192,7 +198,7 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 48 && y == ny - 88 - 1)) continue;
+      //if (!(x == 76 && y == ny - 76 - 1)) continue;
       //cout << endl;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates

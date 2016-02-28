@@ -5,7 +5,7 @@
 using namespace glm;
 using namespace std;
 
-const double EPSILON = 1E-2;
+const double EPSILON = 1E-4;
 
 Primitive::~Primitive()
 {
@@ -44,7 +44,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     double t = std::min(roots[0], roots[1]);
     double t_2 = std::max(roots[0], roots[1]);
 
-    if (t > max_t || t < 0) {
+    if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
       return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + (float)t * ray_dir) - c), 1);
@@ -54,7 +54,6 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
 
 
 IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
-  const double EPSILON = 1E-3;
   double min_t = std::numeric_limits<double>::infinity();
   bool foundOne = false;
   vec4 intersect_normal;
