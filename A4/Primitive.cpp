@@ -44,6 +44,10 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     double t = std::min(roots[0], roots[1]);
     double t_2 = std::max(roots[0], roots[1]);
 
+    if (length(ray_origin - c) < m_radius - 1) {
+      t = t_2;
+    }
+
     if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {

@@ -1,9 +1,8 @@
 scene - make scene - easy                                       3h
 
 bugs
-shadow gets culled - related to high epsilon / mesh/sphere stability                                           4h
+shadow gets culled early- related to high epsilon / mesh/sphere stability                                           4h
 phong implementation/multiplying k_d in multiple times          4h
-shadow gets culled if inside bounding box
 
 
 
@@ -15,6 +14,9 @@ shadow gets culled if inside bounding box
 
 
 
+
+???????????
+refraction - ray might originate from inside sphere/cube
 
 
 
