@@ -192,7 +192,7 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 120 && y == ny - 220 - 1) && !(x == 121 && y == ny - 220 - 1)) continue;
+      //if (!(x == 48 && y == ny - 88 - 1)) continue;
       //cout << endl;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
