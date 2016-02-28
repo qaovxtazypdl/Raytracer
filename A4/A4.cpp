@@ -75,9 +75,9 @@ vec3 directLight(const vector<GeometryNode *> &nodes, const PhongMaterial &mat, 
       double r_dot_v = dot(v_eye, normalize(reflDirection));
 
       if (l_dot_n > 0)
-      color += attenuation * mat.m_kd * l_dot_n * light->colour;
+        color += attenuation * mat.m_kd * l_dot_n * light->colour;
       if (r_dot_v > 0)
-      color += attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * light->colour;
+        color += attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * light->colour;
     }
   }
   return color;
@@ -95,22 +95,16 @@ vec3 trace(const vector<GeometryNode *> &nodes, const vec4 &ray_origin, const ve
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
   double k_a = 0.25;
-  vec3 k_emit = vec3(0.04,0.04,0.04);
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
-    vec3 color = k_emit + k_a * ambient;
+    vec3 color = k_a * ambient;
     vec4 point = ray_origin + result.second.intersect_t * ray_dir;
     vec4 normal = result.second.normal;
 
-/*
-cout << endl;
-cout << result.first->m_name << endl;
-cout << result.second.component << endl;
-cout << result.second.intersect_t << " " + to_string(result.second.normal)<< endl;
-cout << to_string(ray_origin) + " " + to_string(ray_dir) << endl;
-cout << depth << " 1 " << to_string(color) << endl;
-*/
+//cout << depth<< endl;
+//cout << result.first->m_name << endl;
+//cout << result.second.component << endl;
 
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
     vec3 k_s = mat.m_ks;
@@ -181,7 +175,8 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 179 && y == ny - 293 - 1)) continue;
+      //if (!(x == 120 && y == ny - 220 - 1) && !(x == 121 && y == ny - 220 - 1)) continue;
+      //cout << endl;
       //cout << x << " " << y << endl;
       //for each pixel, find world coordinates
       vec3 pixelColor;

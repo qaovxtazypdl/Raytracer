@@ -1,30 +1,13 @@
 advanced:
+=============
 hierachy
-bounding volumes
-scene
+bounding volumes - BSP or whatever
+scene - make scene - easy
 
 
 bugs:
-cube and mesh not working / optimize triangle routines
 non square screen
-ambient phong/how to use coeffs
-
-test case:
-light source behind triangle
-diffuse on back face
-
-
-
-hacks - should fix:
-==================================
-multiplying k_d in multiple times
-"backface light culling"/shitty epsilon sphere/discard roots in a better way
-
-
-
-
-
-
-
-
+back face of mesh - worry?
+mesh/sphere stability
+phong implementation/multiplying k_d in multiple times
 

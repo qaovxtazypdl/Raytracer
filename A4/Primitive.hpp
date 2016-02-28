@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "polyroots.hpp"
+#include <glm/gtx/io.hpp>
 
 struct Triangle
 {
