@@ -5,7 +5,6 @@ scene - make scene - easy                                       3h
 bugs
 shadow gets culled - related to high epsilon
 mesh/sphere stability                                           4h
-make cube intersection faster
 non square screen                                               1h
 phong implementation/multiplying k_d in multiple times          4h
 

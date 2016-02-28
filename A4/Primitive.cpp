@@ -69,7 +69,7 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, c
   double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
   double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
 
-  if ((tmax < 0 || tmin > tmax) || tmin < EPSILON) {
+  if (tmax < 0 || tmin > tmax || tmin < EPSILON) {
     return IntersectionInfo();
   } else {
     vec4 normal;
