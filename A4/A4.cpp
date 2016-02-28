@@ -108,8 +108,10 @@ vec3 trace(const vector<HierarchicalNodeInfo> &nodes, const vec4 &ray_origin, co
     vec3 k_s = mat.m_ks;
     vec3 k_d = mat.m_kd;
 
-    color += k_d * directLight(nodes, mat, ray_dir, point, normal, lights);
+    //light contributions
+    color += directLight(nodes, mat, ray_dir, point, normal, lights);
 
+    //reflection
     if (length(k_s) > 0) {
       vec4 reflDirection = ggReflection(ray_dir, normal);
       color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
@@ -195,6 +197,7 @@ void A4_Render(
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
       //if (!(x == 106 && y == ny - 141 - 1) && !(x == 121 && y == ny - 141 - 1)) continue;
+      //if (!(x == nx/2 && y == ny/2)) continue;
       //cout << endl;
       //cout << x << " " << y << endl;
       vec3 pixelColor;
@@ -206,7 +209,7 @@ void A4_Render(
           }
         }
       } else {
-        vec4 ray_dir = ray_direction(ny, nx, w, h, d, x + 0.5, y + 0.5, eye, view, up);
+        vec4 ray_dir = ray_direction(nx, ny, w, h, d, x + 0.5, y + 0.5, eye, view, up);
         pixelColor += trace(nodes, vec4(eye, 1.0f), ray_dir, ambient, lights, 0);
       }
 

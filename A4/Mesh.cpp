@@ -39,7 +39,7 @@ Mesh::Mesh( const std::string& fname )
 		}
 	}
 
-  boundingBox = new NonhierBox(vec3(minx, miny, minz), vec3(maxx-minx, maxy-miny, maxz-minz));
+  boundingBox = new NonhierBox(vec3(minx, miny, minz), vec3(std::max(maxx-minx, 0.01), std::max(maxy-miny, 0.01), std::max(maxz-minz, 0.01)));
 }
 
 std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
