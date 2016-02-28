@@ -136,6 +136,12 @@ void buildTreeCache(const SceneNode *root, mat4 accumulatedTrans, vector<Hierarc
   }
 }
 
+vector<HierarchicalNodeInfo> buildTreeCache(const SceneNode *root, mat4 accumulatedTrans) {
+  vector<HierarchicalNodeInfo> result;
+  buildTreeCache(root, accumulatedTrans, result);
+  return result;
+}
+
 void A4_Render(
 		// What to render
 		SceneNode * root,
@@ -176,10 +182,13 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = nx/ny * h;
 
-  vector<HierarchicalNodeInfo> nodes;
-  buildTreeCache(root, mat4(1.0f), nodes); //warning: mutable state function
+  vector<HierarchicalNodeInfo> nodes = buildTreeCache(root, mat4(1.0f));
 
   cout << "Progress: 0" << endl;
+
+  default_random_engine rng;
+  uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
+
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
@@ -190,12 +199,9 @@ void A4_Render(
       //cout << x << " " << y << endl;
       vec3 pixelColor;
       if (MACRO_USE_SUPERSAMPLE) {
-        default_random_engine rng;
-        uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
-
         for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
           for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-            vec4 ray_dir = ray_direction(ny, nx, w, h, d, x + a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
+            vec4 ray_dir = ray_direction(ny, nx, w, h, d, x + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
             pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, vec4(eye, 1.0f), ray_dir, ambient, lights, 0);
           }
         }
