@@ -66,21 +66,75 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, c
   double ty_second = (m_pos[1] + m_size - ray_origin[1]) / ray_dir[1];
   double tz_second = (m_pos[2] + m_size - ray_origin[2]) / ray_dir[2];
 
-  double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
-  double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
+  double min_t = std::numeric_limits<double>::infinity();
+  vec4 normal;
+  bool foundOne = false;
+  int matched_comp = -1;
 
-  if ((tmax < 0 || tmin > tmax) || tmin < EPSILON) {
-    return IntersectionInfo();
+  if (ray_dir[0] != 0 && tx_first > EPSILON && tx_first < min_t) {
+    vec4 point = ray_origin + tx_first * ray_dir;
+    if ((point[1] >= m_pos[1] && point[1] <= m_pos[1] + m_size) && (point[2] >= m_pos[2] && point[2] <= m_pos[2] + m_size)) {
+      normal = vec4(-1,0,0,0);
+      min_t = tx_first;
+      foundOne = true;
+      matched_comp = 1;
+    }
+  }
+
+  if (ray_dir[0] != 0 && tx_second > EPSILON && tx_second < min_t) {
+    vec4 point = ray_origin + tx_second * ray_dir;
+    if ((point[1] >= m_pos[1] && point[1] <= m_pos[1] + m_size) && (point[2] >= m_pos[2] && point[2] <= m_pos[2] + m_size)) {
+      normal = vec4(1,0,0,0);
+      min_t = tx_second;
+      foundOne = true;
+      matched_comp = 2;
+    }
+  }
+
+  if (ray_dir[1] != 0 && ty_first > EPSILON && ty_first < min_t) {
+    vec4 point = ray_origin + ty_first * ray_dir;
+    if ((point[0] >= m_pos[0] && point[0] <= m_pos[0] + m_size) && (point[2] >= m_pos[2] && point[2] <= m_pos[2] + m_size)) {
+      normal = vec4(0,-1,0,0);
+      min_t = ty_first;
+      foundOne = true;
+      matched_comp = 3;
+    }
+  }
+
+  if (ray_dir[1] != 0 && ty_second > EPSILON && ty_second < min_t) {
+    vec4 point = ray_origin + ty_second * ray_dir;
+    if ((point[0] >= m_pos[0] && point[0] <= m_pos[0] + m_size) && (point[2] >= m_pos[2] && point[2] <= m_pos[2] + m_size)) {
+      normal = vec4(0,1,0,0);
+      min_t = ty_second;
+      foundOne = true;
+      matched_comp = 4;
+    }
+  }
+
+  if (ray_dir[2] != 0 && tz_first > EPSILON && tz_first < min_t) {
+    vec4 point = ray_origin + tz_first * ray_dir;
+    if ((point[1] >= m_pos[1] && point[1] <= m_pos[1] + m_size) && (point[0] >= m_pos[0] && point[0] <= m_pos[0] + m_size)) {
+      normal = vec4(0,0,-1,0);
+      min_t = tz_first;
+      foundOne = true;
+      matched_comp = 5;
+    }
+  }
+
+  if (ray_dir[2] != 0 && tz_second > EPSILON && tz_second < min_t) {
+    vec4 point = ray_origin + tz_second * ray_dir;
+    if ((point[1] >= m_pos[1] && point[1] <= m_pos[1] + m_size) && (point[0] >= m_pos[0] && point[0] <= m_pos[0] + m_size)) {
+      normal = vec4(0,0,1,0);
+      min_t = tz_second;
+      foundOne = true;
+      matched_comp = 6;
+    }
+  }
+
+  if (foundOne) {
+    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, normal, matched_comp);
   } else {
-    vec4 normal;
-    if (tmin == tx_first) normal = vec4(-1,0,0,0);
-    else if (tmin == tx_second) normal = vec4(1,0,0,0);
-    else if (tmin == ty_first) normal = vec4(0,-1,0,0);
-    else if (tmin == ty_second) normal = vec4(0,1,0,0);
-    else if (tmin == tz_first) normal = vec4(0,0,-1,0);
-    else if (tmin == tz_second) normal = vec4(0,0,1,0);
-
-    return IntersectionInfo(tmin, tmin*ray_dir + ray_origin, normal, 0);
+    return IntersectionInfo();
   }
 }
 

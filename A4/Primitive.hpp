@@ -63,40 +63,13 @@ protected:
   std::vector<Triangle> m_faces;
 };
 
-class NonhierBox : public TrianglesPrimitive {
+class NonhierBox : public Primitive {
 public:
   NonhierBox(const glm::vec3& pos, double size)
     : m_pos(pos), m_size(size)
   {
-      m_vertices.push_back( glm::vec3(m_pos[0], m_pos[1], m_pos[2]));
-      m_vertices.push_back( glm::vec3(m_pos[0], m_pos[1], m_pos[2] + m_size));
-      m_vertices.push_back( glm::vec3(m_pos[0], m_pos[1] + m_size, m_pos[2]));
-      m_vertices.push_back( glm::vec3(m_pos[0], m_pos[1] + m_size, m_pos[2] + m_size));
-      m_vertices.push_back( glm::vec3(m_pos[0] + m_size, m_pos[1], m_pos[2]));
-      m_vertices.push_back( glm::vec3(m_pos[0] + m_size, m_pos[1], m_pos[2] + m_size));
-      m_vertices.push_back( glm::vec3(m_pos[0] + m_size, m_pos[1] + m_size, m_pos[2]));
-      m_vertices.push_back( glm::vec3(m_pos[0] + m_size, m_pos[1] + m_size, m_pos[2] + m_size));
-
-//front
-      m_faces.push_back(Triangle(0,2,4));
-      m_faces.push_back(Triangle(6,4,2));
-//back
-      m_faces.push_back(Triangle(5,7,1));
-      m_faces.push_back(Triangle(3,1,7));
-//top
-      m_faces.push_back(Triangle(2,3,6));
-      m_faces.push_back(Triangle(7,6,3));
-//bottom
-      m_faces.push_back(Triangle(0,4,1));
-      m_faces.push_back(Triangle(5,1,4));
-//left
-      m_faces.push_back(Triangle(0,1,2));
-      m_faces.push_back(Triangle(3,2,1));
-//right
-      m_faces.push_back(Triangle(4,6,5));
-      m_faces.push_back(Triangle(7,5,6));
   }
-
+  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t);
   virtual ~NonhierBox();
 
 private:
