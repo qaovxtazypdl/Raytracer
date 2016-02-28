@@ -54,6 +54,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
 
 
 IntersectionInfo TrianglesPrimitive::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+  const double EPSILON = 1E-3;
   double min_t = std::numeric_limits<double>::infinity();
   bool foundOne = false;
   vec4 intersect_normal;
