@@ -41,18 +41,6 @@ public:
   virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {return IntersectionInfo();}
 };
 
-class Sphere : public Primitive {
-public:
-  virtual ~Sphere();
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {return IntersectionInfo();}
-};
-
-class Cube : public Primitive {
-public:
-  virtual ~Cube();
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {return IntersectionInfo();}
-};
-
 class NonhierSphere : public Primitive {
 public:
   NonhierSphere(const glm::vec3& pos, double radius)
@@ -114,4 +102,23 @@ public:
 private:
   glm::vec3 m_pos;
   double m_size;
+};
+
+
+class Sphere : public NonhierSphere {
+public:
+  Sphere()
+    : NonhierSphere(glm::vec3(0,0,0), 1.0)
+  {
+  }
+  virtual ~Sphere();
+};
+
+class Cube : public NonhierBox {
+public:
+  Cube()
+    : NonhierBox(glm::vec3(0,0,0), 1.0)
+  {
+  }
+  virtual ~Cube();
 };

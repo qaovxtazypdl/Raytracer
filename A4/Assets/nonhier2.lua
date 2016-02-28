@@ -10,7 +10,6 @@ mat3 = gr.material({1.0, 0.6, 0.1}, {0.5, 0.7, 0.5}, 25)
 mat4 = gr.material({0.7, 0.6, 1.0}, {0.5, 0.4, 0.8}, 25)
 
 scene = gr.node( 'scene' )
-scene:translate(0, 0, -800)
 
 s1 = gr.nh_sphere('s1', {0, 0, -400}, 100)
 scene:add_child(s1)

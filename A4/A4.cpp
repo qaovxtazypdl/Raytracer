@@ -46,15 +46,15 @@ pair<GeometryNode *, IntersectionInfo> testHit(const vector<pair<GeometryNode *,
     mat4 T = node.second;
     mat4 T_inv = inverse(T);
 
-    IntersectionInfo intersect = node.first->m_primitive->checkRayIntersection(/*T_inv */ ray_origin, /*T_inv */ ray_dir, max_t);
+    IntersectionInfo intersect = node.first->m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, max_t);
     if (intersect.didIntersect && intersect.intersect_t < min_t) {
       //update max
 
       min_t = intersect.intersect_t;
       minNode = node.first;
       intersectionInfo = intersect;
-      //intersectionInfo.normal = T * intersectionInfo.normal;
-      //intersectionInfo.point = T * intersectionInfo.point;
+      intersectionInfo.normal = normalize(T * intersectionInfo.normal);
+      intersectionInfo.point = T * intersectionInfo.point;
     }
   }
 
@@ -121,7 +121,7 @@ vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_orig
 
     if (length(k_s) > 0) {
       vec4 reflDirection = ggReflection(ray_dir, normal);
-      color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+      //color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
