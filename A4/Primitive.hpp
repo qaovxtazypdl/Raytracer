@@ -55,17 +55,13 @@ private:
   double m_radius;
 };
 
-class TrianglesPrimitive : public Primitive {
-public:
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t);
-protected:
-  std::vector<glm::vec3> m_vertices;
-  std::vector<Triangle> m_faces;
-};
-
 class NonhierBox : public Primitive {
 public:
   NonhierBox(const glm::vec3& pos, double size)
+    : m_pos(pos), m_size(size)
+  {
+  }
+  NonhierBox(const glm::vec3& pos, glm::vec3 size)
     : m_pos(pos), m_size(size)
   {
   }
@@ -74,9 +70,8 @@ public:
 
 private:
   glm::vec3 m_pos;
-  double m_size;
+  glm::vec3 m_size;
 };
-
 
 class Sphere : public NonhierSphere {
 public:

@@ -1,8 +1,8 @@
-bounding volumes - BSP or whatever                              4h
 scene - make scene - easy                                       3h
-
+uniform space partition
 
 bugs
+ray obj?
 shadow gets culled - related to high epsilon
 mesh/sphere stability                                           4h
 non square screen                                               1h
