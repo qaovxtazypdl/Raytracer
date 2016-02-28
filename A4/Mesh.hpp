@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "Primitive.hpp"
+#include "Flags.hpp"
 
 // A polygonal mesh.
 class Mesh : public Primitive {

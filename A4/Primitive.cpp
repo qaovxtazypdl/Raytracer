@@ -53,11 +53,6 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
 }
 
 IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
-  //m_pos;
-  //m_size;
-  //box from posx posy posz to posx+sx posy+sy posz+sz
-  //plane x = posx, y=posy, z=posz, so on
-
   double tx_first = (m_pos[0] - ray_origin[0]) / ray_dir[0];
   double ty_first = (m_pos[1] - ray_origin[1]) / ray_dir[1];
   double tz_first = (m_pos[2] - ray_origin[2]) / ray_dir[2];

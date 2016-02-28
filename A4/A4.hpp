@@ -3,6 +3,7 @@
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <random>
 #include <glm/gtx/transform.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -11,6 +12,7 @@
 #include "JointNode.hpp"
 #include "GeometryNode.hpp"
 #include "Primitive.hpp"
+#include "Flags.hpp"
 #include "Material.hpp"
 #include "PhongMaterial.hpp"
 #include "Light.hpp"

@@ -1,0 +1,6 @@
+#pragma once
+
+#define MACRO_USE_SUPERSAMPLE false
+#define MACRO_SUPERSAMPLE_SCALE 3
+
+#define MACRO_RENDER_BOUNDING_BOX false
