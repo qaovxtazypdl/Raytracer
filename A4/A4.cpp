@@ -123,7 +123,7 @@ vec3 trace(const vector<pair<GeometryNode *, mat4>> &nodes, const vec4 &ray_orig
 
     if (length(k_s) > 0) {
       vec4 reflDirection = ggReflection(ray_dir, normal);
-      //color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+      color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
