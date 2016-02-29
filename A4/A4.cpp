@@ -27,7 +27,7 @@ vec4 ray_direction(double nx, double ny, double w, double h, double d, float x, 
   //translate to lookfrom
   p = translate(vec3(eye[0], eye[1], eye[2])) * p;
 
-  return normalize(p - vec4(eye, 1.0f));
+  return p - vec4(eye, 1.0f);
 }
 
 
@@ -74,7 +74,7 @@ vec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial 
       vec4 reflDirection = ggReflection(l_dir, normal);
 
       double l_dot_n = dot(normal, normalize(l_dir));
-      double r_dot_v = dot(v_eye, normalize(reflDirection));
+      double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
 
       if (l_dot_n > 0)
         color += attenuation * mat.m_kd * l_dot_n * light->colour;

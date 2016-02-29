@@ -115,7 +115,7 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
     return IntersectionInfo();
   }
 
-  const double EPSILON = 1E-5;
+  const double EPSILON = 5E-6;
   double min_t = std::numeric_limits<double>::infinity();
   bool foundOne = false;
   vec4 intersect_normal;
