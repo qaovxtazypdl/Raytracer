@@ -4,3 +4,5 @@
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 #define MACRO_RENDER_BOUNDING_BOX false
+#define MACRO_REFLECTION_ON true
+

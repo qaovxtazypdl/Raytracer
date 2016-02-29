@@ -8,3 +8,24 @@ make
 
 Manual
 =====================================
+NOTE: I prepended Assets/ to all objects loaded inside the lua scripts, so that running ./A4 in the A4 directory, pointing
+  to a lua file inside Assets/ will load the objects correctly.
+
+
+Extra feature: recursive reflection.
+  Sends out secondary rays from specular surfaces and recursively raytraces the scene down to a depth of at max 10.
+  This provides a decent rendering of reflective surfaces.
+  Scene:
+
+
+--Screenshot saved in screenshot.jpg (my original scene)
+--Sample renderings saved under Assets/
+  -hier, instance, macho-cows, nonhier, simple, simple-cows, macho-cows-bb (bounding box special render)
+  -sample (original scene)
+  -also included are files with the -nr prefix, which are rendered without reflection.
+
+
+todo
+====
+scene description
+additional nonsquare sample

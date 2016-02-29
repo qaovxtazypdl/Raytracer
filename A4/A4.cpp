@@ -88,7 +88,7 @@ dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial
 
 dvec3 getBackgroundColor(const dvec4 &ray_dir) {
   dvec4 normalized_dir = max(dvec4(0,0,0,0), (1.0/1.7) * (0.7 + normalize(ray_dir)));
-  return dvec3(normalized_dir[1]/3,normalized_dir[0]/3,normalized_dir[2]/3);
+  return dvec3(normalized_dir[1]/2,normalized_dir[0]/2,normalized_dir[2]/2);
 }
 
 //origin is point
@@ -113,7 +113,7 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
     color += directLight(nodes, mat, ray_dir, point, normal, lights);
 
     //reflection
-    if (length(k_s) > 0) {
+    if (MACRO_REFLECTION_ON && length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
       color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
