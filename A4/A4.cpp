@@ -202,7 +202,7 @@ void A4_Render(
       if (MACRO_USE_SUPERSAMPLE) {
         for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
           for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-            dvec4 ray_dir = ray_direction(ny, nx, w, h, d, x + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
+            dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
             pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
           }
         }

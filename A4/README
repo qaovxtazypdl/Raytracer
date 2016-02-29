@@ -4,7 +4,7 @@ premake4 gmake
 make
 
 (same as before)
-tested on ----
+tested on gl07
 
 Manual
 =====================================
