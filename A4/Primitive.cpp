@@ -5,7 +5,7 @@
 using namespace glm;
 using namespace std;
 
-const double EPSILON = 5E-6;
+const double EPSILON = 1E-12;
 
 Primitive::~Primitive()
 {
@@ -28,12 +28,12 @@ NonhierBox::~NonhierBox()
 }
 
 
-IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
   //m_pos;
   //m_radius;
-  vec4 a = ray_origin;
-  vec4 b = ray_dir + ray_origin;
-  vec4 c = vec4(m_pos, 1.0f);
+  dvec4 a = ray_origin;
+  dvec4 b = ray_dir + ray_origin;
+  dvec4 c = dvec4(m_pos, 1.0f);
 
   double roots[2];
   size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-m_radius*m_radius, roots);
@@ -51,12 +51,12 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::vec4 &ray_origin
     if (t > max_t || t < EPSILON) {
       return IntersectionInfo();
     } else {
-      return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + (float)t * ray_dir) - c));
+      return IntersectionInfo(t, t*ray_dir + ray_origin, normalize((ray_origin + t * ray_dir) - c));
     }
   }
 }
 
-IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
   double tx_first = (m_pos[0] - ray_origin[0]) / ray_dir[0];
   double ty_first = (m_pos[1] - ray_origin[1]) / ray_dir[1];
   double tz_first = (m_pos[2] - ray_origin[2]) / ray_dir[2];
@@ -79,13 +79,13 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::vec4 &ray_origin, c
       return IntersectionInfo();
     }
 
-    vec4 normal;
-    if (tmin == tx_first) normal = vec4(-1,0,0,0);
-    else if (tmin == tx_second) normal = vec4(1,0,0,0);
-    else if (tmin == ty_first) normal = vec4(0,-1,0,0);
-    else if (tmin == ty_second) normal = vec4(0,1,0,0);
-    else if (tmin == tz_first) normal = vec4(0,0,-1,0);
-    else if (tmin == tz_second) normal = vec4(0,0,1,0);
+    dvec4 normal;
+    if (tmin == tx_first) normal = dvec4(-1,0,0,0);
+    else if (tmin == tx_second) normal = dvec4(1,0,0,0);
+    else if (tmin == ty_first) normal = dvec4(0,-1,0,0);
+    else if (tmin == ty_second) normal = dvec4(0,1,0,0);
+    else if (tmin == tz_first) normal = dvec4(0,0,-1,0);
+    else if (tmin == tz_second) normal = dvec4(0,0,1,0);
 
     return IntersectionInfo(tmin, tmin*ray_dir + ray_origin, normal);
   }

@@ -20,13 +20,13 @@
 
 struct HierarchicalNodeInfo {
   GeometryNode *geoNode;
-  glm::mat4 mat;
-  glm::mat4 inv;
-  glm::mat3 invTranspose;
+  glm::dmat4 mat;
+  glm::dmat4 inv;
+  glm::dmat3 invTranspose;
 
-  HierarchicalNodeInfo(GeometryNode *geoNode, glm::mat4 mat) : geoNode(geoNode), mat(mat) {
+  HierarchicalNodeInfo(GeometryNode *geoNode, glm::dmat4 mat) : geoNode(geoNode), mat(mat) {
     inv = glm::inverse(mat);
-    invTranspose = glm::transpose(glm::inverse(glm::mat3(mat)));
+    invTranspose = glm::transpose(glm::inverse(glm::dmat3(mat)));
   }
 };
 
@@ -38,12 +38,12 @@ void A4_Render(
 		Image & image,
 
 		// Viewing parameters
-		const glm::vec3 & eye,
-		const glm::vec3 & view,
-		const glm::vec3 & up,
+		const glm::dvec3 & eye,
+		const glm::dvec3 & view,
+		const glm::dvec3 & up,
 		double fovy,
 
 		// Lighting parameters
-		const glm::vec3 & ambient,
+		const glm::dvec3 & ambient,
 		const std::list<Light *> & lights
 );

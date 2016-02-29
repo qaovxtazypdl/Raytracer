@@ -24,10 +24,10 @@ class IntersectionInfo {
 public:
   bool didIntersect;
   double intersect_t;
-  glm::vec4 normal;
-  glm::vec4 point;
+  glm::dvec4 normal;
+  glm::dvec4 point;
 
-  IntersectionInfo(double intersect_t, const glm::vec4 &point, const glm::vec4 &normal) :
+  IntersectionInfo(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal) :
     intersect_t(intersect_t), normal(normal), didIntersect(true), point(point)
   {}
 
@@ -37,7 +37,7 @@ public:
 class Primitive {
 public:
   virtual ~Primitive();
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {return IntersectionInfo();}
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {return IntersectionInfo();}
 };
 
 class NonhierSphere : public Primitive {
@@ -47,7 +47,7 @@ public:
   {
   }
   virtual ~NonhierSphere();
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
 
 private:
   glm::vec3 m_pos;
@@ -64,7 +64,7 @@ public:
     : m_pos(pos), m_size(size)
   {
   }
-  virtual IntersectionInfo checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
   virtual ~NonhierBox();
 
 private:

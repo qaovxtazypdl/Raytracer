@@ -26,7 +26,7 @@ Mesh::Mesh( const std::string& fname )
 	while( ifs >> code ) {
 		if( code == "v" ) {
 			ifs >> vx >> vy >> vz;
-			m_vertices.push_back( glm::vec3( vx, vy, vz ) );
+			m_vertices.push_back( glm::dvec3( vx, vy, vz ) );
       minx = std::min(minx, vx);
       maxx = std::max(maxx, vx);
       miny = std::min(miny, vy);
@@ -39,7 +39,7 @@ Mesh::Mesh( const std::string& fname )
 		}
 	}
 
-  boundingBox = new NonhierBox(vec3(minx, miny, minz), vec3(std::max(maxx-minx, 0.01), std::max(maxy-miny, 0.01), std::max(maxz-minz, 0.01)));
+  boundingBox = new NonhierBox(dvec3(minx, miny, minz), dvec3(std::max(maxx-minx, 0.01), std::max(maxy-miny, 0.01), std::max(maxz-minz, 0.01)));
 }
 
 std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
@@ -63,22 +63,22 @@ std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
   return out;
 }
 
-bool Mesh::computeBGT(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, Triangle tri, double &beta, double &gamma, double &t) {
-  vec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
-  vec4 ray_b = ray_origin + ray_dir;
-  vec3 a = vec3(ray_origin[0], ray_origin[1], ray_origin[2]);
-  vec3 b = vec3(ray_b[0], ray_b[1], ray_b[2]);
+bool Mesh::computeBGT(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Triangle tri, double &beta, double &gamma, double &t) {
+  dvec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
+  dvec4 ray_b = ray_origin + ray_dir;
+  dvec3 a = dvec3(ray_origin[0], ray_origin[1], ray_origin[2]);
+  dvec3 b = dvec3(ray_b[0], ray_b[1], ray_b[2]);
 
-  vec3 R = a-v1;
-  vec3 x = v2-v1;
-  vec3 y = v3-v1;
-  vec3 z = vec3(-ray_dir[0], -ray_dir[1], -ray_dir[2]);
+  dvec3 R = a-v1;
+  dvec3 x = v2-v1;
+  dvec3 y = v3-v1;
+  dvec3 z = dvec3(-ray_dir[0], -ray_dir[1], -ray_dir[2]);
 
   //intersect
-  mat3 A = mat3(x,y,z);
+  dmat3 A = dmat3(x,y,z);
 
   double D = determinant(A);
-  if (abs(D) < 1E-6) {
+  if (abs(D) < 1E-11) {
     return false;
   }
   D = 1/D;
@@ -106,7 +106,7 @@ bool Mesh::computeBGT(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, Tri
   return true;
 }
 
-IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
   if (MACRO_RENDER_BOUNDING_BOX) {
     return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
   }
@@ -115,17 +115,17 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
     return IntersectionInfo();
   }
 
-  const double EPSILON = 5E-6;
+  const double EPSILON = 1E-11;
   double min_t = std::numeric_limits<double>::infinity();
   bool foundOne = false;
-  vec4 intersect_normal;
+  dvec4 intersect_normal;
 
   int i = 0;
   //return maximum intersection z
   for (Triangle tri : m_faces) {
     i++;
 
-    vec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
+    dvec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
     double beta, gamma, t;
     if (!computeBGT(ray_origin, ray_dir, tri, beta, gamma, t)) continue;
 
@@ -135,7 +135,7 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
       if (min_t > t) {
         foundOne = true;
         min_t = t;
-        intersect_normal = normalize(vec4(cross(v2-v1, v3-v1), 0.0f));
+        intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0f));
       }
     }
   }

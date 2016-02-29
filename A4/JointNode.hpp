@@ -14,7 +14,7 @@ public:
   void rotate_joint(double diff);
   void rotate_z(double diff);
 
-  const glm::mat4 get_joint_transform() const;
+  const glm::dmat4 get_joint_transform() const;
 
   struct JointRange {
     double min, init, max;

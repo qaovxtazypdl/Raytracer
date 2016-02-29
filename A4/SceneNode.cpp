@@ -21,8 +21,8 @@ unsigned int SceneNode::nodeInstanceCount = 0;
 SceneNode::SceneNode(const std::string& name)
   : m_name(name),
 	m_nodeType(NodeType::SceneNode),
-	trans(mat4()),
-	invtrans(mat4()),
+	trans(dmat4()),
+	invtrans(dmat4()),
 	m_nodeId(nodeInstanceCount++)
 {
 
@@ -49,18 +49,18 @@ SceneNode::~SceneNode() {
 }
 
 //---------------------------------------------------------------------------------------
-void SceneNode::set_transform(const glm::mat4& m) {
+void SceneNode::set_transform(const glm::dmat4& m) {
 	trans = m;
 	invtrans = glm::inverse(m);
 }
 
 //---------------------------------------------------------------------------------------
-const glm::mat4& SceneNode::get_transform() const {
+const glm::dmat4& SceneNode::get_transform() const {
 	return trans;
 }
 
 //---------------------------------------------------------------------------------------
-const glm::mat4& SceneNode::get_inverse() const {
+const glm::dmat4& SceneNode::get_inverse() const {
 	return invtrans;
 }
 
@@ -91,18 +91,18 @@ void SceneNode::rotate(char axis, float angle) {
 		default:
 			break;
 	}
-	mat4 rot_matrix = glm::rotate(degreesToRadians(angle), rot_axis);
+	dmat4 rot_matrix = glm::rotate(degreesToRadians(angle), rot_axis);
 	set_transform( rot_matrix * trans );
 }
 
 //---------------------------------------------------------------------------------------
 void SceneNode::scale(const glm::vec3 & amount) {
-	set_transform( glm::scale(amount) * trans );
+	set_transform( dmat4(glm::scale(amount)) * trans );
 }
 
 //---------------------------------------------------------------------------------------
 void SceneNode::translate(const glm::vec3& amount) {
-	set_transform( glm::translate(amount) * trans );
+	set_transform( dmat4(glm::translate(amount)) * trans );
 }
 
 

@@ -139,7 +139,7 @@ redcarpet:scale(0.1,0.01,1)
 redcarpet:set_material(carpet)
 plane:add_child(redcarpet)
 
-gr.render(scene, 'sample.png', 500, 500,
+gr.render(scene, 'sample.png', 750, 750,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 
