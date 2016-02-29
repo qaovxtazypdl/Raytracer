@@ -36,7 +36,7 @@ mirror_edge:set_material(silver)
 mirror_edge:scale(0.01,0.7,0.01)
 mirror_edge:translate(0.0,-0.37,0.61)
 
-mirror_plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+mirror_plane = gr.mesh( 'mirror_plane', 'Assets/plane.obj' )
 mirror_plane:rotate('z', 90)
 mirror_plane:scale(40/50,16/50,60/100)
 mirror_plane:set_material(mirror)
@@ -139,7 +139,7 @@ redcarpet:scale(0.1,0.01,1)
 redcarpet:set_material(carpet)
 plane:add_child(redcarpet)
 
-gr.render(scene, 'sample.png', 368, 368,
+gr.render(scene, 'sample.png', 768, 768,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 

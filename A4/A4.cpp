@@ -96,17 +96,18 @@ vec3 getBackgroundColor(const vec4 &ray_dir) {
 vec3 trace(const vector<HierarchicalNodeInfo> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
-  double k_a = 0;
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
-    vec3 color = k_a * ambient;
+    vec3 color;
     vec4 point = result.second.point;
     vec4 normal = result.second.normal;
 
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
     vec3 k_s = mat.m_ks;
     vec3 k_d = mat.m_kd;
+
+    color += k_d * ambient;
 
     //light contributions
     color += directLight(nodes, mat, ray_dir, point, normal, lights);
