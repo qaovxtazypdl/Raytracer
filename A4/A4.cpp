@@ -96,7 +96,7 @@ vec3 getBackgroundColor(const vec4 &ray_dir) {
 vec3 trace(const vector<HierarchicalNodeInfo> &nodes, const vec4 &ray_origin, const vec4 &ray_dir, const vec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_dir);
 
-  double k_a = 0.25;
+  double k_a = 0;
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
   if (result.first != NULL) {
