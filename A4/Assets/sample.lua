@@ -1,4 +1,4 @@
-hide = gr.material({0.6, 0.53, 0.84}, {0.3, 0.3, 0.3}, 40)
+hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.2, 0.05, 0.03}, 20)
 mirror = gr.material({0.2, 0.3, 0.3}, {0.75, 0.75, 0.75}, 120)
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -31,11 +31,23 @@ scene = gr.node('root')
 mirror_plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 mirror_plane:set_material(mirror)
 
+mirror_edge = gr.mesh('mirror_edge', 'Assets/cylinder.obj')
+mirror_edge:set_material(silver)
+mirror_plane:add_child(mirror_edge)
+
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 scene:add_child(plane)
 plane:set_material(stone)
 plane:scale(50,50,100)
 plane:rotate('x', 15)
+plane:translate(0,-1,0)
+
+cow = gr.mesh( 'cow', 'Assets/cow.obj' )
+cow:rotate('y', 90)
+cow:translate(0,4.3,22)
+cow:scale(0.01,0.01,0.01)
+cow:set_material(hide)
+plane:add_child(cow)
 
 mirror_1 = gr.node('plane_instance_1')
 mirror_1:rotate('z', 90)
@@ -54,30 +66,59 @@ mirror_2:add_child(mirror_plane)
 plane:add_child(mirror_2)
 
 
-central_sphere = gr.sphere('central_sphere', {0, 10, -10}, 10)
+central_sphere = gr.sphere('central_sphere')
 central_sphere:scale(1/50,1/50,1/100)
 central_sphere:scale(10,10,10)
-central_sphere:translate(0,10,-10)
-scene:add_child(central_sphere)
-plane:set_material(chrome)
+central_sphere:translate(0,0.13,-0.1)
+central_sphere:set_material(chrome)
+plane:add_child(central_sphere)
 
 bottom_sphere_1 = gr.sphere('bottom_sphere_1')
---central_sphere:add_child(bottom_sphere_1)
-bottom_sphere_1:set_material(chrome)
+bottom_sphere_1:scale(0.25,0.25,0.25)
+bottom_sphere_1:translate(-0.9,-0.34,0.8)
+bottom_sphere_1:set_material(ruby)
+central_sphere:add_child(bottom_sphere_1)
 
-bottom_sphere_1 = gr.sphere('bottom_sphere_1')
---central_sphere:add_child(bottom_sphere_1)
-bottom_sphere_1:set_material(chrome)
+bottom_sphere_2 = gr.sphere('bottom_sphere_2')
+bottom_sphere_2:scale(0.25,0.25,0.25)
+bottom_sphere_2:translate(-0.45,-0.34,1.15)
+bottom_sphere_2:set_material(emerald)
+central_sphere:add_child(bottom_sphere_2)
 
-bottom_sphere_1 = gr.sphere('bottom_sphere_1')
---central_sphere:add_child(bottom_sphere_1)
-bottom_sphere_1:set_material(chrome)
+bottom_sphere_3 = gr.sphere('bottom_sphere_3')
+bottom_sphere_3:scale(0.25,0.25,0.25)
+bottom_sphere_3:translate(0.45,-0.34,1.15)
+bottom_sphere_3:set_material(bronze)
+central_sphere:add_child(bottom_sphere_3)
 
-bottom_sphere_1 = gr.sphere('bottom_sphere_1')
---central_sphere:add_child(bottom_sphere_1)
-bottom_sphere_1:set_material(chrome)
+bottom_sphere_4 = gr.sphere('bottom_sphere_4')
+bottom_sphere_4:scale(0.25,0.25,0.25)
+bottom_sphere_4:translate(0.9,-0.34,0.8)
+bottom_sphere_4:set_material(brubber)
+central_sphere:add_child(bottom_sphere_4)
 
-gr.render(scene, 'sample.png', 300, 300,
+bottom_slab = gr.cube('bottom_slab')
+bottom_slab:scale(0.5,0.25,0.5)
+bottom_slab:translate(-0.25,-0.76,0.85)
+bottom_slab:set_material(obsidian)
+central_sphere:add_child(bottom_slab)
+
+trophy = gr.cube('trophy')
+trophy:scale(0.2,3,0.2)
+trophy:translate(0.42,0,0.5)
+trophy:set_material(gold)
+bottom_slab:add_child(trophy)
+
+bauble = gr.sphere('bauble')
+bauble:scale(1/0.2,2/3.0,1/0.2)
+bauble:scale(0.3,0.2,0.2)
+bauble:translate(0.5,0.8,0.5)
+bauble:set_material(gold)
+trophy:add_child(bauble)
+
+--nonhier sphere and cube outside
+--cylindrical mirror edges
+gr.render(scene, 'sample.png', 400, 400,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 
