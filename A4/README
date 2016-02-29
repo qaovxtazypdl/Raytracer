@@ -4,7 +4,8 @@ premake4 gmake
 make
 
 (same as before)
-tested on gl---------------
+
+tested on gl07.student.cs
 
 Manual
 =====================================
@@ -18,17 +19,17 @@ Extra feature: recursive reflection.
   Scene: It's a ground plane with small reflectivity, and two mirror plane instances perpendicular to the plane.
     The mirror instances consist of a highly reflective plane, and a cylinder mesh at the edge.
     The mirror instances are set up at an angle so that rays entering will reflect multiple times between them.
-    In between is a shrine of some sort, containing a metallic ball in the middle, surrounded by four smaller
-    balls of varying material, and a statue/trophy in the middle. A cow on a red carpet is staring at the trophy.
+    In between is a shrine of some sort, containing a metallic sphere in the middle, surrounded by four smaller
+    spheres of varying material, and a statue/trophy in the middle. A cow on a red carpet is staring at the trophy.
     On the lower side of the image, there is a nonhierarchical sphere and box on the ground beside the carpet.
     The scene has three light sources. One directly on top, one directly behind eye, and the strongest one on a light angle from the top.
 
 
---Screenshot saved in screenshot.jpg (my original scene)
+--Screenshot saved as screenshot.jpg (my original scene)
 --Sample renderings saved under Assets/ (.png files)
   -hier, instance, macho-cows, nonhier, simple, simple-cows, macho-cows-bb (bounding box special render)
   -sample (original scene), and a non-square version of the sample for more x-range (sample-720p)
-  -also included are files with the -nr prefix, which are rendered without reflection.
+  -also included are versions of the above files with the -nr prefix, which are rendered without reflection.
 
 
 
