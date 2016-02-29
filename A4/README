@@ -4,7 +4,7 @@ premake4 gmake
 make
 
 (same as before)
-
+tested on ----
 
 Manual
 =====================================
@@ -24,12 +24,10 @@ Extra feature: recursive reflection.
 
 
 --Screenshot saved in screenshot.jpg (my original scene)
---Sample renderings saved under Assets/
+--Sample renderings saved under Assets/ (.png files)
   -hier, instance, macho-cows, nonhier, simple, simple-cows, macho-cows-bb (bounding box special render)
-  -sample (original scene)
+  -sample (original scene), and a non-square version of the sample for more x-range (sample-720p)
   -also included are files with the -nr prefix, which are rendered without reflection.
 
 
-todo
-====
-additional nonsquare sample
+
