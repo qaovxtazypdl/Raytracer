@@ -183,7 +183,7 @@ void A4_Render(
 
   double d = 100;
   double h = 2*d*tan(fovy*PI/180/2);
-  double w = nx/ny * h;
+  double w = (double)nx/ny * h;
 
   vector<HierarchicalNodeInfo> nodes = buildTreeCache(root, dmat4(1.0));
 
