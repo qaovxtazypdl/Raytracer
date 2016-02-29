@@ -88,7 +88,7 @@ dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial
 
 dvec3 getBackgroundColor(const dvec4 &ray_dir) {
   dvec4 normalized_dir = max(dvec4(0,0,0,0), (1.0/1.7) * (0.7 + normalize(ray_dir)));
-  return dvec3(normalized_dir[1]/2,normalized_dir[0]/2,normalized_dir[2]/2);
+  return dvec3(normalized_dir[1]/3,normalized_dir[0]/3,normalized_dir[2]/3);
 }
 
 //origin is point
@@ -115,7 +115,7 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
     //reflection
     if (length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
@@ -197,10 +197,7 @@ void A4_Render(
       if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
         cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
-      //if (!(x == 106 && y == ny - 141 - 1) && !(x == 121 && y == ny - 141 - 1)) continue;
-      //if (!(x == nx/2 && y == ny/2)) continue;
-      //cout << endl;
-      //cout << x << " " << y << endl;
+
       dvec3 pixelColor;
       if (MACRO_USE_SUPERSAMPLE) {
         for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {

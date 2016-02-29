@@ -1,7 +1,7 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.2, 0.05, 0.03}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
-mirror = gr.material({0.2, 0.3, 0.3}, {0.75, 0.75, 0.75}, 120)
+mirror = gr.material({0.2, 0.3, 0.3}, {1.5,1.5,1.5}, 120)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -139,7 +139,7 @@ redcarpet:scale(0.1,0.01,1)
 redcarpet:set_material(carpet)
 plane:add_child(redcarpet)
 
-gr.render(scene, 'sample.png', 750, 750,
+gr.render(scene, 'sample.png', 350, 350,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 
