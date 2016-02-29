@@ -29,13 +29,21 @@ frontal_light = gr.light({0, 0, 200}, {0.4, 0.4, 0.5}, {1, 0, 0})
 --start script
 scene = gr.node('root')
 
-mirror_plane = gr.mesh( 'plane', 'Assets/plane.obj' )
-mirror_plane:set_material(mirror)
-
+--MIRROR instance
 mirror_edge = gr.mesh('mirror_edge', 'Assets/cylinder.obj')
 mirror_edge:set_material(silver)
-mirror_edge:scale(0.2,0.2,0.2)
-mirror_plane:add_child(mirror_edge)
+mirror_edge:scale(0.01,0.7,0.01)
+mirror_edge:translate(0.0,-0.37,0.61)
+
+mirror_plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+mirror_plane:rotate('z', 90)
+mirror_plane:scale(40/50,16/50,60/100)
+mirror_plane:set_material(mirror)
+
+mirror_root = gr.node('mirror_root')
+mirror_root:add_child(mirror_plane)
+mirror_root:add_child(mirror_edge)
+--end mirror instance
 
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 plane:set_material(stone)
@@ -52,19 +60,15 @@ cow:set_material(hide)
 --plane:add_child(cow)
 
 mirror_1 = gr.node('mirror_instance_1')
-mirror_1:rotate('z', 90)
-mirror_1:rotate('y', 15)
-mirror_1:translate(0.25,1,-0.2)
-mirror_1:scale(40/50,16/50,60/100)
-mirror_1:add_child(mirror_plane)
+mirror_1:rotate('y', 20)
+mirror_1:translate(0.2,0.32,-0.12)
+mirror_1:add_child(mirror_root)
 plane:add_child(mirror_1)
 
 mirror_2 = gr.node('mirror_instance_2')
-mirror_2:rotate('z', 90)
-mirror_2:rotate('y', -15)
-mirror_2:translate(-0.25,1,-0.2)
-mirror_2:scale(40/50,16/50,60/100)
-mirror_2:add_child(mirror_plane)
+mirror_2:rotate('y', -20)
+mirror_2:translate(-0.2,0.32,-0.12)
+mirror_2:add_child(mirror_root)
 plane:add_child(mirror_2)
 
 
@@ -119,11 +123,11 @@ bauble:set_material(gold)
 trophy:add_child(bauble)
 
 --nonhier sphere and cube outside
-nhsphere = gr.nh_sphere('nhsphere', {-11,-13.6,50}, 0.5)
+nhsphere = gr.nh_sphere('nhsphere', {-11,-13.7,50}, 0.5)
 nhsphere:set_material(brubber)
 scene:add_child(nhsphere)
 
-nh_box = gr.nh_box('nh_box', {10,-14.2,50}, 1)
+nh_box = gr.nh_box('nh_box', {10,-14.3,50}, 1)
 nh_box:set_material(pewter)
 scene:add_child(nh_box)
 
