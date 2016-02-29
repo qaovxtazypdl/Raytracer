@@ -19,6 +19,7 @@ public:
     delete boundingBox;
   }
 private:
+  bool computeBGT(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, Triangle tri, double &beta, double &gamma, double &t);
   friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
   NonhierBox *boundingBox;
   std::vector<glm::vec3> m_vertices;

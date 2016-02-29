@@ -63,7 +63,7 @@ std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
   return out;
 }
 
-
+/*
 IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
   if (MACRO_RENDER_BOUNDING_BOX) {
     return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
@@ -72,7 +72,6 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
   if (!boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t).didIntersect) {
     return IntersectionInfo();
   }
-
   const double EPSILON = 1E-3;
   double min_t = std::numeric_limits<double>::infinity();
   bool foundOne = false;
@@ -118,6 +117,93 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const g
 
     //check for intersection
     if (t >= EPSILON && t <= max_t && beta >= 0 && gamma >= 0 && beta+gamma <= 1) {
+      //found! update if t value of intersection is less. (find minimum t)
+      if (min_t > t) {
+        foundOne = true;
+        min_t = t;
+        intersect_normal = normalize(vec4(cross(v2-v1, v3-v1), 0.0f));
+      }
+    }
+  }
+
+  if (foundOne) {
+    if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
+    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal);
+  } else {
+    return IntersectionInfo();
+  }
+}
+*/
+
+
+bool Mesh::computeBGT(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, Triangle tri, double &beta, double &gamma, double &t) {
+  vec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
+  vec4 ray_b = ray_origin + ray_dir;
+  vec3 a = vec3(ray_origin[0], ray_origin[1], ray_origin[2]);
+  vec3 b = vec3(ray_b[0], ray_b[1], ray_b[2]);
+
+  vec3 R = a-v1;
+  vec3 x = v2-v1;
+  vec3 y = v3-v1;
+  vec3 z = vec3(-ray_dir[0], -ray_dir[1], -ray_dir[2]);
+
+  //intersect
+  mat3 A = mat3(x,y,z);
+
+  double D = determinant(A);
+  if (abs(D) < 1E-6) {
+    return false;
+  }
+  D = 1/D;
+
+  A[0] = R;
+  double D1 = determinant(A);
+  beta = D1*D;
+  if (beta < 0.0 || beta > 1.0) {
+    return false;
+  }
+
+  A[0] = x;
+  A[1] = R;
+  double D2 = determinant(A);
+  gamma = D2*D;
+  if (gamma < 0.0 || beta + gamma > 1.0) {
+    return false;
+  }
+
+  A[1] = y;
+  A[2] = R;
+  double D3 = determinant(A);
+  t = D3*D;
+
+  return true;
+}
+
+IntersectionInfo Mesh::checkRayIntersection(const glm::vec4 &ray_origin, const glm::vec4 &ray_dir, double max_t) {
+  if (MACRO_RENDER_BOUNDING_BOX) {
+    return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
+  }
+
+  if (!boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t).didIntersect) {
+    return IntersectionInfo();
+  }
+
+  const double EPSILON = 1E-3;
+  double min_t = std::numeric_limits<double>::infinity();
+  bool foundOne = false;
+  vec4 intersect_normal;
+
+  int i = 0;
+  //return maximum intersection z
+  for (Triangle tri : m_faces) {
+    i++;
+
+    vec3 v1 = m_vertices[tri.v1], v2 = m_vertices[tri.v2], v3 = m_vertices[tri.v3];
+    double beta, gamma, t;
+    if (!computeBGT(ray_origin, ray_dir, tri, beta, gamma, t)) continue;
+
+    //check for intersection
+    if (t >= EPSILON) {
       //found! update if t value of intersection is less. (find minimum t)
       if (min_t > t) {
         foundOne = true;
