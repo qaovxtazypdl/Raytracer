@@ -33,7 +33,7 @@ mirror_plane:set_material(mirror)
 
 mirror_edge = gr.mesh('mirror_edge', 'Assets/cylinder.obj')
 mirror_edge:set_material(silver)
-mirror_plane:add_child(mirror_edge)
+--mirror_plane:add_child(mirror_edge)
 
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 scene:add_child(plane)
@@ -117,6 +117,14 @@ bauble:set_material(gold)
 trophy:add_child(bauble)
 
 --nonhier sphere and cube outside
+nhsphere = gr.nh_sphere('nhsphere', {0,0, -50}, 13)
+nhsphere:set_material(brubber)
+scene:add_child(nhsphere)
+
+nh_box = gr.nh_box('nh_box', {0,0, -50}, 13)
+nh_box:set_material(pewter)
+scene:add_child(nh_box)
+
 --cylindrical mirror edges
 gr.render(scene, 'sample.png', 400, 400,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
