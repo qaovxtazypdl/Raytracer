@@ -1,0 +1,10 @@
+Compilation
+=====================================
+premake4 gmake
+make
+
+(same as before)
+
+
+Manual
+=====================================

@@ -62,7 +62,7 @@ scene:rotate('X', 23)
 
 -- the floor
 
-plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+plane = gr.mesh( 'plane', 'plane.obj' )
 scene:add_child(plane)
 plane:set_material(grass)
 plane:scale(30, 30, 30)
@@ -71,7 +71,7 @@ plane:scale(30, 30, 30)
 -- buckyball at the centre of the real Stonehenge was destroyed
 -- in the great fire of 733 AD.
 
-buckyball = gr.mesh( 'buckyball', 'Assets/buckyball.obj' )
+buckyball = gr.mesh( 'buckyball', 'buckyball.obj' )
 scene:add_child(buckyball)
 buckyball:set_material(stone)
 buckyball:scale(1.5, 1.5, 1.5)
@@ -91,7 +91,7 @@ for _, pt in pairs({
    cow_instance:scale(1.4, 1.4, 1.4)
    cow_instance:rotate('Y', pt[2])
    cow_instance:translate(table.unpack(pt[1]))
-
+   
    cow_number = cow_number + 1
 end
 
@@ -105,6 +105,6 @@ for i = 1, 6 do
 end
 
 gr.render(scene,
-	  'simple-cows.png', 500, 500,
+	  'simple-cows.png', 256, 256,
 	  {0, 2, 30}, {0, 0, -1}, {0, 1, 0}, 50,
 	  {0.4, 0.4, 0.4}, {gr.light({200, 202, 430}, {0.8, 0.8, 0.8}, {1, 0, 0})})
