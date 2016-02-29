@@ -1,5 +1,6 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.2, 0.05, 0.03}, 20)
+carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.2, 0.3, 0.3}, {0.75, 0.75, 0.75}, 120)
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
 emerald = gr.material({0.07568, 0.61424, 0.07568}, {0.633, 0.727811, 0.633}, 76.8)
@@ -36,11 +37,11 @@ mirror_edge:set_material(silver)
 --mirror_plane:add_child(mirror_edge)
 
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
-scene:add_child(plane)
 plane:set_material(stone)
 plane:scale(50,50,100)
 plane:rotate('x', 15)
 plane:translate(0,-1,0)
+scene:add_child(plane)
 
 cow = gr.mesh( 'cow', 'Assets/cow.obj' )
 cow:rotate('y', 90)
@@ -117,15 +118,21 @@ bauble:set_material(gold)
 trophy:add_child(bauble)
 
 --nonhier sphere and cube outside
-nhsphere = gr.nh_sphere('nhsphere', {0,0, -50}, 13)
+nhsphere = gr.nh_sphere('nhsphere', {-11,-13.5,50}, 0.5)
 nhsphere:set_material(brubber)
 scene:add_child(nhsphere)
 
-nh_box = gr.nh_box('nh_box', {0,0, -50}, 13)
+nh_box = gr.nh_box('nh_box', {10,-14.2,50}, 1)
 nh_box:set_material(pewter)
 scene:add_child(nh_box)
 
---cylindrical mirror edges
+--red carpet
+redcarpet = gr.cube('redcarpet')
+redcarpet:translate(-0.5,0.3,0)
+redcarpet:scale(0.1,0.01,1)
+redcarpet:set_material(carpet)
+plane:add_child(redcarpet)
+
 gr.render(scene, 'sample.png', 400, 400,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
