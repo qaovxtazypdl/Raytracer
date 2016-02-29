@@ -135,7 +135,7 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       if (min_t > t) {
         foundOne = true;
         min_t = t;
-        intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0f));
+        intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0));
       }
     }
   }

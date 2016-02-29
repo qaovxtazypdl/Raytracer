@@ -5,12 +5,12 @@
 
 class PhongMaterial : public Material {
 public:
-  PhongMaterial(const glm::vec3& kd, const glm::vec3& ks, double shininess);
+  PhongMaterial(const glm::dvec3& kd, const glm::dvec3& ks, double shininess);
   virtual ~PhongMaterial();
 
-  glm::vec3 m_kd;
-  glm::vec3 m_ks;
-  glm::vec3 m_refr;
+  glm::dvec3 m_kd;
+  glm::dvec3 m_ks;
+  glm::dvec3 m_refr;
 
   double m_indexOfRefraction;
   double m_shininess;

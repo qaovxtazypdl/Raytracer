@@ -33,7 +33,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
   //m_radius;
   dvec4 a = ray_origin;
   dvec4 b = ray_dir + ray_origin;
-  dvec4 c = dvec4(m_pos, 1.0f);
+  dvec4 c = dvec4(m_pos, 1.0);
 
   double roots[2];
   size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-m_radius*m_radius, roots);

@@ -1,5 +1,4 @@
 bugs
-shadow gets culled early- related to high epsilon / mesh/sphere stability                                           4h
 phong implementation/multiplying k_d in multiple times                                                              4h
 
 

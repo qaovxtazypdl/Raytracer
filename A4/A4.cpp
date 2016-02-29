@@ -7,7 +7,7 @@ double PI = 3.1415926535897932384;
 double INF = std::numeric_limits<double>::infinity();
 
 //fovy radians
-dvec4 ray_direction(double nx, double ny, double w, double h, double d, float x, float y, const dvec3 &eye, const dvec3 &view, const dvec3 &up) {
+dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x, double y, const dvec3 &eye, const dvec3 &view, const dvec3 &up) {
   dvec4 p(x, y, 0, 1);
 
   //translate_1  -n_x/2, -n_y/2 d
@@ -20,14 +20,14 @@ dvec4 ray_direction(double nx, double ny, double w, double h, double d, float x,
   dvec3 w_3 = normalize(view - eye);
   dvec3 u_3 = normalize(cross(up, w_3));
   dvec3 v_3 = cross(w_3, u_3);
-  dvec4 col4 = dvec4(0.0f,0.0f,0.0f,1.0f);
+  dvec4 col4 = dvec4(0.0,0.0,0.0,1.0);
 
-  p = dmat4(dvec4(u_3, 0.0f), dvec4(v_3, 0.0f), dvec4(w_3, 0.0f), col4) * p;
+  p = dmat4(dvec4(u_3, 0.0), dvec4(v_3, 0.0), dvec4(w_3, 0.0), col4) * p;
 
   //translate to lookfrom
   p = translate(dvec3(eye[0], eye[1], eye[2])) * p;
 
-  return p - dvec4(eye, 1.0f);
+  return p - dvec4(eye, 1.0);
 }
 
 
@@ -48,7 +48,7 @@ pair<GeometryNode *, IntersectionInfo> testHit(const vector<HierarchicalNodeInfo
       min_t = intersect.intersect_t;
       minNode = node.geoNode;
       intersectionInfo = intersect;
-      intersectionInfo.normal = normalize(dvec4(T_invtrans * dvec3(intersectionInfo.normal), 0.0f));
+      intersectionInfo.normal = normalize(dvec4(T_invtrans * dvec3(intersectionInfo.normal), 0.0));
       intersectionInfo.point = T * intersectionInfo.point;
     }
   }
@@ -206,15 +206,15 @@ void A4_Render(
         for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
           for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
             dvec4 ray_dir = ray_direction(ny, nx, w, h, d, x + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-            pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0f), ray_dir, ambient, lights, 0);
+            pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
           }
         }
       } else {
         dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x + 0.5, y + 0.5, eye, view, up);
-        pixelColor += trace(nodes, dvec4(eye, 1.0f), ray_dir, ambient, lights, 0);
+        pixelColor += trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
       }
 
-      pixelColor = min(pixelColor, dvec3(1.0f, 1.0f, 1.0f));
+      pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
 
       for (int i = 0; i < 3; i++) {
         image(x, ny - y - 1, i) = pixelColor[i];
