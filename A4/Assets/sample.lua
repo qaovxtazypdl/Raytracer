@@ -2,6 +2,8 @@ hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.2, 0.05, 0.03}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.2, 0.3, 0.3}, {0.75, 0.75, 0.75}, 120)
+
+--obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
 emerald = gr.material({0.07568, 0.61424, 0.07568}, {0.633, 0.727811, 0.633}, 76.8)
 jade = gr.material({0.54, 0.89, 0.63}, {0.316228, 0.316228, 0.316228}, 12.8)
@@ -20,7 +22,6 @@ polcopper = gr.material({0.5508, 0.2118, 0.066}, {0.580594, 0.223257, 0.0695701}
 polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006}, 83.2)
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
-
 
 primary_light = gr.light({-100.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
 secondary_light = gr.light({0, 100.0, 0}, {0.1, 0.7, 0.5}, {1, 0.4, 0})
@@ -57,7 +58,7 @@ cow:rotate('y', 90)
 cow:translate(0,4.3,22)
 cow:scale(0.01,0.01,0.01)
 cow:set_material(hide)
---plane:add_child(cow)
+plane:add_child(cow)
 
 mirror_1 = gr.node('mirror_instance_1')
 mirror_1:rotate('y', 20)
