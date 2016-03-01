@@ -1,5 +1,5 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
-stone = gr.material({0.5, 0.40, 0.01}, {0.2, 0.05, 0.03}, 20)
+stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120)
 
@@ -58,7 +58,7 @@ cow:rotate('y', 90)
 cow:translate(0,4.3,22)
 cow:scale(0.01,0.01,0.01)
 cow:set_material(hide)
-plane:add_child(cow)
+--plane:add_child(cow)
 
 mirror_1 = gr.node('mirror_instance_1')
 mirror_1:rotate('y', 20)

@@ -86,15 +86,19 @@ dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial
 }
 
 
-dvec3 getBackgroundColor(const dvec4 &ray_dir) {
-  dvec4 normalized_dir = max(dvec4(0,0,0,0), (1.0/1.7) * (0.7 + normalize(ray_dir)));
-  return dvec3(normalized_dir[1]/2,normalized_dir[0]/2,normalized_dir[2]/2);
+dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
+  dvec4 normalized_dir = abs(normalize(ray_dir));
+  dvec4 posn = ray_origin + (91.674223857 * normalize(ray_dir));
+  dvec3 color;
+  if (((int)((posn[0] + posn[1] + posn[2]) * 19237.12597) % 101) == 0) color += dvec3(pow(0.67, depth/1.25 + 1.13));
+  color += dvec3(normalized_dir[1]/1.6,normalized_dir[0]/1.65,normalized_dir[2]/2.1);
+  return color;
 }
 
 //origin is point
 //direction is vector
 dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
-  if (depth >= 10) return getBackgroundColor(ray_dir);
+  if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
 
   pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
 
@@ -119,7 +123,7 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
     }
     return color;
   } else {
-    return getBackgroundColor(ray_dir);
+    return getBackgroundColor(ray_origin, ray_dir, depth);
   }
 }
 
