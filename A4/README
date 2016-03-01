@@ -10,7 +10,7 @@ tested on gl07.student.cs
 Manual
 =====================================
 NOTE: I prepended Assets/ to all objects loaded inside the lua scripts, so that running ./A4 in the A4 directory, pointing
-  to a lua file inside Assets/ will load the objects correctly.
+  to a lua file inside Assets/ will load the objects correctly. PLEASE RUN IN A4 DIRECTORY, not A4/Assets. (eg. ./A4 Assets/sample.lua)
   I assumed that we could use dvec, dmat4, double ... etc to help reduce numerical error.
 
 Extra feature: recursive reflection.

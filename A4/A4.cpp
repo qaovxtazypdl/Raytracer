@@ -85,7 +85,7 @@ dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial
   return color;
 }
 
-
+/*
 dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
   dvec4 normalized_dir = abs(normalize(ray_dir));
   dvec4 posn = ray_origin + (102.6223857 * normalize(ray_dir));
@@ -97,6 +97,32 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
     color += dvec3(pow(0.67, depth/1.25 + 0.79));
   }
   color += dvec3(normalized_dir[1]/1.6,normalized_dir[0]/1.65,normalized_dir[2]/2.1);
+  return color;
+}*/
+
+dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
+  dvec3 color;
+
+  double r = 100000.0;
+  dvec4 a = ray_origin;
+  dvec4 b = ray_dir + ray_origin;
+  dvec4 c = dvec4(0,0,0,1.0);
+
+  double roots[2];
+  size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-r*r, roots);
+
+  double t = std::max(roots[0], roots[1]);
+
+  dvec4 intersectionPoint = t*ray_dir + ray_origin;
+  dvec4 normalized_point = abs(normalize(intersectionPoint));
+
+  int density = (pow(abs(dot(intersectionPoint, dvec4(1,-0.75,0,0)) / 1000), 1.7)) / 3 + 6;
+  int pseudorandom = (int)((1.02*intersectionPoint[0] + 0.98*intersectionPoint[1] + 1.03*intersectionPoint[2]) * 117.12597 + 23.23987188) % density;
+  //pseudorandom = (int)(pseudorandom * 2398.1287416 + 37.134) % 271;
+  if (MACRO_STARFIELD_BACKGROUND_ON && pseudorandom == 0) {
+    color += dvec3(pow(0.67, depth/1.25 + 0.79));
+  }
+  color += dvec3(normalized_point[1]/1.42,normalized_point[0]/1.76,normalized_point[2]/3.3);
   return color;
 }
 

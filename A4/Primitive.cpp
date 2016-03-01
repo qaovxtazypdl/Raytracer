@@ -56,14 +56,17 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
   }
 }
 
+//refernce: https://tavianator.com/fast-branchless-raybounding-box-intersections/
 IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
-  double tx_first = (m_pos[0] - ray_origin[0]) / ray_dir[0];
-  double ty_first = (m_pos[1] - ray_origin[1]) / ray_dir[1];
-  double tz_first = (m_pos[2] - ray_origin[2]) / ray_dir[2];
+  glm::dvec4 inv_ray_dir = 1.0/ray_dir;
 
-  double tx_second = (m_pos[0] + m_size[0] - ray_origin[0]) / ray_dir[0];
-  double ty_second = (m_pos[1] + m_size[1] - ray_origin[1]) / ray_dir[1];
-  double tz_second = (m_pos[2] + m_size[2] - ray_origin[2]) / ray_dir[2];
+  double tx_first = (m_pos[0] - ray_origin[0]) * inv_ray_dir[0];
+  double ty_first = (m_pos[1] - ray_origin[1]) * inv_ray_dir[1];
+  double tz_first = (m_pos[2] - ray_origin[2]) * inv_ray_dir[2];
+
+  double tx_second = (m_pos[0] + m_size[0] - ray_origin[0]) * inv_ray_dir[0];
+  double ty_second = (m_pos[1] + m_size[1] - ray_origin[1]) * inv_ray_dir[1];
+  double tz_second = (m_pos[2] + m_size[2] - ray_origin[2]) * inv_ray_dir[2];
 
   double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
   double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
