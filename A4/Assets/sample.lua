@@ -58,7 +58,7 @@ cow:rotate('y', 90)
 cow:translate(0,4.3,22)
 cow:scale(0.01,0.01,0.01)
 cow:set_material(hide)
---plane:add_child(cow)
+plane:add_child(cow)
 
 mirror_1 = gr.node('mirror_instance_1')
 mirror_1:rotate('y', 20)
