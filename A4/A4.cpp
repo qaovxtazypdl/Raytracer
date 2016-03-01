@@ -85,21 +85,6 @@ dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial
   return color;
 }
 
-/*
-dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
-  dvec4 normalized_dir = abs(normalize(ray_dir));
-  dvec4 posn = ray_origin + (102.6223857 * normalize(ray_dir));
-  dvec3 color;
-
-  int pseudorandom = (int)((1.1*posn[0] + 0.98*posn[1] + 1.03*posn[2]) * 14237.12597 + 23.23987188) % 282;
-  //pseudorandom = (int)(pseudorandom * 2398.1287416 + 37.134) % 271;
-  if (MACRO_STARFIELD_BACKGROUND_ON && pseudorandom == 0) {
-    color += dvec3(pow(0.67, depth/1.25 + 0.79));
-  }
-  color += dvec3(normalized_dir[1]/1.6,normalized_dir[0]/1.65,normalized_dir[2]/2.1);
-  return color;
-}*/
-
 dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
   dvec3 color;
 
