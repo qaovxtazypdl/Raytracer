@@ -90,7 +90,9 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   dvec4 normalized_dir = abs(normalize(ray_dir));
   dvec4 posn = ray_origin + (91.674223857 * normalize(ray_dir));
   dvec3 color;
-  if (((int)((posn[0] + posn[1] + posn[2]) * 19237.12597) % 101) == 0) color += dvec3(pow(0.67, depth/1.25 + 1.13));
+  if (MACRO_STARFIELD_BACKGROUND_ON && ((int)((posn[0] + posn[1] + posn[2]) * 19237.12597) % 101) == 0) {
+    color += dvec3(pow(0.67, depth/1.25 + 1.13));
+  }
   color += dvec3(normalized_dir[1]/1.6,normalized_dir[0]/1.65,normalized_dir[2]/2.1);
   return color;
 }
