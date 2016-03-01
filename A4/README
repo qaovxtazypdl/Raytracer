@@ -24,12 +24,13 @@ Extra feature: recursive reflection.
     On the lower side of the image, there is a nonhierarchical sphere and box on the ground beside the carpet.
     The scene has three light sources. One directly on top, one directly behind eye, and the strongest one on a light angle from the top.
 
-
---Screenshot saved as screenshot.jpg (my original scene)
+--Screenshot saved as screenshot.jpg (my original scene @ 2x)
 --Sample renderings saved under Assets/ (.png files)
   -hier, instance, macho-cows, nonhier, simple, simple-cows, macho-cows-bb (bounding box special render)
-  -sample (original scene), and a non-square version of the sample for more x-range (sample-720p)
-  -also included are versions of the above files with the -nr prefix, which are rendered without reflection.
-
+  -sample (original scene)
+  -also included are versions of the above files with the -nref prefix, which are rendered without reflection.
+  -also included are versions of the above files with the -nstar prefix, which are rendered without starfield, for
+    easier time distinguishing between a star and a glitched fleck (not that there are any).
+  -also included are versions of the above files with the -2x prefix, which are rendered at 2x resolution from default
 
 
