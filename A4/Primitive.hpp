@@ -89,3 +89,39 @@ public:
   }
   virtual ~Cube();
 };
+
+
+class Cone : public Primitive {
+public:
+  Cone()
+  {
+  }
+
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
+  virtual ~Cone();
+
+private:
+  glm::vec3 m_pos;
+  glm::vec3 m_size;
+};
+
+
+class Cylinder : public Primitive {
+public:
+  Cylinder()
+  {
+  }
+
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
+  virtual ~Cylinder();
+};
+
+
+class Torus : public Primitive {
+public:
+  Torus()
+  {
+  }
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
+  virtual ~Torus();
+};

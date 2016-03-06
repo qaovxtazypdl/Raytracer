@@ -27,6 +27,17 @@ NonhierBox::~NonhierBox()
 {
 }
 
+Cone::~Cone()
+{
+}
+
+Cylinder::~Cylinder()
+{
+}
+
+Torus::~Torus()
+{
+}
 
 IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
   //m_pos;
@@ -44,7 +55,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
     double t = std::min(roots[0], roots[1]);
     double t_2 = std::max(roots[0], roots[1]);
 
-    if (length(ray_origin - c) < m_radius - 1) {
+    if (length(ray_origin - c) < m_radius - EPSILON) {
       t = t_2;
     }
 
@@ -93,4 +104,74 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
     return IntersectionInfo(tmin, tmin*ray_dir + ray_origin, normal);
   }
 }
+
+IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+  return IntersectionInfo();
+}
+
+IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+  bool found = false;
+  double t = std::numeric_limits<double>::infinity();
+  dvec4 norm;
+  double roots[2];
+
+  //intersection with planes z=1, z=-1
+  double tplaneupper = (1.0 - ray_origin[2]) / ray_dir[2];
+  if (tplaneupper > EPSILON && tplaneupper < t) {
+    dvec4 intersect = ray_origin + tplaneupper*ray_dir;
+    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
+      //accept and update
+      found = true;
+      t = tplaneupper;
+      norm = dvec4(0,0,1,0);
+    }
+  }
+
+  double tplanelower = (-1.0 - ray_origin[2]) / ray_dir[2];
+  if (tplanelower > EPSILON && tplanelower < t) {
+    dvec4 intersect = ray_origin + tplanelower*ray_dir;
+    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
+      //accept and update
+      found = true;
+      t = tplanelower;
+      norm = dvec4(0,0,-1,0);
+    }
+  }
+
+  size_t numRoots = quadraticRoots(
+    ray_dir[0]*ray_dir[0] + ray_dir[1]*ray_dir[1],
+    2*(ray_origin[0]*ray_dir[0] + ray_origin[1]*ray_dir[1]),
+    ray_origin[0]*ray_origin[0] + ray_origin[1]*ray_origin[1] - 1, roots
+  );
+
+  //intersection with circular portion
+  if (numRoots == 2) {
+    double t_1 = std::min(roots[0], roots[1]);
+    double t_2 = std::max(roots[0], roots[1]);
+
+    if (length(dvec3(ray_origin[0], ray_origin[1], 0)) < 1 - EPSILON) {
+      t_1 = t_2;
+    }
+
+    if (t_1 > EPSILON && t_1 < t) {
+      dvec4 intersect = ray_origin + t_1*ray_dir;
+      if (abs(intersect[2]) < 1 - EPSILON){
+        found = true;
+        t = t_1;
+        norm = normalize(intersect - dvec4(0,0,intersect[2],1));
+      }
+    }
+  }
+
+  if (t > max_t || !found) {
+    return IntersectionInfo();
+  } else {
+    return IntersectionInfo(t, t*ray_dir + ray_origin, norm);
+  }
+}
+
+IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+  return IntersectionInfo();
+}
+
 
