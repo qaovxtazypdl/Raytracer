@@ -111,33 +111,21 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
   dvec4 norm;
   double roots[2];
 
-  //intersection with planes z=1, z=-1
-  double tplaneupper = (1.0 - ray_origin[2]) / ray_dir[2];
-  if (tplaneupper > EPSILON && tplaneupper < t) {
-    dvec4 intersect = ray_origin + tplaneupper*ray_dir;
-    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
+  double tplane = (-1.0 - ray_origin[1]) / ray_dir[1];
+  if (tplane > EPSILON && tplane < t) {
+    dvec4 intersect = ray_origin + tplane*ray_dir;
+    if (length(dvec3(intersect[0], intersect[2], 0)) < 1 - EPSILON) {
       //accept and update
       found = true;
-      t = tplaneupper;
-      norm = dvec4(0,0,1,0);
-    }
-  }
-
-  double tplanelower = (-1.0 - ray_origin[2]) / ray_dir[2];
-  if (tplanelower > EPSILON && tplanelower < t) {
-    dvec4 intersect = ray_origin + tplanelower*ray_dir;
-    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
-      //accept and update
-      found = true;
-      t = tplanelower;
-      norm = dvec4(0,0,-1,0);
+      t = tplane;
+      norm = dvec4(0,-1,0,0);
     }
   }
 
   size_t numRoots = quadraticRoots(
-    ray_dir[0]*ray_dir[0] + ray_dir[1]*ray_dir[1],
-    2*(ray_origin[0]*ray_dir[0] + ray_origin[1]*ray_dir[1]),
-    ray_origin[0]*ray_origin[0] + ray_origin[1]*ray_origin[1] - 1, roots
+    ray_dir[0]*ray_dir[0] + ray_dir[2]*ray_dir[2] - ray_dir[1]*ray_dir[1],
+    2*(ray_origin[0]*ray_dir[0] + ray_origin[2]*ray_dir[2] - ray_origin[1]*ray_dir[1]),
+    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1], roots
   );
 
   //intersection with circular portion
@@ -145,16 +133,16 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     double t_1 = std::min(roots[0], roots[1]);
     double t_2 = std::max(roots[0], roots[1]);
 
-    if (length(dvec3(ray_origin[0], ray_origin[1], 0)) < 1 - EPSILON) {
+    if (length(dvec3(ray_origin[0], ray_origin[2], 0)) < 1 - EPSILON) {
       t_1 = t_2;
     }
 
     if (t_1 > EPSILON && t_1 < t) {
       dvec4 intersect = ray_origin + t_1*ray_dir;
-      if (abs(intersect[2]) < 1 - EPSILON){
+      if (intersect[1] >= -1 && intersect[1] < -EPSILON){
         found = true;
         t = t_1;
-        norm = normalize(intersect - dvec4(0,0,intersect[2],1));
+        norm = normalize(intersect - dvec4(0,intersect[1],0,1));
       }
     }
   }
@@ -173,32 +161,32 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
   double roots[2];
 
   //intersection with planes z=1, z=-1
-  double tplaneupper = (1.0 - ray_origin[2]) / ray_dir[2];
+  double tplaneupper = (1.0 - ray_origin[1]) / ray_dir[1];
   if (tplaneupper > EPSILON && tplaneupper < t) {
     dvec4 intersect = ray_origin + tplaneupper*ray_dir;
-    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
+    if (length(dvec3(intersect[0], intersect[2], 0)) < 1 - EPSILON) {
       //accept and update
       found = true;
       t = tplaneupper;
-      norm = dvec4(0,0,1,0);
+      norm = dvec4(0,1,0,0);
     }
   }
 
-  double tplanelower = (-1.0 - ray_origin[2]) / ray_dir[2];
+  double tplanelower = (-1.0 - ray_origin[1]) / ray_dir[1];
   if (tplanelower > EPSILON && tplanelower < t) {
     dvec4 intersect = ray_origin + tplanelower*ray_dir;
-    if (length(dvec3(intersect[0], intersect[1], 0)) < 1 - EPSILON) {
+    if (length(dvec3(intersect[0], intersect[2], 0)) < 1 - EPSILON) {
       //accept and update
       found = true;
       t = tplanelower;
-      norm = dvec4(0,0,-1,0);
+      norm = dvec4(0,-1,0,0);
     }
   }
 
   size_t numRoots = quadraticRoots(
-    ray_dir[0]*ray_dir[0] + ray_dir[1]*ray_dir[1],
-    2*(ray_origin[0]*ray_dir[0] + ray_origin[1]*ray_dir[1]),
-    ray_origin[0]*ray_origin[0] + ray_origin[1]*ray_origin[1] - 1, roots
+    ray_dir[0]*ray_dir[0] + ray_dir[2]*ray_dir[2],
+    2*(ray_origin[0]*ray_dir[0] + ray_origin[2]*ray_dir[2]),
+    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - 1, roots
   );
 
   //intersection with circular portion
@@ -206,16 +194,16 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
     double t_1 = std::min(roots[0], roots[1]);
     double t_2 = std::max(roots[0], roots[1]);
 
-    if (length(dvec3(ray_origin[0], ray_origin[1], 0)) < 1 - EPSILON) {
+    if (length(dvec3(ray_origin[0], ray_origin[2], 0)) < 1 - EPSILON) {
       t_1 = t_2;
     }
 
     if (t_1 > EPSILON && t_1 < t) {
       dvec4 intersect = ray_origin + t_1*ray_dir;
-      if (abs(intersect[2]) < 1 - EPSILON){
+      if (abs(intersect[1]) < 1 - EPSILON){
         found = true;
         t = t_1;
-        norm = normalize(intersect - dvec4(0,0,intersect[2],1));
+        norm = normalize(intersect - dvec4(0,intersect[1],0,1));
       }
     }
   }
