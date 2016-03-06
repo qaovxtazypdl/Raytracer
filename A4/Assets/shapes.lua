@@ -46,6 +46,15 @@ central_cylinder:translate(0,0.2,0)
 central_cylinder:set_material(obsidian)
 plane:add_child(central_cylinder)
 
+central_cone = gr.cone('central_cone')
+central_cone:scale(1/50,1/50,1/100)
+central_cone:scale(10,10,10)
+central_cone:translate(0,0.13,-0.1)
+central_cone:rotate('x', 90)
+central_cone:translate(0.3,0.2,0)
+central_cone:set_material(polgold)
+plane:add_child(central_cone)
+
 gr.render(scene, 'shapes.png', 500, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
