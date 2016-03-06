@@ -60,6 +60,17 @@ dvec4 ggReflection(const dvec4 &v, const dvec4 &n) {
   return v - 2.0 * n * (dot(v,n));
 }
 
+dvec4 ggRefraction(const dvec4 &v, const dvec4 &n, double indexOfRefr) {
+  double n1 = 1.33;
+  double n2 = 1.67;
+
+  double t_i = acos(-dot(v,n)/length(v)/length(n));
+  double t_out = n1 * t_i/n2;
+
+  if (t_out >= PI/2) return dvec4(0,0,0,0);
+  return n1/n2 * v + (n1/n2*cos(t_i) - sqrt(1-pow(sin(t_out),2))) * n;
+}
+
 dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
@@ -130,12 +141,18 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
     color += k_d * ambient;
 
     //light contributions
-    color += directLight(nodes, mat, ray_dir, point, normal, lights);
+    color += 0.5 * directLight(nodes, mat, ray_dir, point, normal, lights);
 
     //reflection
     if (MACRO_REFLECTION_ON && length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
       color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+    }
+
+    if (MACRO_REFRACTION_ON && length(k_s) > 0) {
+      //dvec4 reflDirection = ggReflection(ray_dir, normal);
+      dvec4 refrDirection = ggRefraction(ray_dir, normal, 1.56);
+      color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
@@ -212,11 +229,25 @@ void A4_Render(
   default_random_engine rng;
   uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
 
+  vector<dvec3> vertexColors((nx+1) * (ny+1));
+
+  for (uint y = 0; y <= ny; ++y) {
+    for (uint x = 0; x <= nx; ++x) {
+      if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
+        cout << "Trace - Progress: " << (x + y*nx)*100/(ny*nx) << endl;
+      }
+      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x, y, eye, view, up);
+      vertexColors[(nx + 1) * y + x] = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+    }
+  }
+
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
-      if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
-        cout << "Progress: " << (x + y*nx)*100/(ny*nx) << endl;
+      if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
+        cout << "AA - Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
+      //find points where pixel trace differences are high, and do a stochastic jitter SS on that pixel specifically.
+
 
       dvec3 pixelColor;
       if (MACRO_USE_SUPERSAMPLE) {
@@ -227,8 +258,8 @@ void A4_Render(
           }
         }
       } else {
-        dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x + 0.5, y + 0.5, eye, view, up);
-        pixelColor += trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+        pixelColor = (vertexColors[(nx + 1) * y + x] + vertexColors[(nx + 1) * (y+1) + (x+1)] + vertexColors[(nx + 1) * (y+1) + x] + vertexColors[(nx + 1) * y + (x+1)]) / 4;
+        pixelColor = vertexColors[(nx + 1) * y + x];
       }
 
       pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));

@@ -6,4 +6,5 @@
 #define MACRO_STARFIELD_BACKGROUND_ON true
 #define MACRO_RENDER_BOUNDING_BOX false
 #define MACRO_REFLECTION_ON true
+#define MACRO_REFRACTION_ON false
 
