@@ -35,6 +35,10 @@ Cylinder::~Cylinder()
 {
 }
 
+Hyperboloid::~Hyperboloid()
+{
+}
+
 Torus::~Torus()
 {
 }
@@ -215,19 +219,30 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
   }
 }
 
-IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
-    bool found = false;
+IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+  bool found = false;
   double t = std::numeric_limits<double>::infinity();
   dvec4 norm;
   double roots[2];
 
-  double tplane = (-1.0 - ray_origin[1]) / ray_dir[1];
-  if (tplane > EPSILON && tplane < t) {
-    dvec4 intersect = ray_origin + tplane*ray_dir;
-    if (length(dvec3(intersect[0], intersect[2], 0)) < 1 - EPSILON) {
+  double tplanetop = (1.0 - ray_origin[1]) / ray_dir[1];
+  if (tplanetop > EPSILON && tplanetop < t) {
+    dvec4 intersect = ray_origin + tplanetop*ray_dir;
+    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_squeeze) {
       //accept and update
       found = true;
-      t = tplane;
+      t = tplanetop;
+      norm = dvec4(0,1,0,0);
+    }
+  }
+
+  double tplanebottom = (-1.0 - ray_origin[1]) / ray_dir[1];
+  if (tplanebottom > EPSILON && tplanebottom < t) {
+    dvec4 intersect = ray_origin + tplanebottom*ray_dir;
+    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_squeeze) {
+      //accept and update
+      found = true;
+      t = tplanebottom;
       norm = dvec4(0,-1,0,0);
     }
   }
@@ -235,7 +250,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
   size_t numRoots = quadraticRoots(
     ray_dir[0]*ray_dir[0] + ray_dir[2]*ray_dir[2] - ray_dir[1]*ray_dir[1],
     2*(ray_origin[0]*ray_dir[0] + ray_origin[2]*ray_dir[2] - ray_origin[1]*ray_dir[1]),
-    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1] - 1, roots
+    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1] - m_squeeze, roots
   );
 
   //intersection with circular portion
@@ -249,7 +264,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
 
     if (t_1 > EPSILON && t_1 < t) {
       dvec4 intersect = ray_origin + t_1*ray_dir;
-      if (intersect[1] >= -1 && intersect[1] < -EPSILON){
+      if (abs(intersect[1]) < 1){
         found = true;
         t = t_1;
         norm = normalize(dvec4(intersect[0],-intersect[1],intersect[2],0));
@@ -263,5 +278,12 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
     return IntersectionInfo(t, t*ray_dir + ray_origin, norm);
   }
 }
+
+
+IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+    return IntersectionInfo();
+}
+
+
 
 
