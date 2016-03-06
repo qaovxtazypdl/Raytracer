@@ -113,10 +113,14 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   dvec4 normalized_point = abs(normalize(intersectionPoint));
 
   int density = (pow(abs(dot(intersectionPoint, dvec4(1,-0.75,0,0)) / 1000), 1.7)) / 3 + 6;
-  int pseudorandom = (int)((1.02*intersectionPoint[0] + 0.98*intersectionPoint[1] + 1.03*intersectionPoint[2]) * 17.12597 + 23.23987188) % density;
+  int pseudorandom = (int)((1.02*intersectionPoint[0] + 0.98*intersectionPoint[1] + 1.03*intersectionPoint[2]) * 3.237468235 + 23.23987188) % density;
 
   if (MACRO_STARFIELD_BACKGROUND_ON && pseudorandom == 0) {
-    color += dvec3(pow(0.67, depth/1.25 + 0.79));
+    if (MACRO_USE_SUPERSAMPLE) {
+      color += dvec3(pow(0.67, depth/1.25 + 0.79) * 2.67);
+    } else {
+      color += dvec3(pow(0.67, depth/1.25 + 0.79));
+    }
   }
   color += dvec3(normalized_point[1]/1.42,normalized_point[0]/1.76,normalized_point[2]/3.3);
   return color;

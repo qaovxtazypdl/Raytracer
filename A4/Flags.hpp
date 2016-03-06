@@ -1,6 +1,6 @@
 #pragma once
 
-#define MACRO_USE_SUPERSAMPLE true
+#define MACRO_USE_SUPERSAMPLE false
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 #define MACRO_STARFIELD_BACKGROUND_ON true
