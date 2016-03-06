@@ -142,7 +142,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       if (intersect[1] >= -1 && intersect[1] < -EPSILON){
         found = true;
         t = t_1;
-        norm = normalize(intersect - dvec4(0,intersect[1],0,1));
+        norm = normalize(dvec4(intersect[0],-intersect[1],intersect[2],0));
       }
     }
   }
@@ -203,7 +203,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       if (abs(intersect[1]) < 1 - EPSILON){
         found = true;
         t = t_1;
-        norm = normalize(intersect - dvec4(0,intersect[1],0,1));
+        norm = normalize(dvec4(intersect[0],0,intersect[2],0));
       }
     }
   }

@@ -53,6 +53,14 @@ central_cone:translate(0.32,0.2,0.5)
 central_cone:set_material(polgold)
 plane:add_child(central_cone)
 
+central_torus = gr.torus('central_torus')
+central_torus:scale(1/50,1/50,1/100)
+central_torus:scale(5,5,10)
+central_torus:translate(0,0.13,-0.1)
+central_torus:translate(-0.32,0.2,0.5)
+central_torus:set_material(polgold)
+plane:add_child(central_torus)
+
 gr.render(scene, 'shapes.png', 500, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
