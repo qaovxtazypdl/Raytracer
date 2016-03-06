@@ -58,6 +58,7 @@ central_hyperboloid:scale(1/50,1/50,1/100)
 central_hyperboloid:scale(5,5,10)
 central_hyperboloid:translate(0,0.13,-0.1)
 central_hyperboloid:translate(-0.32,0.2,0.5)
+central_hyperboloid:rotate('z', 90)
 central_hyperboloid:set_material(polgold)
 plane:add_child(central_hyperboloid)
 
