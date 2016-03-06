@@ -267,12 +267,20 @@ void A4_Render(
         }
       }
 
-      if (MACRO_USE_SUPERSAMPLE && adaptiveSS) {
-        pixelColor = dvec3(0.0, 0.0, 0.0);
-        for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
-          for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-            dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-            pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      if (MACRO_USE_SUPERSAMPLE_TEST) {
+        if (adaptiveSS) {
+          pixelColor = dvec3(1.0, 1.0, 1.0);
+        } else {
+          pixelColor = dvec3(0.0, 0.0, 0.0);
+        }
+      } else {
+        if (MACRO_USE_SUPERSAMPLE && adaptiveSS) {
+          pixelColor = dvec3(0.0, 0.0, 0.0);
+          for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
+            for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
+              dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+            }
           }
         }
       }
