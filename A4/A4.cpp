@@ -113,8 +113,8 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   dvec4 normalized_point = abs(normalize(intersectionPoint));
 
   int density = (pow(abs(dot(intersectionPoint, dvec4(1,-0.75,0,0)) / 1000), 1.7)) / 3 + 6;
-  int pseudorandom = (int)((1.02*intersectionPoint[0] + 0.98*intersectionPoint[1] + 1.03*intersectionPoint[2]) * 117.12597 + 23.23987188) % density;
-  //pseudorandom = (int)(pseudorandom * 2398.1287416 + 37.134) % 271;
+  int pseudorandom = (int)((1.02*intersectionPoint[0] + 0.98*intersectionPoint[1] + 1.03*intersectionPoint[2]) * 17.12597 + 23.23987188) % density;
+
   if (MACRO_STARFIELD_BACKGROUND_ON && pseudorandom == 0) {
     color += dvec3(pow(0.67, depth/1.25 + 0.79));
   }
@@ -141,7 +141,7 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
     color += k_d * ambient;
 
     //light contributions
-    color += 0.5 * directLight(nodes, mat, ray_dir, point, normal, lights);
+    color += directLight(nodes, mat, ray_dir, point, normal, lights);
 
     //reflection
     if (MACRO_REFLECTION_ON && length(k_s) > 0) {
@@ -229,37 +229,48 @@ void A4_Render(
   default_random_engine rng;
   uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
 
-  vector<dvec3> vertexColors((nx+1) * (ny+1));
+  vector<dvec3> vertexColors((nx+2) * (ny+2));
 
-  for (uint y = 0; y <= ny; ++y) {
-    for (uint x = 0; x <= nx; ++x) {
-      if ((x + y*nx)*100/(ny*nx) > (x + y*nx - 1)*100/(ny*nx)) {
-        cout << "Trace - Progress: " << (x + y*nx)*100/(ny*nx) << endl;
+  for (int y = 0; y < ny + 2; ++y) {
+    for (int x = 0; x < nx + 2; ++x) {
+      if ((x + y*(nx+2))*100/((ny+2)*(nx+2)) > (x + y*(nx+2) - 1)*100/((ny+2)*(nx+2))) {
+        cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
       }
-      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x, y, eye, view, up);
-      vertexColors[(nx + 1) * y + x] = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
+      vertexColors[(nx + 2) * y + x] = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
     }
   }
 
-	for (uint y = 0; y < ny; ++y) {
-		for (uint x = 0; x < nx; ++x) {
+	for (int y = 0; y < ny; ++y) {
+		for (int x = 0; x < nx; ++x) {
       if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
         cout << "AA - Progress: " << (x + y*nx)*100/(ny*nx) << endl;
       }
       //find points where pixel trace differences are high, and do a stochastic jitter SS on that pixel specifically.
+      dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
 
-
-      dvec3 pixelColor;
+      bool adaptiveSS = false;
+      double adaptiveThreshold = 0.03;
       if (MACRO_USE_SUPERSAMPLE) {
+        if (length(vertexColors[(nx + 2) * (y) + (x+1)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+2) + (x+1)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+1) + (x)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+1) + (x+2)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        }
+      }
+
+      if (MACRO_USE_SUPERSAMPLE && adaptiveSS) {
+        pixelColor = dvec3(0.0, 0.0, 0.0);
         for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
           for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-            dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
+            dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
             pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
           }
         }
-      } else {
-        pixelColor = (vertexColors[(nx + 1) * y + x] + vertexColors[(nx + 1) * (y+1) + (x+1)] + vertexColors[(nx + 1) * (y+1) + x] + vertexColors[(nx + 1) * y + (x+1)]) / 4;
-        pixelColor = vertexColors[(nx + 1) * y + x];
       }
 
       pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
