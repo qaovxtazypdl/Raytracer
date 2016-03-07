@@ -61,6 +61,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
 
     dvec4 pt1 = t*ray_dir + ray_origin;
     dvec4 pt2 = t_2*ray_dir + ray_origin;
+
     return IntersectionInfo({IntersectionPoint(
       t, pt1, normalize(pt1-c), m_material, this,
       t_2, pt2, normalize(pt2-c), m_material, this)}

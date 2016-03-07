@@ -102,7 +102,7 @@ public:
   }
 
   void TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_invtrans) {
-    for (IntersectionPoint pt : intersections) {
+    for (IntersectionPoint &pt : intersections) {
       pt.normal_1 = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.normal_1), 0.0));
       pt.point_1 = T * pt.point_1;
 

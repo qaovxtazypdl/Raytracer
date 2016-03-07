@@ -29,14 +29,14 @@ void GeometryNode::setMaterial( Material *mat )
 }
 
 
-IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir, double max_t) const {
+IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
   IntersectionInfo intersectionInfo;
   dmat4 T = trans;
   dmat4 T_inv = invtrans;
   dmat3 T_invtrans = invtrans_transpose;
 
   for (SceneNode * node : children) {
-    intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir, max_t));
+    intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
 
   intersectionInfo.UNION(m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, m_material));

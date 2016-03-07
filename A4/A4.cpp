@@ -51,15 +51,13 @@ dvec3 directLight(const SceneNode *root, const PhongMaterial &mat, const dvec4 &
 
   for (Light * light : lights) {
     dvec4 l_dir = dvec4(light->position, 1.0) - point;
-    IntersectionInfo result = root->testHit(point, l_dir, 1.0);
+    IntersectionInfo result = root->testHit(point, l_dir);
     IntersectionPoint pt = result.getFirstValidIntersection(1.0);
 
     if (!pt.valid) {
       double d = length(l_dir);
       double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
-
       dvec4 reflDirection = ggReflection(l_dir, normal);
-
       double l_dot_n = dot(normal, normalize(l_dir));
       double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
 
@@ -107,7 +105,7 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
 
-  IntersectionInfo result = root->testHit(ray_origin, ray_dir, INF);
+  IntersectionInfo result = root->testHit(ray_origin, ray_dir);
   IntersectionPoint pt = result.getFirstValidIntersection(INF);
 
   if (pt.valid) {
@@ -194,8 +192,8 @@ void A4_Render(
       if ((x + y*(nx+2))*100/((ny+2)*(nx+2)) > (x + y*(nx+2) - 1)*100/((ny+2)*(nx+2))) {
         cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
       }
-      if (!(x > 150 && x < 200 && y < ny-125 && y > ny-175)) continue;
-      if (!(x == 175 && y == ny-150-1)) continue;
+      //if (!(x > 225 && x < 275 && y < ny-250 && y > ny-300)) continue;
+      //if (!(x == 250 && y == ny-275-1)) continue;
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
       vertexColors[(nx + 2) * y + x] = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
     }

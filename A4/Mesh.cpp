@@ -176,7 +176,7 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     if (!computeBGT(ray_origin, ray_dir, tri, beta, gamma, t)) continue;
 
     //check for intersection
-    if (false && t >= EPSILON) {
+    if (t >= EPSILON) {
       //found! update if t value of intersection is less. (find minimum t)
       intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0));
       if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;

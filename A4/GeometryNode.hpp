@@ -10,7 +10,7 @@ public:
 		Material *mat = nullptr );
 
 	void setMaterial( Material *material );
-  virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) const;
+  virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
 
 	Material *m_material;
 	Primitive *m_primitive;
