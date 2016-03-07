@@ -6,6 +6,7 @@
 
 // #include "cs488-framework/ObjFileDecoder.hpp"
 #include "Mesh.hpp"
+#include "Material.hpp"
 
 using namespace glm;
 using namespace std;
@@ -106,8 +107,9 @@ bool Mesh::computeBGT(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, T
   return true;
 }
 
-IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
-  if (MACRO_RENDER_BOUNDING_BOX) {
+IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+  return IntersectionInfo();
+  /*if (MACRO_RENDER_BOUNDING_BOX) {
     return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
   }
 
@@ -145,6 +147,6 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal);
   } else {
     return IntersectionInfo();
-  }
+  }*/
 }
 

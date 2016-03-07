@@ -7,13 +7,14 @@
 #include <glm/glm.hpp>
 
 #include "Primitive.hpp"
+#include "Material.hpp"
 #include "Flags.hpp"
 
 // A polygonal mesh.
 class Mesh : public Primitive {
 public:
   Mesh( const std::string& fname );
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material);
 
   ~Mesh() {
     delete boundingBox;

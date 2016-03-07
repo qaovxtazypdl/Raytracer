@@ -52,8 +52,9 @@ dvec3 directLight(const SceneNode *root, const PhongMaterial &mat, const dvec4 &
   for (Light * light : lights) {
     dvec4 l_dir = dvec4(light->position, 1.0) - point;
     IntersectionInfo result = root->testHit(point, l_dir, 1.0);
+    IntersectionPoint *pt = result.getFirstValidIntersection(1.0);
 
-    if (!result.didIntersect) {
+    if (pt == NULL) {
       double d = length(l_dir);
       double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
 
@@ -107,13 +108,14 @@ dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir
   if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
 
   IntersectionInfo result = root->testHit(ray_origin, ray_dir, INF);
+  IntersectionPoint *pt = result.getFirstValidIntersection(INF);
 
-  if (result.didIntersect) {
+  if (pt != NULL) {
     dvec3 color;
-    dvec4 point = result.point;
-    dvec4 normal = result.normal;
+    dvec4 point = pt->point_1;
+    dvec4 normal = pt->normal_1;
 
-    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.m_material);
+    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt->m_material_1);
     dvec3 k_s = mat.m_ks;
     dvec3 k_d = mat.m_kd;
 
