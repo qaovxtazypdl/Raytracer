@@ -49,10 +49,49 @@ public:
     intersect_t_2(intersect_t_2), normal_2(normal_2), point_2(point_2),
     m_material_1(material_1), m_primitive_1(primitive_1),
     m_material_2(material_2), m_primitive_2(primitive_2),
-    valid(true)
+    valid(true), m_added(2)
   {}
 
-  IntersectionPoint(): valid(false) {}
+  IntersectionPoint(): valid(false), m_added(0) {}
+
+  void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive) {
+    if (m_added == 2) {
+      std::cout << "ADDING TOO MUCH" << std::endl;
+      throw "ADDING TOO MUCH";
+      return;
+    } else if (m_added == 0) {
+      intersect_t_1 = intersect_t;
+      normal_1 = normal;
+      point_1 = point;
+      m_material_1 = material;
+      m_primitive_1 = primitive;
+      m_added++;
+    } else if (m_added == 1) {
+      if (intersect_t_1 > intersect_t) {
+        intersect_t_2 = intersect_t_1;
+        normal_2 = normal_1;
+        point_2 = point_1;
+        m_material_2 = m_material_1;
+        m_primitive_2 = m_primitive_1;
+
+        intersect_t_1 = intersect_t;
+        normal_1 = normal;
+        point_1 = point;
+        m_material_1 = material;
+        m_primitive_1 = primitive;
+      } else {
+        intersect_t_2 = intersect_t;
+        normal_2 = normal;
+        point_2 = point;
+        m_material_2 = material;
+        m_primitive_2 = primitive;
+      }
+      valid = true;
+      m_added++;
+    }
+  }
+private:
+  int m_added;
 };
 
 class IntersectionInfo {
@@ -89,7 +128,9 @@ public:
 
   void UNION(const IntersectionInfo &other) {
     for (IntersectionPoint pt : other.intersections) {
-      intersections.push_back(pt);
+      if (pt.valid) {
+        intersections.push_back(pt);
+      }
     }
   }
 
