@@ -200,19 +200,21 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
 IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
   IntersectionPoint result1, result2;
   dvec4 intersect;
-  dvec4 norm;
+  dvec4 norm, pt;
   double roots[2];
+
+  vector<pair<double,dvec4>> ts;
 
   double tplanetop = (1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplanetop*ray_dir;
   if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
-    result1.addIntersection(tplanetop, tplanetop*ray_dir + ray_origin, dvec4(0,1,0,0), m_material, this);
+    ts.push_back({tplanetop, dvec4(0,1,0,0)});
   }
 
   double tplanebottom = (-1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplanebottom*ray_dir;
   if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
-    result1.addIntersection(tplanebottom, tplanebottom*ray_dir + ray_origin, dvec4(0,-1,0,0), m_material, this);
+    ts.push_back({tplanebottom, dvec4(0,-1,0,0)});
   }
 
   size_t numRoots = quadraticRoots(
@@ -221,20 +223,54 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
     ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1] - m_inner, roots
   );
 
+  double t_1, t_2, t;
   //intersection with circular portion
   if (numRoots == 2) {
-    double t_1 = std::min(roots[0], roots[1]);
-    double t_2 = std::max(roots[0], roots[1]);
+    t_1 = std::min(roots[0], roots[1]);
+    t_2 = std::max(roots[0], roots[1]);
 
     intersect = ray_origin + t_1*ray_dir;
     if (abs(intersect[1]) < 1){
-      result1.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), m_material, this);
+      ts.push_back({t_1, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))});
     }
 
     intersect = ray_origin + t_2*ray_dir;
     if (abs(intersect[1]) < 1){
-      result1.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), m_material, this);
+      ts.push_back({t_2, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))});
     }
+  }
+
+  sort(ts.begin(), ts.end(), [](const pair<double, dvec4> &left, const pair<double, dvec4> &right) {
+    return left.first < right.first;
+  });
+
+  if (ts.size() == 3 || ts.size() == 1) {
+    cout << "TORUS ROOT ASSUMPTION" << endl;
+    throw "TORUS ROOT ASSUMPTION";
+  } else if (ts.size() == 0) {
+    return IntersectionInfo();
+  }
+
+  t = ts[0].first;
+  pt = ray_origin + ray_dir * t;
+  norm = ts[0].second;
+  result1.addIntersection(t, pt, norm, m_material, this);
+
+  t = ts[1].first;
+  pt = ray_origin + ray_dir * t;
+  norm = ts[1].second;
+  result1.addIntersection(t, pt, norm, m_material, this);
+
+  if (ts.size() == 4) {
+    t = ts[2].first;
+    pt = ray_origin + ray_dir * t;
+    norm = ts[2].second;
+    result2.addIntersection(t, pt, norm, m_material, this);
+
+    t = ts[3].first;
+    pt = ray_origin + ray_dir * t;
+    norm = ts[3].second;
+    result2.addIntersection(t, pt, norm, m_material, this);
   }
 
   return IntersectionInfo({result1, result2});
