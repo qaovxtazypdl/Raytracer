@@ -59,20 +59,21 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
   }
 }
 
-void IntersectionInfo::UNION(const IntersectionInfo &other) {
+IntersectionInfo& IntersectionInfo::UNION(const IntersectionInfo &other) {
   for (IntersectionPoint pt : other.intersections) {
     if (pt.valid) {
       intersections.push_back(pt);
     }
   }
+  return *this;
 }
 
-void IntersectionInfo::DIFFERENCE(const IntersectionInfo &other) {
-
+IntersectionInfo& IntersectionInfo::DIFFERENCE(const IntersectionInfo &other) {
+  return *this;
 }
 
-void IntersectionInfo::INTERSECT(const IntersectionInfo &other) {
-
+IntersectionInfo& IntersectionInfo::INTERSECT(const IntersectionInfo &other) {
+  return *this;
 }
 
 void IntersectionInfo::TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_invtrans) {

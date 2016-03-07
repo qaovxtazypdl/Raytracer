@@ -43,19 +43,18 @@ private:
 
 class IntersectionInfo {
 public:
-  bool didIntersect;
   std::vector<IntersectionPoint> intersections;
 
   IntersectionInfo(const std::vector<IntersectionPoint> &ispts) :
-    didIntersect(true), intersections(ispts)
+    intersections(ispts)
   {}
 
-  IntersectionInfo() : didIntersect(false) {}
+  IntersectionInfo() {}
 
   IntersectionPoint getFirstValidIntersection(double max_t);
 
-  void UNION(const IntersectionInfo &other);
-  void DIFFERENCE(const IntersectionInfo &other);
-  void INTERSECT(const IntersectionInfo &other);
+  IntersectionInfo& UNION(const IntersectionInfo &other);
+  IntersectionInfo& DIFFERENCE(const IntersectionInfo &other);
+  IntersectionInfo& INTERSECT(const IntersectionInfo &other);
   void TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_invtrans);
 };
