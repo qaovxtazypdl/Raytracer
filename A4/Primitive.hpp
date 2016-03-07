@@ -25,6 +25,8 @@ struct Triangle
 
 class IntersectionPoint {
 public:
+  bool valid;
+
   double intersect_t_1;
   glm::dvec4 normal_1;
   glm::dvec4 point_1;
@@ -46,8 +48,11 @@ public:
     intersect_t_1(intersect_t_1), normal_1(normal_1), point_1(point_1),
     intersect_t_2(intersect_t_2), normal_2(normal_2), point_2(point_2),
     m_material_1(material_1), m_primitive_1(primitive_1),
-    m_material_2(material_2), m_primitive_2(primitive_2)
+    m_material_2(material_2), m_primitive_2(primitive_2),
+    valid(true)
   {}
+
+  IntersectionPoint(): valid(false) {}
 };
 
 class IntersectionInfo {
@@ -61,16 +66,16 @@ public:
 
   IntersectionInfo() : didIntersect(false) {}
 
-  IntersectionPoint *getFirstValidIntersection(double max_t) {
-    const double EPSILON = 1E-12;
-    IntersectionPoint *result = NULL;
+  IntersectionPoint getFirstValidIntersection(double max_t) {
+    const double EPSILON = 1E-11;
+    IntersectionPoint result;
     double min_t = std::numeric_limits<double>::infinity();
     bool found = false;
 
     for (IntersectionPoint pt : intersections) {
       if (pt.intersect_t_1 < min_t && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
         min_t = pt.intersect_t_1;
-        result = &pt;
+        result = pt;
         found = true;
       }
     }
@@ -78,7 +83,7 @@ public:
     if (found) {
       return result;
     } else {
-      return NULL;
+      return IntersectionPoint();
     }
   }
 
