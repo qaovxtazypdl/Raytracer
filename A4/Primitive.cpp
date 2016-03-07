@@ -228,7 +228,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
   double tplanetop = (1.0 - ray_origin[1]) / ray_dir[1];
   if (tplanetop > EPSILON && tplanetop < t) {
     dvec4 intersect = ray_origin + tplanetop*ray_dir;
-    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_squeeze) {
+    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
       //accept and update
       found = true;
       t = tplanetop;
@@ -239,7 +239,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
   double tplanebottom = (-1.0 - ray_origin[1]) / ray_dir[1];
   if (tplanebottom > EPSILON && tplanebottom < t) {
     dvec4 intersect = ray_origin + tplanebottom*ray_dir;
-    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_squeeze) {
+    if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
       //accept and update
       found = true;
       t = tplanebottom;
@@ -250,7 +250,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
   size_t numRoots = quadraticRoots(
     ray_dir[0]*ray_dir[0] + ray_dir[2]*ray_dir[2] - ray_dir[1]*ray_dir[1],
     2*(ray_origin[0]*ray_dir[0] + ray_origin[2]*ray_dir[2] - ray_origin[1]*ray_dir[1]),
-    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1] - m_squeeze, roots
+    ray_origin[0]*ray_origin[0] + ray_origin[2]*ray_origin[2] - ray_origin[1]*ray_origin[1] - m_inner, roots
   );
 
   //intersection with circular portion
@@ -281,7 +281,48 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
 
 
 IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
+  double R = 1.0;
+  double r = m_inner;
+  double a = dot(ray_dir, ray_dir);
+  double b = 2 * dot(ray_origin, ray_dir);
+  double c = dot(ray_origin, ray_origin) - 1 - r*r - R*R;
+
+  double c_4, c_3, c_2, c_1, c_0;
+  c_0 = c*c + 4*R*R*ray_origin[2]*ray_origin[2] - 4*R*R*r*r;
+  c_1 = 2*b*c + 8*R*R*ray_origin[2]*ray_dir[2];
+  c_2 = b*b + 2*a*c + 4*R*R*ray_dir[2]*ray_dir[2];
+  c_3 = 2*a*b;
+  c_4 = a*a;
+
+  double roots[4];
+  size_t numRoots = quarticRoots(c_3/c_4, c_2/c_4, c_1/c_4, c_0/c_4, roots);
+  bool found = false;
+
+  if (numRoots > 0) {
+    double t = std::numeric_limits<double>::infinity();
+    for (int i = 0; i < numRoots; i++) {
+      if (roots[i] > EPSILON && roots[i] < t) {
+        t = roots[i];
+        found = true;
+      }
+    }
+
+    if (found) {
+      dvec4 pt = ray_origin + ray_dir * t;
+      dvec4 norm = normalize(dvec4(
+        4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[0],
+        4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[1],
+        4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
+        0
+      ));
+
+      return IntersectionInfo(t, pt, norm);
+    } else {
+      return IntersectionInfo();
+    }
+  } else {
     return IntersectionInfo();
+  }
 }
 
 

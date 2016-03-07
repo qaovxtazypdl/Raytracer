@@ -119,21 +119,23 @@ public:
 
 class Torus : public Primitive {
 public:
-  Torus()
+  Torus(double inner) : m_inner(inner)
   {
   }
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
   virtual ~Torus();
+private:
+  double m_inner;
 };
 
 class Hyperboloid : public Primitive {
 public:
-  Hyperboloid(double squeeze) : m_squeeze(squeeze)
+  Hyperboloid(double inner) : m_inner(inner)
   {
   }
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
   virtual ~Hyperboloid();
 
 private:
-  double m_squeeze;
+  double m_inner;
 };
