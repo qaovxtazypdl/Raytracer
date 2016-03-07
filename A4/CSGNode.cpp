@@ -4,7 +4,7 @@
 
 #include <glm/ext.hpp>
 
-#include "CSGNode.h"
+#include "CSGNode.hpp"
 
 using namespace glm;
 using namespace std;

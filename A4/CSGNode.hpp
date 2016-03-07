@@ -7,13 +7,14 @@
 #include <glm/glm.hpp>
 
 #include "Primitive.hpp"
+#include "SceneNode.hpp"
 #include "Flags.hpp"
 
 enum CSGAction {
   UNION,
   INTERSECTION,
   DIFFERENCE
-}
+};
 
 // A polygonal CSGNode.
 class CSGNode : public Primitive {

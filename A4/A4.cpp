@@ -192,8 +192,6 @@ void A4_Render(
       if ((x + y*(nx+2))*100/((ny+2)*(nx+2)) > (x + y*(nx+2) - 1)*100/((ny+2)*(nx+2))) {
         cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
       }
-      //if (!(x > 225 && x < 275 && y < ny-250 && y > ny-300)) continue;
-      //if (!(x == 250 && y == ny-275-1)) continue;
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
       vertexColors[(nx + 2) * y + x] = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
     }

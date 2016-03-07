@@ -65,8 +65,10 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/A4.o \
+	$(OBJDIR)/CSGNode.o \
 	$(OBJDIR)/GeometryNode.o \
 	$(OBJDIR)/Image.o \
+	$(OBJDIR)/Intersection.o \
 	$(OBJDIR)/JointNode.o \
 	$(OBJDIR)/Light.o \
 	$(OBJDIR)/Main.o \
@@ -140,11 +142,19 @@ $(OBJDIR)/A4.o: ../A4.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
+$(OBJDIR)/CSGNode.o: ../CSGNode.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/GeometryNode.o: ../GeometryNode.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/Image.o: ../Image.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Intersection.o: ../Intersection.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
