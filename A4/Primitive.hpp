@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "polyroots.hpp"
+#include "Material.hpp"
 #include <glm/gtx/io.hpp>
 
 struct Triangle
@@ -20,6 +21,7 @@ struct Triangle
   {}
 };
 
+class Primitive;
 class IntersectionInfo {
 public:
   bool didIntersect;
@@ -27,8 +29,11 @@ public:
   glm::dvec4 normal;
   glm::dvec4 point;
 
+  Material *m_material;
+  Primitive *m_primitive;
+
   IntersectionInfo(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal) :
-    intersect_t(intersect_t), normal(normal), didIntersect(true), point(point)
+    intersect_t(intersect_t), normal(normal), didIntersect(true), point(point), m_material(NULL), m_primitive(NULL)
   {}
 
   IntersectionInfo() : didIntersect(false), intersect_t(0) {}

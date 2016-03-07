@@ -18,18 +18,6 @@
 #include "Light.hpp"
 #include "Image.hpp"
 
-struct HierarchicalNodeInfo {
-  GeometryNode *geoNode;
-  glm::dmat4 mat;
-  glm::dmat4 inv;
-  glm::dmat3 invTranspose;
-
-  HierarchicalNodeInfo(GeometryNode *geoNode, glm::dmat4 mat) : geoNode(geoNode), mat(mat) {
-    inv = glm::inverse(mat);
-    invTranspose = glm::transpose(glm::inverse(glm::dmat3(mat)));
-  }
-};
-
 void A4_Render(
 		// What to render
 		SceneNode * root,

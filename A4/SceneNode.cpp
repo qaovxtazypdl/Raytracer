@@ -52,6 +52,7 @@ SceneNode::~SceneNode() {
 void SceneNode::set_transform(const glm::dmat4& m) {
 	trans = m;
 	invtrans = glm::inverse(m);
+  invtrans_transpose = glm::transpose(glm::inverse(glm::dmat3(m)));
 }
 
 //---------------------------------------------------------------------------------------
@@ -133,4 +134,24 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 
 	os << "]\n";
 	return os;
+}
+
+IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir, double max_t) const {
+  double min_t = std::numeric_limits<double>::infinity();
+  IntersectionInfo intersectionInfo;
+  dmat4 T = trans;
+  dmat4 T_inv = invtrans;
+  dmat3 T_invtrans = invtrans_transpose;
+
+  for (SceneNode * node : children) {
+    IntersectionInfo intersect = node->testHit(T_inv * ray_origin, T_inv * ray_dir, max_t);
+    if (intersect.didIntersect && intersect.intersect_t < min_t) {
+      min_t = intersect.intersect_t;
+      intersectionInfo = intersect;
+      intersectionInfo.normal = normalize(dvec4(T_invtrans * dvec3(intersectionInfo.normal), 0.0));
+      intersectionInfo.point = T * intersectionInfo.point;
+    }
+  }
+
+  return intersectionInfo;
 }

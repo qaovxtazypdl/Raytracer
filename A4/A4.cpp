@@ -31,31 +31,6 @@ dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x
 }
 
 
-pair<GeometryNode *, IntersectionInfo> testHit(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, double max_t) {
-  double min_t = INF;
-  GeometryNode * minNode = NULL;
-  IntersectionInfo intersectionInfo;
-
-  for (HierarchicalNodeInfo node : nodes) {
-    dmat4 T = node.mat;
-    dmat4 T_inv = node.inv;
-    dmat3 T_invtrans = node.invTranspose;
-
-    IntersectionInfo intersect = node.geoNode->m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, max_t);
-    if (intersect.didIntersect && intersect.intersect_t < min_t) {
-      //update max
-
-      min_t = intersect.intersect_t;
-      minNode = node.geoNode;
-      intersectionInfo = intersect;
-      intersectionInfo.normal = normalize(dvec4(T_invtrans * dvec3(intersectionInfo.normal), 0.0));
-      intersectionInfo.point = T * intersectionInfo.point;
-    }
-  }
-
-  return pair<GeometryNode *, IntersectionInfo>(minNode, intersectionInfo);
-}
-
 dvec4 ggReflection(const dvec4 &v, const dvec4 &n) {
   return v - 2.0 * n * (dot(v,n));
 }
@@ -71,14 +46,14 @@ dvec4 ggRefraction(const dvec4 &v, const dvec4 &n, double indexOfRefr) {
   return n1/n2 * v + (n1/n2*cos(t_i) - sqrt(1-pow(sin(t_out),2))) * n;
 }
 
-dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
+dvec3 directLight(const SceneNode *root, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
   for (Light * light : lights) {
     dvec4 l_dir = dvec4(light->position, 1.0) - point;
-    pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, point, l_dir, 1.0);
+    IntersectionInfo result = root->testHit(point, l_dir, 1.0);
 
-    if (result.first == NULL) {
+    if (result.didIntersect) {
       double d = length(l_dir);
       double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
 
@@ -128,62 +103,40 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 
 //origin is point
 //direction is vector
-dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
+dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
 
-  pair<GeometryNode *, IntersectionInfo> result = testHit(nodes, ray_origin, ray_dir, INF);
+  IntersectionInfo result = root->testHit(ray_origin, ray_dir, INF);
 
-  if (result.first != NULL) {
+  if (result.didIntersect) {
     dvec3 color;
-    dvec4 point = result.second.point;
-    dvec4 normal = result.second.normal;
+    dvec4 point = result.point;
+    dvec4 normal = result.normal;
 
-    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.first->m_material);
+    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(result.m_material);
     dvec3 k_s = mat.m_ks;
     dvec3 k_d = mat.m_kd;
 
     color += k_d * ambient;
 
     //light contributions
-    color += directLight(nodes, mat, ray_dir, point, normal, lights);
+    color += directLight(root, mat, ray_dir, point, normal, lights);
 
     //reflection
     if (MACRO_REFLECTION_ON && length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+      color += 0.50 * k_s * trace(root, point, reflDirection, ambient, lights, depth+1);
     }
 
     if (MACRO_REFRACTION_ON && length(k_s) > 0) {
       //dvec4 reflDirection = ggReflection(ray_dir, normal);
       dvec4 refrDirection = ggRefraction(ray_dir, normal, 1.56);
-      color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, depth+1);
+      color += 0.50 * trace(root, point, refrDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
     return getBackgroundColor(ray_origin, ray_dir, depth);
   }
-}
-
-
-void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<HierarchicalNodeInfo> &result) {
-  accumulatedTrans = accumulatedTrans * root->get_transform();
-  if (root->m_nodeType == NodeType::GeometryNode) {
-    GeometryNode * geometryNode = const_cast<GeometryNode *>(static_cast<const GeometryNode *>(root));
-    result.push_back(HierarchicalNodeInfo(geometryNode, accumulatedTrans));
-  } else if (root->m_nodeType == NodeType::JointNode) {
-    const JointNode * jointNode = static_cast<const JointNode *>(root);
-    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
-  }
-
-  for (SceneNode * node : root->children) {
-    buildTreeCache(node, accumulatedTrans, result);
-  }
-}
-
-vector<HierarchicalNodeInfo> buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans) {
-  vector<HierarchicalNodeInfo> result;
-  buildTreeCache(root, accumulatedTrans, result);
-  return result;
 }
 
 void A4_Render(
@@ -226,8 +179,6 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = (double)nx/ny * h;
 
-  vector<HierarchicalNodeInfo> nodes = buildTreeCache(root, dmat4(1.0));
-
   cout << "Progress: 0" << endl;
 
   default_random_engine rng;
@@ -241,7 +192,7 @@ void A4_Render(
         cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
       }
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
-      vertexColors[(nx + 2) * y + x] = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      vertexColors[(nx + 2) * y + x] = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
     }
   }
 
@@ -279,7 +230,7 @@ void A4_Render(
           for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
             for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
               dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
             }
           }
         }
