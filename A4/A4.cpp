@@ -53,7 +53,7 @@ dvec3 directLight(const SceneNode *root, const PhongMaterial &mat, const dvec4 &
     dvec4 l_dir = dvec4(light->position, 1.0) - point;
     IntersectionInfo result = root->testHit(point, l_dir, 1.0);
 
-    if (result.didIntersect) {
+    if (!result.didIntersect) {
       double d = length(l_dir);
       double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
 

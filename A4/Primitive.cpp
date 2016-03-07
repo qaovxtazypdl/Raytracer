@@ -315,7 +315,6 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
-
       return IntersectionInfo(t, pt, norm);
     } else {
       return IntersectionInfo();

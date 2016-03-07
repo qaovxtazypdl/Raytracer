@@ -36,6 +36,8 @@ plane:scale(50,50,100)
 plane:rotate('x', 15)
 plane:translate(0,-1,0)
 scene:add_child(plane)
+scene:add_child(plane)
+scene:add_child(plane)
 
 central_cylinder = gr.cylinder('central_cylinder')
 central_cylinder:scale(1/50,1/50,1/100)
