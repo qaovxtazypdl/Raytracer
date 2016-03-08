@@ -70,7 +70,7 @@ IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
     return result;
   }
 
-  if (intersect_t_1 < other.intersect_t_1) {
+  if (intersect_t_1 <= other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
       result = IntersectionPoint(*this, true, other, false);
     } else {
@@ -81,12 +81,6 @@ IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
       result = other;
     } else {
       result = IntersectionPoint(other, true, *this, false);
-    }
-  } else if (intersect_t_1 == other.intersect_t_1) {
-    if (intersect_t_2 < other.intersect_t_2) {
-      result = IntersectionPoint(*this, true, other, false);
-    } else {
-      result = *this;
     }
   }
   return result;
@@ -155,14 +149,73 @@ IntersectionInfo IntersectionInfo::UNION(const IntersectionInfo &other) {
 
 
 
-IntersectionPoint IntersectionPoint::DIFFERENCE(const IntersectionPoint &other) {
-  return IntersectionPoint();
+std::pair<IntersectionPoint,IntersectionPoint> IntersectionPoint::DIFFERENCE(const IntersectionPoint &other) {
+  IntersectionPoint result1, result2;
+  if ((intersect_t_1 < other.intersect_t_1 && intersect_t_2 < other.intersect_t_1) ||
+    (intersect_t_1 > other.intersect_t_1 && intersect_t_1 > other.intersect_t_2)
+  ) {
+    return std::pair<IntersectionPoint,IntersectionPoint>(*this, result2);
+  }
+
+  if (intersect_t_1 < other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      result1 = IntersectionPoint(*this, true, other, true);
+      result2 = IntersectionPoint();
+    } else {
+      result1 = IntersectionPoint(*this, true, other, true);
+      result2 = IntersectionPoint(other, false, *this, false);
+    }
+  } else if (intersect_t_1 >= other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      result1 = IntersectionPoint();
+      result2 = IntersectionPoint();
+    } else {
+      result1 = IntersectionPoint();
+      result2 = IntersectionPoint(other, false, *this, false);
+    }
+  }
+  return std::pair<IntersectionPoint,IntersectionPoint>(result1, result2);
 }
+
 IntersectionInfo IntersectionInfo::DIFFERENCE(const IntersectionInfo &other) {
+  vector<IntersectionPoint> result;
+  if (intersections.size() == 0 || other.intersections.size() == 0) {
+    return *this;
+  }
+
+  int i = 0, j = 0;
+  while(i < intersections.size() && j < other.intersections.size()) {
+    if (intersections[i].intersect_t_2 >= other.intersections[j].intersect_t_1) {
+      //compute intersection, increment other.
+      pair<IntersectionPoint,IntersectionPoint> isecs = intersections[i].DIFFERENCE(other.intersections[j]);
+      if (isecs.first.valid) {
+        if (other.intersections[j].intersect_t_2 > intersections[i].intersect_t_1) {
+          result.push_back(isecs.first);
+        }
+      }
+      if (isecs.second.valid) {
+        intersections[i] = isecs.second;
+        j++;
+      } else {
+        if (other.intersections[j].intersect_t_2 <= intersections[i].intersect_t_1) {
+          j++;
+        } else {
+          i++;
+        }
+      }
+    } else if (intersections[i].intersect_t_2 < other.intersections[j].intersect_t_1) {
+      result.push_back(intersections[i]);
+      i++;
+    }
+  }
+  while (i < intersections.size()) {
+    result.push_back(intersections[i]);
+    i++;
+  }
+
+  intersections = result;
   return *this;
 }
-
-
 
 
 IntersectionPoint IntersectionPoint::INTERSECT(const IntersectionPoint &other) {
@@ -179,13 +232,7 @@ IntersectionPoint IntersectionPoint::INTERSECT(const IntersectionPoint &other) {
     } else {
       result = other;
     }
-  } else if (intersect_t_1 > other.intersect_t_1) {
-    if (intersect_t_2 < other.intersect_t_2) {
-      result = *this;
-    } else {
-      result = IntersectionPoint(*this, true, other, false);
-    }
-  } else if (intersect_t_1 == other.intersect_t_1) {
+  } else if (intersect_t_1 >= other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
       result = *this;
     } else {

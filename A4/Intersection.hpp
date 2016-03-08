@@ -43,13 +43,17 @@ public:
     m_material_1(first_1?first.m_material_1:first.m_material_2), m_primitive_1(first_1?first.m_primitive_1:first.m_primitive_2),
     m_material_2(first_2?second.m_material_1:second.m_material_2), m_primitive_2(first_2?second.m_primitive_1:second.m_primitive_2),
     valid(true), m_added(2)
-  {}
+  {
+    if (intersect_t_1 == intersect_t_2) {
+      valid = false;
+    }
+  }
 
   IntersectionPoint(): valid(false), m_added(0) {}
   void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive);
 
   IntersectionPoint UNION(const IntersectionPoint &other);
-  IntersectionPoint DIFFERENCE(const IntersectionPoint &other);
+  std::pair<IntersectionPoint,IntersectionPoint> DIFFERENCE(const IntersectionPoint &other);
   IntersectionPoint INTERSECT(const IntersectionPoint &other);
 private:
   int m_added;

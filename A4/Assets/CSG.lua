@@ -52,7 +52,7 @@ central_cone:translate(0,0.23,0.55)
 central_cone:set_material(polgold)
 
 coneUcylinder = gr.csg('coneUcylinder')
-coneUcylinder:set_csg_children(central_cylinder, central_cone, 'INTERSECT')
+coneUcylinder:set_csg_children(central_cylinder, central_cone, 'DIFFERENCE')
 plane:add_child(coneUcylinder)
 
 --central_hyperboloid = gr.hyperboloid('central_hyperboloid', 0.1)
