@@ -54,7 +54,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
   double roots[2];
   size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-m_radius*m_radius, roots);
 
-  if (numRoots != 2 || (roots[0] < EPSILON && roots[1] < EPSILON)) {
+  if (numRoots != 2) {
     return IntersectionInfo();
   } else {
     double t = std::min(roots[0], roots[1]);
