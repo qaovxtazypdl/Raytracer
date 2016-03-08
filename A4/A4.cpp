@@ -183,12 +183,22 @@ void A4_Render(
 
   /**********************************
   IntersectionInfo int1 = IntersectionInfo({
+    IntersectionPoint(-3, dvec4(), dvec4(), NULL, NULL, 0.01, dvec4(), dvec4(), NULL, NULL),
     IntersectionPoint(1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(6.3, dvec4(), dvec4(), NULL, NULL, 13, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(40, dvec4(), dvec4(), NULL, NULL, 50, dvec4(), dvec4(), NULL, NULL),
   });
 
-  IntersectionInfo int2 = IntersectionInfo();
+  IntersectionInfo int2 = IntersectionInfo({
+    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 5, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.5, dvec4(), dvec4(), NULL, NULL, 5.7, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.77, dvec4(), dvec4(), NULL, NULL, 5.9, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.91, dvec4(), dvec4(), NULL, NULL, 6.03, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 62.03, dvec4(), dvec4(), NULL, NULL),
+  });
 
-  IntersectionInfo unioned = int2.UNION(int1);
+  IntersectionInfo unioned = int1.INTERSECT(int2);
   for(IntersectionPoint &p : unioned.intersections) {
     cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
   }

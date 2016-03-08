@@ -37,11 +37,11 @@ public:
     valid(true), m_added(2)
   {}
 
-  IntersectionPoint(const IntersectionPoint &first, const IntersectionPoint &second) :
-    intersect_t_1(first.intersect_t_1), normal_1(first.normal_1), point_1(first.point_1),
-    intersect_t_2(second.intersect_t_2), normal_2(second.normal_2), point_2(second.point_2),
-    m_material_1(first.m_material_1), m_primitive_1(first.m_primitive_1),
-    m_material_2(second.m_material_2), m_primitive_2(second.m_primitive_2),
+  IntersectionPoint(const IntersectionPoint &first, bool first_1, const IntersectionPoint &second, bool first_2) :
+    intersect_t_1(first_1?first.intersect_t_1:first.intersect_t_2), normal_1(first_1?first.normal_1:first.normal_2), point_1(first_1?first.point_1:first.point_2),
+    intersect_t_2(first_2?second.intersect_t_1:second.intersect_t_2), normal_2(first_2?second.normal_1:second.normal_2), point_2(first_2?second.point_1:second.point_2),
+    m_material_1(first_1?first.m_material_1:first.m_material_2), m_primitive_1(first_1?first.m_primitive_1:first.m_primitive_2),
+    m_material_2(first_2?second.m_material_1:second.m_material_2), m_primitive_2(first_2?second.m_primitive_1:second.m_primitive_2),
     valid(true), m_added(2)
   {}
 

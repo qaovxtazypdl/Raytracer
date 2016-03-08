@@ -72,7 +72,7 @@ IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
 
   if (intersect_t_1 < other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
-      result = IntersectionPoint(*this, other);
+      result = IntersectionPoint(*this, true, other, false);
     } else {
       result = *this;
     }
@@ -80,11 +80,11 @@ IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
     if (intersect_t_2 < other.intersect_t_2) {
       result = other;
     } else {
-      result = IntersectionPoint(other, *this);
+      result = IntersectionPoint(other, true, *this, false);
     }
   } else if (intersect_t_1 == other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
-      result = IntersectionPoint(*this, other);
+      result = IntersectionPoint(*this, true, other, false);
     } else {
       result = *this;
     }
@@ -166,9 +166,60 @@ IntersectionInfo IntersectionInfo::DIFFERENCE(const IntersectionInfo &other) {
 
 
 IntersectionPoint IntersectionPoint::INTERSECT(const IntersectionPoint &other) {
-  return IntersectionPoint();
+  IntersectionPoint result;
+  if ((intersect_t_1 < other.intersect_t_1 && intersect_t_2 < other.intersect_t_1) ||
+    (intersect_t_1 > other.intersect_t_1 && intersect_t_1 > other.intersect_t_2)
+  ) {
+    return result;
+  }
+
+  if (intersect_t_1 < other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      result = IntersectionPoint(other, true, *this, false);
+    } else {
+      result = other;
+    }
+  } else if (intersect_t_1 > other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      result = *this;
+    } else {
+      result = IntersectionPoint(*this, true, other, false);
+    }
+  } else if (intersect_t_1 == other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      result = *this;
+    } else {
+      result = IntersectionPoint(*this, true, other, false);
+    }
+  }
+  return result;
 }
+
 IntersectionInfo IntersectionInfo::INTERSECT(const IntersectionInfo &other) {
+  vector<IntersectionPoint> result;
+  if (intersections.size() == 0 || other.intersections.size() == 0) {
+    intersections = result;
+    return *this;
+  }
+
+  int i = 0, j = 0;
+  while(i < intersections.size() && j < other.intersections.size()) {
+    if (intersections[i].intersect_t_2 >= other.intersections[j].intersect_t_1) {
+      //compute intersection, increment other.
+      IntersectionPoint isec = intersections[i].INTERSECT(other.intersections[j]);
+      if (isec.valid) {
+        result.push_back(isec);
+      }
+      if (intersections[i].intersect_t_2 >= other.intersections[j].intersect_t_2) {
+        j++;
+      } else {
+        i++;
+      }
+    } else if (intersections[i].intersect_t_2 < other.intersections[j].intersect_t_1) {
+      i++;
+    }
+  }
+  intersections = result;
   return *this;
 }
 
