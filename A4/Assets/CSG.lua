@@ -48,7 +48,7 @@ central_cone = gr.cone('central_cone')
 central_cone:scale(1/50,1/50,1/100)
 central_cone:scale(5,5,10)
 central_cone:translate(0,0.13,-0.1)
-central_cone:translate(0,0.23,0.5)
+central_cone:translate(0,0.23,0.55)
 central_cone:set_material(polgold)
 
 coneUcylinder = gr.csg('coneUcylinder')
