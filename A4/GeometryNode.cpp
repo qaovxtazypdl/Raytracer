@@ -34,18 +34,12 @@ IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray
   dmat4 T = trans;
   dmat4 T_inv = invtrans;
   dmat3 T_invtrans = invtrans_transpose;
-cout << "1" << endl;
 
   for (SceneNode * node : children) {
-    intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
+    intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
-cout << "2" << endl;
 
-  intersectionInfo.UNION(m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, m_material));
-cout << "3" << endl;
-
+  intersectionInfo = intersectionInfo.UNION(m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, m_material));
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
-cout << "4" << endl;
-
   return intersectionInfo;
 }

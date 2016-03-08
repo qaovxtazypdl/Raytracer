@@ -143,7 +143,7 @@ IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_di
   dmat3 T_invtrans = invtrans_transpose;
 
   for (SceneNode * node : children) {
-    intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
+    intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
 
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);

@@ -20,27 +20,27 @@ IntersectionInfo CSGNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir)
   dmat3 T_invtrans = invtrans_transpose;
 
   for (SceneNode * node : children) {
-    intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
+    intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
 
   IntersectionInfo CSGInt;
   if (m_action == CSGAction::UNION) {
-    CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).UNION(
+    CSGInt = CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).UNION(
       m_right->testHit(T_inv * ray_origin, T_inv * ray_dir)
     ));
   } else if (m_action == CSGAction::INTERSECT) {
-    CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).INTERSECT(
+    CSGInt = CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).INTERSECT(
       m_right->testHit(T_inv * ray_origin, T_inv * ray_dir)
     ));
   } else if (m_action == CSGAction::DIFFERENCE) {
-    CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).DIFFERENCE(
+    CSGInt = CSGInt.UNION(m_left->testHit(T_inv * ray_origin, T_inv * ray_dir).DIFFERENCE(
       m_right->testHit(T_inv * ray_origin, T_inv * ray_dir)
     ));
   } else {
     cout <<  "Unrecognized CSG operation." << endl;
     throw "Unrecognized CSG operation.";
   }
-  intersectionInfo.UNION(CSGInt);
+  intersectionInfo = intersectionInfo.UNION(CSGInt);
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
   return intersectionInfo;
 }

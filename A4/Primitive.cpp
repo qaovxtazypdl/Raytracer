@@ -147,7 +147,6 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     }
   }
 
-  cout << result.intersect_t_1 << " CONE " << result.intersect_t_2 << endl;
   return IntersectionInfo({result});
 }
 

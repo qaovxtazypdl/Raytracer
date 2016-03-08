@@ -93,13 +93,6 @@ IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
 }
 
 IntersectionInfo IntersectionInfo::UNION(const IntersectionInfo &other) {
-  /*for(IntersectionPoint &p : intersections) {
-    cout << p.intersect_t_1 << " A " << p.intersect_t_2 << endl;
-  }
-  for(const IntersectionPoint &p : other.intersections) {
-    cout << p.intersect_t_1 << " B " << p.intersect_t_2 << endl;
-  }*/
-
   vector<IntersectionPoint> result;
   if (intersections.size() == 0) {
     intersections = other.intersections;
@@ -155,9 +148,6 @@ IntersectionInfo IntersectionInfo::UNION(const IntersectionInfo &other) {
     j++;
   }
   result.push_back(current);
-  /*for(IntersectionPoint &p : result) {
-    cout << p.intersect_t_1 << " R " << p.intersect_t_2 << endl;
-  }*/
   intersections = result;
   return *this;
 }

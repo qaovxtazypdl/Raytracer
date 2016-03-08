@@ -45,14 +45,6 @@ public:
     valid(true), m_added(2)
   {}
 
-  IntersectionPoint(const IntersectionPoint &other) :
-    intersect_t_1(other.intersect_t_1), normal_1(other.normal_1), point_1(other.point_1),
-    intersect_t_2(other.intersect_t_2), normal_2(other.normal_2), point_2(other.point_2),
-    m_material_1(other.m_material_1), m_primitive_1(other.m_primitive_1),
-    m_material_2(other.m_material_2), m_primitive_2(other.m_primitive_2),
-    valid(true), m_added(2)
-  {}
-
   IntersectionPoint(): valid(false), m_added(0) {}
   void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive);
 
