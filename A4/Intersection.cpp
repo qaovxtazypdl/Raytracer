@@ -1,5 +1,4 @@
 #include "Intersection.hpp"
-#include <algorithm>
 
 using namespace std;
 

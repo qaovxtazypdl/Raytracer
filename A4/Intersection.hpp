@@ -6,6 +6,7 @@
 #include <vector>
 #include <glm/gtx/io.hpp>
 #include "Material.hpp"
+#include <algorithm>
 
 class Primitive;
 class IntersectionPoint {
@@ -72,7 +73,7 @@ public:
       }
     }
 
-    sort(intersections.begin(), intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {
+    std::sort(intersections.begin(), intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {
       return pt1.intersect_t_1 < pt2.intersect_t_1;
     });
   }
