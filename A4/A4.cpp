@@ -180,6 +180,21 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = (double)nx/ny * h;
 
+
+  /**********************************
+  IntersectionInfo int1 = IntersectionInfo({
+    IntersectionPoint(1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int2 = IntersectionInfo();
+
+  IntersectionInfo unioned = int2.UNION(int1);
+  for(IntersectionPoint &p : unioned.intersections) {
+    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
+  }
+  return;
+  ***********************************/
+
   cout << "Progress: 0" << endl;
 
   default_random_engine rng;
@@ -192,6 +207,8 @@ void A4_Render(
       if ((x + y*(nx+2))*100/((ny+2)*(nx+2)) > (x + y*(nx+2) - 1)*100/((ny+2)*(nx+2))) {
         cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
       }
+      if (!(x > 280 && x < 320 && y < ny-200-1 && y > ny-240-1)) continue;
+      //if (!(x == 300 && y == ny-225-1)) continue;
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
       vertexColors[(nx + 2) * y + x] = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
     }

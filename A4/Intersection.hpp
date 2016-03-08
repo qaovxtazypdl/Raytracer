@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -82,8 +84,8 @@ public:
 
   IntersectionPoint getFirstValidIntersection(double max_t);
 
-  IntersectionInfo& UNION(const IntersectionInfo &other);
-  IntersectionInfo& DIFFERENCE(const IntersectionInfo &other);
-  IntersectionInfo& INTERSECT(const IntersectionInfo &other);
+  IntersectionInfo UNION(const IntersectionInfo &other);
+  IntersectionInfo DIFFERENCE(const IntersectionInfo &other);
+  IntersectionInfo INTERSECT(const IntersectionInfo &other);
   void TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_invtrans);
 };

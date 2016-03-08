@@ -147,6 +147,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     }
   }
 
+  cout << result.intersect_t_1 << " CONE " << result.intersect_t_2 << endl;
   return IntersectionInfo({result});
 }
 
@@ -193,7 +194,6 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), m_material, this);
     }
   }
-
   return IntersectionInfo({result});
 }
 
