@@ -160,10 +160,13 @@ std::pair<IntersectionPoint,IntersectionPoint> IntersectionPoint::DIFFERENCE(con
   if (intersect_t_1 < other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
       result1 = IntersectionPoint(*this, true, other, true);
+      result1.reverseNormal(false);
       result2 = IntersectionPoint();
     } else {
       result1 = IntersectionPoint(*this, true, other, true);
+      result1.reverseNormal(false);
       result2 = IntersectionPoint(other, false, *this, false);
+      result2.reverseNormal(true);
     }
   } else if (intersect_t_1 >= other.intersect_t_1) {
     if (intersect_t_2 < other.intersect_t_2) {
@@ -172,6 +175,7 @@ std::pair<IntersectionPoint,IntersectionPoint> IntersectionPoint::DIFFERENCE(con
     } else {
       result1 = IntersectionPoint();
       result2 = IntersectionPoint(other, false, *this, false);
+      result2.reverseNormal(true);
     }
   }
   return std::pair<IntersectionPoint,IntersectionPoint>(result1, result2);
@@ -277,6 +281,14 @@ void IntersectionInfo::TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_inv
 
     pt.normal_2 = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.normal_2), 0.0));
     pt.point_2 = T * pt.point_2;
+  }
+}
+
+void IntersectionPoint::reverseNormal(bool first) {
+  if (first) {
+    normal_1 *= -1.0;
+  } else {
+    normal_2 *= -1.0;
   }
 }
 

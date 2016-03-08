@@ -48,31 +48,87 @@ central_cone = gr.cone('central_cone')
 central_cone:scale(1/50,1/50,1/100)
 central_cone:scale(5,5,10)
 central_cone:translate(0,0.13,-0.1)
-central_cone:translate(0,0.23,0.55)
+central_cone:translate(0.05,0.23,0.55)
 central_cone:set_material(polgold)
 
 coneUcylinder = gr.csg('coneUcylinder')
-coneUcylinder:set_csg_children(central_cylinder, central_cone, 'DIFFERENCE')
+coneUcylinder:set_csg_children(central_cylinder, central_cone, 'UNION')
+coneUcylinder:translate(0,-0.2,0)
 plane:add_child(coneUcylinder)
 
---central_hyperboloid = gr.hyperboloid('central_hyperboloid', 0.1)
---central_hyperboloid:scale(1/50,1/50,1/100)
---central_hyperboloid:scale(5,5,10)
---central_hyperboloid:rotate('z', 90)
---central_hyperboloid:translate(0,0.13,-0.1)
---central_hyperboloid:translate(0,0,0.5)
---central_hyperboloid:set_material(polgold)
---plane:add_child(central_hyperboloid)
+coneIcylinder = gr.csg('coneIcylinder')
+coneIcylinder:set_csg_children(central_cylinder, central_cone, 'INTERSECT')
+coneIcylinder:translate(0,0.05,0)
+plane:add_child(coneIcylinder)
 
---central_torus = gr.torus('central_torus', 0.3)
---central_torus:scale(1/50,1/50,1/100)
---central_torus:scale(10,10,20)
---central_torus:translate(0,0.13,-0.1)
---central_torus:translate(0,0.2,0.2)
---central_torus:set_material(chrome)
---plane:add_child(central_torus)
+coneDcylinder = gr.csg('coneDcylinder')
+coneDcylinder:set_csg_children(central_cylinder, central_cone, 'DIFFERENCE')
+coneDcylinder:translate(0,0.2,0)
+plane:add_child(coneDcylinder)
 
-gr.render(scene, 'csg.png', 500, 500,
+
+central_torus = gr.torus('central_torus', 0.25)
+central_torus:scale(1/50,1/50,1/100)
+central_torus:scale(4,4,8)
+central_torus:translate(0,0.13,-0.1)
+central_torus:translate(-0.4,0.2,.5)
+central_torus:set_material(obsidian)
+
+central_hyperboloid = gr.hyperboloid('central_hyperboloid', 0.25)
+central_hyperboloid:scale(1/50,1/50,1/100)
+central_hyperboloid:scale(4,4,8)
+central_hyperboloid:translate(0,0.13,-0.1)
+central_hyperboloid:translate(-0.4,0.23,0.5)
+central_hyperboloid:set_material(polgold)
+
+central_hyperboloidUtorus = gr.csg('central_hyperboloidUtorus')
+central_hyperboloidUtorus:set_csg_children(central_torus, central_hyperboloid, 'UNION')
+central_hyperboloidUtorus:translate(0,-0.25,0)
+plane:add_child(central_hyperboloidUtorus)
+
+central_hyperboloidItorus = gr.csg('central_hyperboloidItorus')
+central_hyperboloidItorus:set_csg_children(central_torus, central_hyperboloid, 'INTERSECT')
+central_hyperboloidItorus:translate(0,0.0,0)
+plane:add_child(central_hyperboloidItorus)
+
+central_hyperboloidDtorus = gr.csg('central_hyperboloidDtorus')
+central_hyperboloidDtorus:set_csg_children(central_torus, central_hyperboloid, 'DIFFERENCE')
+central_hyperboloidDtorus:translate(0,0.25,0)
+plane:add_child(central_hyperboloidDtorus)
+
+
+central_sphere = gr.sphere('central_sphere')
+central_sphere:scale(1/50,1/50,1/100)
+central_sphere:scale(4,4,4)
+central_sphere:translate(0,0.13,-0.1)
+central_sphere:translate(0.4,0.2,.5)
+central_sphere:set_material(obsidian)
+
+central_cube = gr.cube('central_cube')
+central_cube:translate(-0.5,-0.753,-0.5)
+central_cube:scale(1/50,1/50,1/100)
+central_cube:scale(6,6,6)
+central_cube:translate(0,0.13,-0.1)
+central_cube:translate(0.4,0.23,0.5)
+central_cube:set_material(polgold)
+
+central_cubeUsphere = gr.csg('central_cubeUsphere')
+central_cubeUsphere:set_csg_children(central_cube, central_sphere, 'UNION')
+central_cubeUsphere:translate(0,-0.25,0)
+plane:add_child(central_cubeUsphere)
+
+central_cubeIsphere = gr.csg('central_cubeIsphere')
+central_cubeIsphere:set_csg_children(central_cube, central_sphere, 'INTERSECT')
+central_cubeIsphere:translate(0,0.0,0)
+plane:add_child(central_cubeIsphere)
+
+central_cubeDsphere = gr.csg('central_cubeDsphere')
+central_cubeDsphere:set_csg_children(central_cube, central_sphere, 'DIFFERENCE')
+central_cubeDsphere:translate(0,0.25,0)
+plane:add_child(central_cubeDsphere)
+
+
+gr.render(scene, 'csg.png', 700, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 

@@ -52,6 +52,7 @@ public:
   IntersectionPoint(): valid(false), m_added(0) {}
   void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive);
 
+  void reverseNormal(bool first);
   IntersectionPoint UNION(const IntersectionPoint &other);
   std::pair<IntersectionPoint,IntersectionPoint> DIFFERENCE(const IntersectionPoint &other);
   IntersectionPoint INTERSECT(const IntersectionPoint &other);
