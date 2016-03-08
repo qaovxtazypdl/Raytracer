@@ -45,9 +45,19 @@ IntersectionInfo CSGNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir)
   return intersectionInfo;
 }
 
-void CSGNode::setCSGChildren(CSGAction action, SceneNode *left, SceneNode *right) {
+void CSGNode::setCSGChildren(SceneNode *left, SceneNode *right, const string &action) {
   m_left = left;
   m_right = right;
-  m_action = action;
+
+  if (action == "UNION") {
+    m_action = CSGAction::UNION;
+  } else if (action == "INTERSECT") {
+    m_action = CSGAction::INTERSECT;
+  } else if (action == "DIFFERENCE") {
+    m_action = CSGAction::DIFFERENCE;
+  } else {
+    cout <<  "Unrecognized CSG operation." << endl;
+    throw "Unrecognized CSG operation.";
+  }
 }
 

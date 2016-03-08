@@ -41,6 +41,7 @@
 #include <cctype>
 #include <cstring>
 #include <cstdio>
+#include <string>
 #include <vector>
 #include <map>
 
@@ -49,6 +50,7 @@
 #include "Light.hpp"
 #include "Mesh.hpp"
 #include "GeometryNode.hpp"
+#include "CSGNode.hpp"
 #include "JointNode.hpp"
 #include "Primitive.hpp"
 #include "Material.hpp"
@@ -124,6 +126,24 @@ int gr_node_cmd(lua_State* L)
 
   const char* name = luaL_checkstring(L, 1);
   data->node = new SceneNode(name);
+
+  luaL_getmetatable(L, "gr.node");
+  lua_setmetatable(L, -2);
+
+  return 1;
+}
+
+// Create a CSG node
+extern "C"
+int gr_csg_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
+  data->node = 0;
+
+  const char* name = luaL_checkstring(L, 1);
+  data->node = new CSGNode(name);
 
   luaL_getmetatable(L, "gr.node");
   lua_setmetatable(L, -2);
@@ -471,6 +491,31 @@ int gr_node_add_child_cmd(lua_State* L)
   return 0;
 }
 
+// Add children to a csg node
+extern "C"
+int gr_node_set_csg_children_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+  CSGNode* self = dynamic_cast<CSGNode*>(selfdata->node);
+
+  gr_node_ud* childdataLeft = (gr_node_ud*)luaL_checkudata(L, 2, "gr.node");
+  luaL_argcheck(L, childdataLeft != 0, 2, "Node expected");
+  SceneNode* childLeft = childdataLeft->node;
+
+  gr_node_ud* childdataRight = (gr_node_ud*)luaL_checkudata(L, 3, "gr.node");
+  luaL_argcheck(L, childdataRight != 0, 3, "Node expected");
+  SceneNode* childRight = childdataRight->node;
+
+  const char* action_string = luaL_checkstring(L, 4);
+
+  self->setCSGChildren(childLeft, childRight, std::string(action_string));
+
+  return 0;
+}
+
 // Set a node's material
 extern "C"
 int gr_node_set_material_cmd(lua_State* L)
@@ -594,6 +639,7 @@ static const luaL_Reg grlib_functions[] = {
   {"joint", gr_joint_cmd},
   {"material", gr_material_cmd},
   // New for assignment 4
+  {"csg", gr_csg_cmd},
   {"cube", gr_cube_cmd},
   {"cylinder", gr_cylinder_cmd},
   {"cone", gr_cone_cmd},
@@ -622,6 +668,7 @@ static const luaL_Reg grlib_functions[] = {
 static const luaL_Reg grlib_node_methods[] = {
   {"__gc", gr_node_gc_cmd},
   {"add_child", gr_node_add_child_cmd},
+  {"set_csg_children", gr_node_set_csg_children_cmd},
   {"set_material", gr_node_set_material_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},

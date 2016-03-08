@@ -21,7 +21,7 @@ class CSGNode : public SceneNode {
 public:
   CSGNode(const std::string& name);
   virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
-  void setCSGChildren(CSGAction action, SceneNode *left, SceneNode *right);
+  void setCSGChildren(SceneNode *left, SceneNode *right, const std::string &action);
 
   ~CSGNode() {}
 private:
