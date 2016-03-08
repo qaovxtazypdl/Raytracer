@@ -1,4 +1,7 @@
 #include "Intersection.hpp"
+#include <algorithm>
+
+using namespace std;
 
 void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive) {
   if (m_added == 2) {
@@ -59,19 +62,108 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
   }
 }
 
-IntersectionInfo& IntersectionInfo::UNION(const IntersectionInfo &other) {
-  for (IntersectionPoint pt : other.intersections) {
-    if (pt.valid) {
-      intersections.push_back(pt);
+IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
+
+  if ((intersect_t_1 < other.intersect_t_1 && intersect_t_2 < other.intersect_t_1) ||
+    (intersect_t_1 > other.intersect_t_1 && intersect_t_1 < other.intersect_t_2)
+  ) {
+    return IntersectionPoint();
+  }
+
+  if (intersect_t_1 < other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      return IntersectionPoint(*this, other);
+    } else {
+      return *this;
+    }
+  } else if (intersect_t_1 > other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      return other;
+    } else {
+      return IntersectionPoint(other, *this);
+    }
+  } else if (intersect_t_1 == other.intersect_t_1) {
+    if (intersect_t_2 < other.intersect_t_2) {
+      return IntersectionPoint(*this, other);
+    } else {
+      return *this;
     }
   }
+  return IntersectionPoint();
+}
+
+IntersectionInfo& IntersectionInfo::UNION(const IntersectionInfo &other) {
+  vector<IntersectionPoint> result;
+  if (intersections.size() == 0) {
+    intersections = other.intersections;
+    return *this;
+  } if (other.intersections.size() == 0) {
+    return *this;
+  }
+
+  int i = 1, j = 0;
+  IntersectionPoint current = intersections[0];
+  while(i < intersections.size() && j < other.intersections.size()) {
+    bool doIncJ = false, doIncI = false;
+    if (intersections[i].intersect_t_1 >= other.intersections[j].intersect_t_1) {
+      if (!current.UNION(other.intersections[j]).valid) {
+        //update current to the failed interval
+        //write interval into result
+        result.push_back(current);
+        current = other.intersections[j];
+      }
+      doIncJ = true;
+    } if (intersections[i].intersect_t_1 <= other.intersections[j].intersect_t_1) {
+      if (!current.UNION(intersections[i]).valid) {
+        //update current to the failed interval
+        //write interval into result
+        result.push_back(current);
+        current = intersections[i];
+      }
+      doIncI = true;
+    }
+    i += doIncI;
+    j += doIncJ;
+  }
+  while (i < intersections.size()) {
+    if (!current.UNION(intersections[i]).valid) {
+      //update current to the failed interval
+      //write interval into result
+      result.push_back(current);
+      current = intersections[i];
+    }
+    i++;
+  }
+  while (j < other.intersections.size()) {
+    if (!current.UNION(other.intersections[j]).valid) {
+      //update current to the failed interval
+      //write interval into result
+      result.push_back(current);
+      current = other.intersections[j];
+    }
+    j++;
+  }
+
+  intersections = result;
   return *this;
 }
 
+
+
+
+IntersectionPoint IntersectionPoint::DIFFERENCE(const IntersectionPoint &other) {
+  return IntersectionPoint();
+}
 IntersectionInfo& IntersectionInfo::DIFFERENCE(const IntersectionInfo &other) {
   return *this;
 }
 
+
+
+
+IntersectionPoint IntersectionPoint::INTERSECT(const IntersectionPoint &other) {
+  return IntersectionPoint();
+}
 IntersectionInfo& IntersectionInfo::INTERSECT(const IntersectionInfo &other) {
   return *this;
 }

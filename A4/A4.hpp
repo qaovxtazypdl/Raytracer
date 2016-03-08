@@ -12,6 +12,7 @@
 #include "JointNode.hpp"
 #include "GeometryNode.hpp"
 #include "Primitive.hpp"
+#include "Intersection.hpp"
 #include "Flags.hpp"
 #include "Material.hpp"
 #include "PhongMaterial.hpp"

@@ -34,8 +34,29 @@ public:
     m_material_2(material_2), m_primitive_2(primitive_2),
     valid(true), m_added(2)
   {}
+
+  IntersectionPoint(const IntersectionPoint &first, const IntersectionPoint &second) :
+    intersect_t_1(first.intersect_t_1), normal_1(first.normal_1), point_1(first.point_1),
+    intersect_t_2(second.intersect_t_2), normal_2(second.normal_2), point_2(second.point_2),
+    m_material_1(first.m_material_1), m_primitive_1(first.m_primitive_1),
+    m_material_2(second.m_material_2), m_primitive_2(second.m_primitive_2),
+    valid(true), m_added(2)
+  {}
+
+  IntersectionPoint(const IntersectionPoint &other) :
+    intersect_t_1(other.intersect_t_1), normal_1(other.normal_1), point_1(other.point_1),
+    intersect_t_2(other.intersect_t_2), normal_2(other.normal_2), point_2(other.point_2),
+    m_material_1(other.m_material_1), m_primitive_1(other.m_primitive_1),
+    m_material_2(other.m_material_2), m_primitive_2(other.m_primitive_2),
+    valid(true), m_added(2)
+  {}
+
   IntersectionPoint(): valid(false), m_added(0) {}
   void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive);
+
+  IntersectionPoint UNION(const IntersectionPoint &other);
+  IntersectionPoint DIFFERENCE(const IntersectionPoint &other);
+  IntersectionPoint INTERSECT(const IntersectionPoint &other);
 private:
   int m_added;
 };
@@ -45,9 +66,17 @@ class IntersectionInfo {
 public:
   std::vector<IntersectionPoint> intersections;
 
-  IntersectionInfo(const std::vector<IntersectionPoint> &ispts) :
-    intersections(ispts)
-  {}
+  IntersectionInfo(const std::vector<IntersectionPoint> &ispts) {
+    for (IntersectionPoint pt : ispts) {
+      if (pt.valid) {
+        intersections.push_back(pt);
+      }
+    }
+
+    sort(intersections.begin(), intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {
+      return pt1.intersect_t_1 < pt2.intersect_t_1;
+    });
+  }
 
   IntersectionInfo() {}
 
