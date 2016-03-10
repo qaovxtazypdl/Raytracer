@@ -57,7 +57,7 @@ IntersectionPoint firstHitInNodeList(const vector<HierarchicalNodeInfo> &nodes, 
 
     IntersectionPoint ipt = ninfo.node->testHit(T_inv * ray_origin, T_inv * ray_direction).getFirstValidIntersection(max_t);
 
-    if (ipt.intersect_t_1 < min_t) {
+    if (ipt.valid && ipt.intersect_t_1 < min_t) {
       result = ipt;
       min_t = ipt.intersect_t_1;
 
@@ -182,7 +182,6 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
   for (int y = 0; y < ny + 2; ++y) {
     for (int x = 0; x < nx + 2; ++x) {
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
-
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
       dvec3 pixelColor = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
       vertexColors[(nx + 2) * y + x] = pixelColor;
@@ -218,7 +217,6 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
   for (int y = 0; y < ny; ++y) {
     for (int x = 0; x < nx; ++x) {
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
-
       //find points where pixel trace differences are high, and do a stochastic jitter SS on that pixel specifically.
       dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
 
