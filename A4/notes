@@ -1,16 +1,31 @@
-???????????
-refraction - ray might originate from inside sphere/cube
+CS488
+PROJECT                                    MAR 30
+
+Adaptive Stochastic Jitter Supersampling   DONE
+Cylinders, Cones, Torus                    DONE
+Constructive Solid Geometry                DONE
+
+E.Threading                                THU
+Soft Shadows                               THU
 
 
 
-extensions!
-===================
-refraction
-perlin noise
-bump mapping
-texture mapping
-space partitioning
-stochastic supersampling
-cylinders, cones, torus
-shadow blur
-depth of field
+
+UNSCHEDULED
+====================================
+Texture Map                                                   needed
+Bump Map                                                      bumps on walls, ground, suits.. etc
+Refraction                                                    pillars, armor parts
+Anaglyph 3D                                                   3d pop!
+Uniform Space Partitioning                                    acceleration
+Scene                                                         !
+
+E.Perlin Noise for texture/bump
+
+SCENE
+=====
+-suits of armor in castle hallway lit by /torches
+-semi-transparent ice pillars
+-transparent crystal statue in middle
+
+PDF/web display/report

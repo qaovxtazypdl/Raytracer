@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <limits>
+#include <thread>
 #include <iostream>
 #include <random>
 #include <glm/gtx/transform.hpp>
