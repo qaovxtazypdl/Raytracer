@@ -140,6 +140,112 @@ dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir
   }
 }
 
+void t_trace(size_t nx, size_t ny, double w, double h, double d,
+  SceneNode * root,
+  Image & image,
+  const dvec3 & eye,
+  const dvec3 & view,
+  const dvec3 & up,
+  const dvec3 & ambient,
+  const std::list<Light *> & lights,
+  vector<dvec3> &vertexColors,
+  int &count,
+  mutex &counterLock,
+  int thread_num,
+  int num_threads
+) {
+  int maxCount = (ny+2) * (nx+2);
+  for (int y = 0; y < ny + 2; ++y) {
+    for (int x = 0; x < nx + 2; ++x) {
+      if ((y + x*ny + thread_num) % num_threads != 0) continue;
+
+      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
+      dvec3 pixelColor = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      vertexColors[(nx + 2) * y + x] = pixelColor;
+
+      counterLock.lock();
+        count++;
+        if (count*100/maxCount > (count-1)*100/maxCount) {
+          cout << "Trace - Progress: " << count*100/maxCount << endl;
+        }
+      counterLock.unlock();
+    }
+  }
+}
+
+void t_aa(size_t nx, size_t ny, double w, double h, double d,
+  SceneNode * root,
+  Image & image,
+  const dvec3 & eye,
+  const dvec3 & view,
+  const dvec3 & up,
+  const dvec3 & ambient,
+  const std::list<Light *> & lights,
+  vector<dvec3> &vertexColors,
+  int &count,
+  mutex &counterLock,
+  int thread_num,
+  int num_threads
+) {
+  default_random_engine rng;
+  uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
+  int maxCount = ny * nx;
+
+  for (int y = 0; y < ny; ++y) {
+    for (int x = 0; x < nx; ++x) {
+      if ((y + x*ny + thread_num) % num_threads != 0) continue;
+
+      //find points where pixel trace differences are high, and do a stochastic jitter SS on that pixel specifically.
+      dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
+
+      bool adaptiveSS = false;
+      double adaptiveThreshold = 0.03;
+      if (MACRO_USE_SUPERSAMPLE) {
+        if (length(vertexColors[(nx + 2) * (y) + (x+1)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+2) + (x+1)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+1) + (x)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        } else if (length(vertexColors[(nx + 2) * (y+1) + (x+2)] - pixelColor) > adaptiveThreshold) {
+          adaptiveSS = true;
+        }
+      }
+
+      if (MACRO_USE_SUPERSAMPLE_TEST) {
+        if (adaptiveSS) {
+          pixelColor = dvec3(1.0, 1.0, 1.0);
+        } else {
+          pixelColor = dvec3(0.0, 0.0, 0.0);
+        }
+      } else {
+        if (MACRO_USE_SUPERSAMPLE && adaptiveSS) {
+          pixelColor = dvec3(0.0, 0.0, 0.0);
+          for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
+            for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
+              dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+            }
+          }
+        }
+      }
+
+      pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
+
+      for (int i = 0; i < 3; i++) {
+        image(x, ny - y - 1, i) = pixelColor[i];
+      }
+
+      counterLock.lock();
+        count++;
+        if (count*10/maxCount > (count-1)*10/maxCount) {
+          cout << "AA/Write - Progress: " << count*100/maxCount << endl;
+        }
+      counterLock.unlock();
+    }
+  }
+}
+
 void A4_Render(
 		// What to render
 		SceneNode * root,
@@ -180,6 +286,22 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = (double)nx/ny * h;
 
+  vector<dvec3> vertexColors((nx+2) * (ny+2));
+  mutex counterLock;
+  int trace_count = 0, aa_count = 0;
+
+  vector<thread> trace_threads;
+  for (int i = 0; i < MACRO_NUM_THREADS; i++) {
+    trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(root), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+  }
+  for (thread &t : trace_threads) t.join();
+
+  vector<thread> aa_threads;
+  for (int i = 0; i < MACRO_NUM_THREADS; i++) {
+    aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(root), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+  }
+  for (thread &t : aa_threads) t.join();
+}
 
   /**********************************
   IntersectionInfo int1 = IntersectionInfo({
@@ -255,72 +377,3 @@ void A4_Render(
   }
   return;
   ***********************************/
-
-  cout << "Progress: 0" << endl;
-
-  default_random_engine rng;
-  uniform_real_distribution<double> ssrand(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE);
-
-  vector<dvec3> vertexColors((nx+2) * (ny+2));
-
-  for (int y = 0; y < ny + 2; ++y) {
-    for (int x = 0; x < nx + 2; ++x) {
-      if ((x + y*(nx+2))*100/((ny+2)*(nx+2)) > (x + y*(nx+2) - 1)*100/((ny+2)*(nx+2))) {
-        cout << "Trace - Progress: " << (x + y*(nx+2))*100/((ny+2)*(nx+2)) << endl;
-      }
-      //if (!(x > 280 && x < 320 && y < ny-200-1 && y > ny-240-1)) continue;
-      //if (!(x == 300 && y == ny-225-1)) continue;
-      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
-      vertexColors[(nx + 2) * y + x] = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
-    }
-  }
-
-	for (int y = 0; y < ny; ++y) {
-		for (int x = 0; x < nx; ++x) {
-      if ((x + y*nx)*10/(ny*nx) > (x + y*nx - 1)*10/(ny*nx)) {
-        cout << "AA - Progress: " << (x + y*nx)*100/(ny*nx) << endl;
-      }
-      //find points where pixel trace differences are high, and do a stochastic jitter SS on that pixel specifically.
-      dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
-
-      bool adaptiveSS = false;
-      double adaptiveThreshold = 0.03;
-      if (MACRO_USE_SUPERSAMPLE) {
-        if (length(vertexColors[(nx + 2) * (y) + (x+1)] - pixelColor) > adaptiveThreshold) {
-          adaptiveSS = true;
-        } else if (length(vertexColors[(nx + 2) * (y+2) + (x+1)] - pixelColor) > adaptiveThreshold) {
-          adaptiveSS = true;
-        } else if (length(vertexColors[(nx + 2) * (y+1) + (x)] - pixelColor) > adaptiveThreshold) {
-          adaptiveSS = true;
-        } else if (length(vertexColors[(nx + 2) * (y+1) + (x+2)] - pixelColor) > adaptiveThreshold) {
-          adaptiveSS = true;
-        }
-      }
-
-      if (MACRO_USE_SUPERSAMPLE_TEST) {
-        if (adaptiveSS) {
-          pixelColor = dvec3(1.0, 1.0, 1.0);
-        } else {
-          pixelColor = dvec3(0.0, 0.0, 0.0);
-        }
-      } else {
-        if (MACRO_USE_SUPERSAMPLE && adaptiveSS) {
-          pixelColor = dvec3(0.0, 0.0, 0.0);
-          for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
-            for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-              dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
-            }
-          }
-        }
-      }
-
-      pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
-
-      for (int i = 0; i < 3; i++) {
-        image(x, ny - y - 1, i) = pixelColor[i];
-      }
-		}
-	}
-  cout << "Progress: 100" << endl;
-}

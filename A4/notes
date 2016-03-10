@@ -7,6 +7,7 @@ Constructive Solid Geometry                DONE
 
 E.Threading                                THU
 Soft Shadows                               THU
+Refraction                                 THU
 
 
 
@@ -15,12 +16,13 @@ UNSCHEDULED
 ====================================
 Texture Map                                                   needed
 Bump Map                                                      bumps on walls, ground, suits.. etc
-Refraction                                                    pillars, armor parts
 Anaglyph 3D                                                   3d pop!
-Uniform Space Partitioning                                    acceleration
+Glossy reflection
 Scene                                                         !
 
+E.Uniform Space Partitioning                                    acceleration
 E.Perlin Noise for texture/bump
+E.Caustics
 
 SCENE
 =====

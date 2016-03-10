@@ -3,6 +3,7 @@
 #include <vector>
 #include <limits>
 #include <thread>
+#include <mutex>
 #include <iostream>
 #include <random>
 #include <glm/gtx/transform.hpp>
