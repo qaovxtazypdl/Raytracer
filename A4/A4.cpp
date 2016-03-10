@@ -55,8 +55,7 @@ IntersectionPoint firstHitInNodeList(const vector<HierarchicalNodeInfo> &nodes, 
     dmat4 T_inv = ninfo.inv;
     dmat3 T_invtrans = ninfo.invTranspose;
 
-    IntersectionInfo iinfo = ninfo.node->testHit(T_inv * ray_origin, T_inv * ray_direction);
-    IntersectionPoint ipt = iinfo.getFirstValidIntersection(max_t);
+    IntersectionPoint ipt = ninfo.node->testHit(T_inv * ray_origin, T_inv * ray_direction).getFirstValidIntersection(max_t);
 
     if (ipt.intersect_t_1 < min_t) {
       result = ipt;
