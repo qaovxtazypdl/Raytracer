@@ -11,6 +11,7 @@ using namespace std;
 
 CSGNode::CSGNode( const std::string& name ): m_left(NULL), m_right(NULL), m_action(CSGAction::UNION), SceneNode(name)
 {
+  m_nodeType = NodeType::CSGNode;
 }
 
 IntersectionInfo CSGNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {

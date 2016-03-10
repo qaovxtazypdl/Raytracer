@@ -126,6 +126,9 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 		case NodeType::JointNode:
 			os << "JointNode";
 			break;
+    case NodeType::CSGNode:
+      os << "CSGNode";
+      break;
 	}
 	os << ":[";
 

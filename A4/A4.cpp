@@ -246,6 +246,26 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
   }
 }
 
+void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<HierarchicalNodeInfo> &result) {
+  accumulatedTrans = accumulatedTrans * root->get_transform();
+  if (root->m_nodeType == NodeType::GeometryNode || root->m_nodeType == NodeType::CSGNode) {
+    result.push_back(HierarchicalNodeInfo(root, accumulatedTrans));
+  } else if (root->m_nodeType == NodeType::JointNode) {
+    const JointNode * jointNode = static_cast<const JointNode *>(root);
+    accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
+  }
+
+  for (SceneNode * node : root->children) {
+    buildTreeCache(node, accumulatedTrans, result);
+  }
+}
+
+vector<HierarchicalNodeInfo> buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans) {
+  vector<HierarchicalNodeInfo> result;
+  buildTreeCache(root, accumulatedTrans, result);
+  return result;
+}
+
 void A4_Render(
 		// What to render
 		SceneNode * root,
@@ -285,6 +305,8 @@ void A4_Render(
   double d = 100;
   double h = 2*d*tan(fovy*PI/180/2);
   double w = (double)nx/ny * h;
+
+  vector<HierarchicalNodeInfo> nodes = buildTreeCache(root, dmat4(1.0));
 
   vector<dvec3> vertexColors((nx+2) * (ny+2));
   mutex counterLock;
