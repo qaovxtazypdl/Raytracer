@@ -46,13 +46,39 @@ dvec4 ggRefraction(const dvec4 &v, const dvec4 &n, double indexOfRefr) {
   return n1/n2 * v + (n1/n2*cos(t_i) - sqrt(1-pow(sin(t_out),2))) * n;
 }
 
-dvec3 directLight(const SceneNode *root, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
+IntersectionPoint firstHitInNodeList(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_direction, double max_t) {
+  IntersectionPoint result;
+  double min_t = INF;
+
+  for (HierarchicalNodeInfo ninfo : nodes) {
+    dmat4 T = ninfo.mat;
+    dmat4 T_inv = ninfo.inv;
+    dmat3 T_invtrans = ninfo.invTranspose;
+
+    IntersectionInfo iinfo = ninfo.node->testHit(T_inv * ray_origin, T_inv * ray_direction);
+    IntersectionPoint ipt = iinfo.getFirstValidIntersection(max_t);
+
+    if (ipt.intersect_t_1 < min_t) {
+      result = ipt;
+      min_t = ipt.intersect_t_1;
+
+      result.point_1 = T * result.point_1;
+      result.point_2 = T * result.point_2;
+
+      result.normal_1 = normalize(dvec4(T_invtrans * dvec3(result.normal_1), 0.0));
+      result.normal_2 = normalize(dvec4(T_invtrans * dvec3(result.normal_2), 0.0));
+    }
+  }
+
+  return result;
+}
+
+dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
   for (Light * light : lights) {
     dvec4 l_dir = dvec4(light->position, 1.0) - point;
-    IntersectionInfo result = root->testHit(point, l_dir);
-    IntersectionPoint pt = result.getFirstValidIntersection(1.0);
+    IntersectionPoint pt = firstHitInNodeList(nodes, point, l_dir, 1.0);
 
     if (!pt.valid) {
       double d = length(l_dir);
@@ -102,11 +128,10 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 
 //origin is point
 //direction is vector
-dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
+dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
 
-  IntersectionInfo result = root->testHit(ray_origin, ray_dir);
-  IntersectionPoint pt = result.getFirstValidIntersection(INF);
+  IntersectionPoint pt = firstHitInNodeList(nodes, ray_origin, ray_dir, INF);
 
   if (pt.valid) {
     dvec3 color;
@@ -121,18 +146,18 @@ dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir
     color += k_d * ambient;
 
     //light contributions
-    color += directLight(root, mat, ray_dir, point, normal, lights);
+    color += directLight(nodes, mat, ray_dir, point, normal, lights);
 
     //reflection
     if (MACRO_REFLECTION_ON && length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += 0.50 * k_s * trace(root, point, reflDirection, ambient, lights, depth+1);
+      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
     }
 
     if (MACRO_REFRACTION_ON && length(k_s) > 0) {
       //dvec4 reflDirection = ggReflection(ray_dir, normal);
       dvec4 refrDirection = ggRefraction(ray_dir, normal, 1.56);
-      color += 0.50 * trace(root, point, refrDirection, ambient, lights, depth+1);
+      color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, depth+1);
     }
     return color;
   } else {
@@ -141,7 +166,7 @@ dvec3 trace(const SceneNode *root, const dvec4 &ray_origin, const dvec4 &ray_dir
 }
 
 void t_trace(size_t nx, size_t ny, double w, double h, double d,
-  SceneNode * root,
+  const vector<HierarchicalNodeInfo> &nodes,
   Image & image,
   const dvec3 & eye,
   const dvec3 & view,
@@ -160,7 +185,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
 
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
-      dvec3 pixelColor = trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      dvec3 pixelColor = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
       vertexColors[(nx + 2) * y + x] = pixelColor;
 
       counterLock.lock();
@@ -174,7 +199,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
 }
 
 void t_aa(size_t nx, size_t ny, double w, double h, double d,
-  SceneNode * root,
+  const vector<HierarchicalNodeInfo> &nodes,
   Image & image,
   const dvec3 & eye,
   const dvec3 & view,
@@ -224,7 +249,7 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
           for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
             for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
               dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(root, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
             }
           }
         }
@@ -314,13 +339,13 @@ void A4_Render(
 
   vector<thread> trace_threads;
   for (int i = 0; i < MACRO_NUM_THREADS; i++) {
-    trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(root), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+    trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
   }
   for (thread &t : trace_threads) t.join();
 
   vector<thread> aa_threads;
   for (int i = 0; i < MACRO_NUM_THREADS; i++) {
-    aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(root), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+    aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
   }
   for (thread &t : aa_threads) t.join();
 }
