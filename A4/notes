@@ -31,3 +31,10 @@ SCENE
 -transparent crystal statue in middle
 
 PDF/web display/report
+
+
+
+BUGS
+============
+possible bug with refraction rays detecting the second intersection
+bug smell from intersection interval not behaving correctly if we return first result.

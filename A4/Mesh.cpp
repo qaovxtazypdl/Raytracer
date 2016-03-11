@@ -139,6 +139,10 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
         t, t*ray_dir + ray_origin, intersect_normal, m_material, this,
         t, t*ray_dir + ray_origin, intersect_normal, m_material, this
       ));
+
+      std::sort(result.intersections.begin(), result.intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {
+        return pt1.intersect_t_1 < pt2.intersect_t_1;
+      });
     }
   }
 

@@ -301,6 +301,96 @@ void A4_Render(
 		const dvec3 & ambient,
 		const std::list<Light *> & lights
 ) {
+
+  /**********************************
+  IntersectionInfo int1 = IntersectionInfo({
+    IntersectionPoint(3, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int2 = IntersectionInfo({
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 4, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo unioned = int1.UNION(int2);
+  for(IntersectionPoint &p : unioned.intersections) {
+    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
+  }
+  return;
+  ***********************************/
+  /**********************************
+  IntersectionInfo int1 = IntersectionInfo({
+    IntersectionPoint(-3, dvec4(), dvec4(), NULL, NULL, 0.01, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(6.3, dvec4(), dvec4(), NULL, NULL, 13, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(40, dvec4(), dvec4(), NULL, NULL, 50, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int2 = IntersectionInfo({
+    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 5, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.5, dvec4(), dvec4(), NULL, NULL, 5.7, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.77, dvec4(), dvec4(), NULL, NULL, 5.9, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.91, dvec4(), dvec4(), NULL, NULL, 6.03, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 62.03, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int0 = IntersectionInfo();
+
+
+  IntersectionInfo int5 = IntersectionInfo({
+    IntersectionPoint(2.9, dvec4(), dvec4(), NULL, NULL, 3.1, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 4, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int6 = IntersectionInfo({
+    IntersectionPoint(3, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 4, dvec4(), dvec4(), NULL, NULL),
+  });
+
+
+  IntersectionInfo unioned = int5.INTERSECT(int6);
+  for(IntersectionPoint &p : unioned.intersections) {
+    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
+  }
+  return;
+  ***********************************/
+  /**********************************
+  IntersectionInfo int1 = IntersectionInfo({
+    IntersectionPoint(-3, dvec4(), dvec4(), NULL, NULL, 0.01, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(2.1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(6.3, dvec4(), dvec4(), NULL, NULL, 13, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(40, dvec4(), dvec4(), NULL, NULL, 50, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int2 = IntersectionInfo({
+    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 5, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.5, dvec4(), dvec4(), NULL, NULL, 5.7, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.77, dvec4(), dvec4(), NULL, NULL, 5.9, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.91, dvec4(), dvec4(), NULL, NULL, 6.03, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 62.03, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int3 = IntersectionInfo({
+    IntersectionPoint(3, dvec4(), dvec4(), NULL, NULL, 5.75, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.85, dvec4(), dvec4(), NULL, NULL, 5.95, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(5.99, dvec4(), dvec4(), NULL, NULL, 8, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int4 = IntersectionInfo({
+    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
+    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 9, dvec4(), dvec4(), NULL, NULL),
+  });
+
+  IntersectionInfo int0 = IntersectionInfo();
+
+  IntersectionInfo unioned = int4.DIFFERENCE(int3);
+  for(IntersectionPoint &p : unioned.intersections) {
+    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
+  }
+  return;
+  ***********************************/
+
   std::cout << "Calling A4_Render(\n" <<
 		  "\t" << *root <<
           "\t" << "Image(width:" << image.width() << ", height:" << image.height() << ")\n"
@@ -343,77 +433,3 @@ void A4_Render(
   for (thread &t : aa_threads) t.join();
 }
 
-  /**********************************
-  IntersectionInfo int1 = IntersectionInfo({
-    IntersectionPoint(1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int2 = IntersectionInfo();
-
-  IntersectionInfo unioned = int2.UNION(int1);
-  for(IntersectionPoint &p : unioned.intersections) {
-    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
-  }
-  return;
-  ***********************************/
-  /**********************************
-  IntersectionInfo int1 = IntersectionInfo({
-    IntersectionPoint(-3, dvec4(), dvec4(), NULL, NULL, 0.01, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(6.3, dvec4(), dvec4(), NULL, NULL, 13, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(40, dvec4(), dvec4(), NULL, NULL, 50, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int2 = IntersectionInfo({
-    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 5, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.5, dvec4(), dvec4(), NULL, NULL, 5.7, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.77, dvec4(), dvec4(), NULL, NULL, 5.9, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.91, dvec4(), dvec4(), NULL, NULL, 6.03, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 62.03, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int0 = IntersectionInfo();
-
-  IntersectionInfo unioned = int2.INTERSECT(int0);
-  for(IntersectionPoint &p : unioned.intersections) {
-    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
-  }
-  return;
-  ***********************************/
-  /**********************************
-  IntersectionInfo int1 = IntersectionInfo({
-    IntersectionPoint(-3, dvec4(), dvec4(), NULL, NULL, 0.01, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(2.1, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(4, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(6.3, dvec4(), dvec4(), NULL, NULL, 13, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(40, dvec4(), dvec4(), NULL, NULL, 50, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int2 = IntersectionInfo({
-    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 5, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.5, dvec4(), dvec4(), NULL, NULL, 5.7, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.77, dvec4(), dvec4(), NULL, NULL, 5.9, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.91, dvec4(), dvec4(), NULL, NULL, 6.03, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 62.03, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int3 = IntersectionInfo({
-    IntersectionPoint(3, dvec4(), dvec4(), NULL, NULL, 5.75, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.85, dvec4(), dvec4(), NULL, NULL, 5.95, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(5.99, dvec4(), dvec4(), NULL, NULL, 8, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int4 = IntersectionInfo({
-    IntersectionPoint(2, dvec4(), dvec4(), NULL, NULL, 6, dvec4(), dvec4(), NULL, NULL),
-    IntersectionPoint(7, dvec4(), dvec4(), NULL, NULL, 9, dvec4(), dvec4(), NULL, NULL),
-  });
-
-  IntersectionInfo int0 = IntersectionInfo();
-
-  IntersectionInfo unioned = int4.DIFFERENCE(int3);
-  for(IntersectionPoint &p : unioned.intersections) {
-    cout << p.intersect_t_1 << ":" << p.intersect_t_2 << endl;
-  }
-  return;
-  ***********************************/

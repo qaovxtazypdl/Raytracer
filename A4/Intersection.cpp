@@ -44,21 +44,27 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
   const double EPSILON = 1E-11;
   IntersectionPoint result;
   double min_t = std::numeric_limits<double>::infinity();
-  bool found = false;
 
   for (IntersectionPoint pt : intersections) {
     if (pt.intersect_t_1 < min_t && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
       min_t = pt.intersect_t_1;
       result = pt;
-      found = true;
+      return result;
+    } else if (pt.intersect_t_2 < min_t && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
+      min_t = pt.intersect_t_2;
+
+      swap(pt.intersect_t_2, pt.intersect_t_1);
+      swap(pt.normal_2, pt.normal_1);
+      swap(pt.point_2, pt.point_1);
+      swap(pt.m_material_2, pt.m_material_1);
+      swap(pt.m_primitive_2, pt.m_primitive_1);
+      result = pt;
+
+      return result;
     }
   }
 
-  if (found) {
-    return result;
-  } else {
-    return IntersectionPoint();
-  }
+  return result;
 }
 
 IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {
@@ -94,8 +100,17 @@ IntersectionInfo IntersectionInfo::UNION(const IntersectionInfo &other) {
     return *this;
   }
 
-  int i = 1, j = 0;
-  IntersectionPoint current = intersections[0];
+  int i, j;
+  IntersectionPoint current;
+  if (intersections[0].intersect_t_1 < other.intersections[0].intersect_t_1) {
+    i = 1;
+    j = 0;
+    current = intersections[0];
+  } else {
+    i = 0;
+    j = 1;
+    current = other.intersections[0];
+  }
   while(i < intersections.size() && j < other.intersections.size()) {
     bool doIncJ = false, doIncI = false;
     if (intersections[i].intersect_t_1 >= other.intersections[j].intersect_t_1) {
