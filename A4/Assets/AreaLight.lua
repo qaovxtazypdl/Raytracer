@@ -2,7 +2,8 @@ hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120)
-white = gr.material({6.0, 6.0, 6.0}, {0.0, 0.0, 0.0}, 0)
+light_material_orange = gr.material_extended({1.0, 0.6, 0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
+light_material_blue = gr.material_extended({0.0, 0.4, 1.0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -24,10 +25,10 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-planar_light = gr.planar_light({21, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
-planar_light_pt = gr.light({21, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
-spherical_light = gr.spherical_light({-21, 27, -15}, {1.0, 1.0, 1.0}, {1, 0, 0}, 4.0)
-spherical_light_pt = gr.light({-21, 27, -15}, {1.0, 1.0, 1.0}, {1, 0, 0}, 4.0)
+planar_light = gr.planar_light({20, 18, -5}, {1.0, 0.6, 0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
+planar_light_pt = gr.light({20, 18, -5}, {1.0, 0.6, 0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
+spherical_light = gr.spherical_light({-21, 27, -15}, {0.0, 0.4, 1.0}, {1, 0, 0}, 4.0)
+spherical_light_pt = gr.light({-21, 27, -15}, {0.0, 0.4, 1.0}, {1, 0, 0}, 4.0)
 
 --start script
 scene = gr.node('root')
@@ -51,7 +52,7 @@ right_cone = gr.cone('right_cone')
 right_cone:scale(1/50,1/50,1/100)
 right_cone:scale(5,10,10)
 right_cone:translate(0,0.07,0)
-right_cone:translate(0.34,0,0.36)
+right_cone:translate(0.38,0,0.36)
 right_cone:set_material(polgold)
 plane:add_child(right_cone)
 
@@ -76,13 +77,19 @@ central_cylinderUtorus:translate(0,-0.25,-0.4)
 plane:add_child(central_cylinderUtorus)
 
 planeLight = gr.mesh('planeLight', 'Assets/plane.obj')
-planeLight:set_material(white)
+planeLight:set_material(light_material_orange)
 planeLight:scale(5,5,5)
 planeLight:rotate('z', 90)
-planeLight:translate(26.1,18,-5)
---scene:add_child(planeLight)
+planeLight:translate(21,18,-5)
+scene:add_child(planeLight)
+
+sphereLight = gr.sphere('sphereLight')
+sphereLight:set_material(light_material_blue)
+sphereLight:scale(4,4,4)
+sphereLight:translate(-21, 27, -15)
+scene:add_child(sphereLight)
 
 gr.render(scene, 'area_light.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {planar_light, spherical_light})
+    {0.3, 0.3, 0.3}, {planar_light_pt, spherical_light_pt})
 

@@ -44,7 +44,7 @@ Torus::~Torus()
 {
 }
 
-IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   //m_pos;
   //m_radius;
   dvec4 a = ray_origin;
@@ -71,7 +71,7 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
 }
 
 //refernce: https://tavianator.com/fast-branchless-raybounding-box-intersections/
-IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   glm::dvec4 inv_ray_dir = 1.0/ray_dir;
 
   double tx_first = (m_pos[0] - ray_origin[0]) * inv_ray_dir[0];
@@ -114,7 +114,7 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
   }
 }
 
-IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   IntersectionPoint result;
 
   dvec4 norm;
@@ -150,7 +150,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
   return IntersectionInfo({result});
 }
 
-IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   IntersectionPoint result;
 
   dvec4 norm;
@@ -196,7 +196,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
   return IntersectionInfo({result});
 }
 
-IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   IntersectionPoint result1, result2;
   dvec4 intersect;
   dvec4 norm, pt;
@@ -276,7 +276,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
 }
 
 
-IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, Material *m_material) {
+IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
   IntersectionPoint result1, result2;
 
   double R = 1.0;

@@ -53,8 +53,8 @@ glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const PhongMater
   for (int i = 0; i < MACRO_NUM_PLANAR_LIGHT_SAMPLES; i++) {
     for (int j = 0; j < MACRO_NUM_PLANAR_LIGHT_SAMPLES; j++) {
       dvec4 lightPoint = corner + 2.0 * (
-        (1.0/MACRO_NUM_PLANAR_LIGHT_SAMPLES*i + 0.5/MACRO_NUM_PLANAR_LIGHT_SAMPLES) * plane_vector_1 + lightrand(rng) +
-        (1.0/MACRO_NUM_PLANAR_LIGHT_SAMPLES*j + 0.5/MACRO_NUM_PLANAR_LIGHT_SAMPLES) * plane_vector_2 + lightrand(rng)
+        (1.0/MACRO_NUM_PLANAR_LIGHT_SAMPLES*i + 0.5/MACRO_NUM_PLANAR_LIGHT_SAMPLES + lightrand(rng)) * plane_vector_1 +
+        (1.0/MACRO_NUM_PLANAR_LIGHT_SAMPLES*j + 0.5/MACRO_NUM_PLANAR_LIGHT_SAMPLES + lightrand(rng)) * plane_vector_2
       );
 
       dvec4 l_dir = lightPoint - point;

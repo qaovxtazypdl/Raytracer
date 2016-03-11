@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <glm/gtx/io.hpp>
-#include "Material.hpp"
+#include "PhongMaterial.hpp"
 #include <algorithm>
 
 class Primitive;
@@ -21,15 +21,15 @@ public:
   glm::dvec4 normal_2;
   glm::dvec4 point_2;
 
-  Material *m_material_1;
+  PhongMaterial *m_material_1;
   Primitive *m_primitive_1;
 
-  Material *m_material_2;
+  PhongMaterial *m_material_2;
   Primitive *m_primitive_2;
 
   IntersectionPoint(
-    double intersect_t_1, const glm::dvec4 &point_1, const glm::dvec4 &normal_1, Material *material_1, Primitive *primitive_1,
-    double intersect_t_2, const glm::dvec4 &point_2, const glm::dvec4 &normal_2, Material *material_2, Primitive *primitive_2
+    double intersect_t_1, const glm::dvec4 &point_1, const glm::dvec4 &normal_1, PhongMaterial *material_1, Primitive *primitive_1,
+    double intersect_t_2, const glm::dvec4 &point_2, const glm::dvec4 &normal_2, PhongMaterial *material_2, Primitive *primitive_2
   ) :
     intersect_t_1(intersect_t_1), normal_1(normal_1), point_1(point_1),
     intersect_t_2(intersect_t_2), normal_2(normal_2), point_2(point_2),
@@ -51,7 +51,7 @@ public:
   }
 
   IntersectionPoint(): valid(false), m_added(0) {}
-  void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, Material *material, Primitive *primitive);
+  void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, PhongMaterial *material, Primitive *primitive);
 
   void reverseNormal(bool first);
   IntersectionPoint UNION(const IntersectionPoint &other);

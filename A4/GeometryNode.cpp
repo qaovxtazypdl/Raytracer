@@ -4,7 +4,7 @@ using namespace std;
 using namespace glm;
 //---------------------------------------------------------------------------------------
 GeometryNode::GeometryNode(
-	const std::string & name, Primitive *prim, Material *mat )
+	const std::string & name, Primitive *prim, PhongMaterial *mat )
 	: SceneNode( name )
 	, m_material( mat )
 	, m_primitive( prim )
@@ -12,7 +12,7 @@ GeometryNode::GeometryNode(
 	m_nodeType = NodeType::GeometryNode;
 }
 
-void GeometryNode::setMaterial( Material *mat )
+void GeometryNode::setMaterial( PhongMaterial *mat )
 {
 	// Obviously, there's a potential memory leak here.  A good solution
 	// would be to use some kind of reference counting, as in the

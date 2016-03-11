@@ -7,12 +7,12 @@
 class GeometryNode : public SceneNode {
 public:
 	GeometryNode( const std::string & name, Primitive *prim,
-		Material *mat = nullptr );
+		PhongMaterial *mat = nullptr );
 
-	void setMaterial( Material *material );
+	void setMaterial( PhongMaterial *material );
   virtual IntersectionInfo testNode(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
   virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
 
-	Material *m_material;
+	PhongMaterial *m_material;
 	Primitive *m_primitive;
 };

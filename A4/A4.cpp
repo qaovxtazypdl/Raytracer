@@ -30,8 +30,12 @@ dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x
 dvec3 directLight(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
-  for (Light * light : lights) {
-    color += light->lightColor(nodes, mat, v_eye, point, normal);
+  if (!mat.isLight) {
+     for (Light * light : lights) {
+      color += light->lightColor(nodes, mat, v_eye, point, normal);
+    }
+  } else {
+    color = mat.m_kd;
   }
 
   return color;

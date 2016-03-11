@@ -528,7 +528,33 @@ int gr_material_cmd(lua_State* L)
 
   data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
                                      glm::vec3(ks[0], ks[1], ks[2]),
-                                     shininess);
+                                     shininess, 1.0, false);
+
+  luaL_newmetatable(L, "gr.material");
+  lua_setmetatable(L, -2);
+
+  return 1;
+}
+
+// Create a material
+extern "C"
+int gr_material_extended_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_material_ud* data = (gr_material_ud*)lua_newuserdata(L, sizeof(gr_material_ud));
+  data->material = 0;
+
+  double kd[3], ks[3];
+  get_tuple(L, 1, kd, 3);
+  get_tuple(L, 2, ks, 3);
+  double shininess = luaL_checknumber(L, 3);
+  double indexOfRefraction = luaL_checknumber(L, 4);
+  bool isLight = ((int)luaL_checknumber(L, 5)) == 1;
+
+  data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
+                                     glm::vec3(ks[0], ks[1], ks[2]),
+                                     shininess, indexOfRefraction, isLight);
 
   luaL_newmetatable(L, "gr.material");
   lua_setmetatable(L, -2);
@@ -598,7 +624,7 @@ int gr_node_set_material_cmd(lua_State* L)
   gr_material_ud* matdata = (gr_material_ud*)luaL_checkudata(L, 2, "gr.material");
   luaL_argcheck(L, matdata != 0, 2, "Material expected");
 
-  Material* material = matdata->material;
+  PhongMaterial* material = dynamic_cast<PhongMaterial *>(matdata->material);
 
   self->setMaterial(material);
 
@@ -704,6 +730,7 @@ static const luaL_Reg grlib_functions[] = {
   {"sphere", gr_sphere_cmd},
   {"joint", gr_joint_cmd},
   {"material", gr_material_cmd},
+  {"material_extended", gr_material_extended_cmd},
   // New for assignment 4
   {"csg", gr_csg_cmd},
   {"cube", gr_cube_cmd},
