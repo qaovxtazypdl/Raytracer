@@ -40,6 +40,7 @@ public:
   virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
 protected:
   std::default_random_engine rng;
-  std::uniform_real_distribution<double> lightrand;
+  std::uniform_real_distribution<double> radialrand;
+  std::uniform_real_distribution<double> angularrand;
   double radius;
 };
