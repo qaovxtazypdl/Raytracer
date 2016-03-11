@@ -91,5 +91,5 @@ scene:add_child(sphereLight)
 
 gr.render(scene, 'area_light.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {planar_light_pt, spherical_light_pt})
+    {0.3, 0.3, 0.3}, {planar_light, spherical_light})
 

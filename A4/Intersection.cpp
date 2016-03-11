@@ -44,6 +44,7 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
   const double EPSILON = 1E-11;
 
   for (IntersectionPoint pt : intersections) {
+    //check > 2 to check if its a shadow ray calculation.
     if ((max_t > 2 || !pt.m_material_1->isLight) && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
       return pt;
     } else if ((max_t > 2 || !pt.m_material_2->isLight) && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
