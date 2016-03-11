@@ -4,9 +4,8 @@ PROJECT                                    MAR 30
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
-E.Threading/Flatten                        DONE
-
 Soft Shadows                               THU
+
 Refraction                                 THU
 
 
@@ -23,6 +22,7 @@ Scene                                                         !
 E.Uniform Space Partitioning                                    acceleration
 E.Perlin Noise for texture/bump
 E.Caustics
+E.Threading/Flatten                                           DONE
 
 SCENE
 =====
@@ -33,7 +33,3 @@ SCENE
 PDF/web display/report
 
 
-
-BUGS
-============
-possible bug with refraction rays detecting the second intersection

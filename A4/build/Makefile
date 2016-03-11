@@ -66,6 +66,7 @@ endif
 OBJECTS := \
 	$(OBJDIR)/A4.o \
 	$(OBJDIR)/CSGNode.o \
+	$(OBJDIR)/FlatPrimitives.o \
 	$(OBJDIR)/GeometryNode.o \
 	$(OBJDIR)/Image.o \
 	$(OBJDIR)/Intersection.o \
@@ -79,6 +80,7 @@ OBJECTS := \
 	$(OBJDIR)/Primitive.o \
 	$(OBJDIR)/scene_lua.o \
 	$(OBJDIR)/SceneNode.o \
+	$(OBJDIR)/Utils.o \
 
 RESOURCES := \
 
@@ -146,6 +148,10 @@ $(OBJDIR)/CSGNode.o: ../CSGNode.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
+$(OBJDIR)/FlatPrimitives.o: ../FlatPrimitives.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/GeometryNode.o: ../GeometryNode.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
@@ -195,6 +201,10 @@ $(OBJDIR)/scene_lua.o: ../scene_lua.cpp
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/SceneNode.o: ../SceneNode.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Utils.o: ../Utils.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

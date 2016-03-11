@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "Utils.hpp"
 #include "SceneNode.hpp"
 #include "CSGNode.hpp"
 #include "JointNode.hpp"
@@ -20,19 +21,8 @@
 #include "Material.hpp"
 #include "PhongMaterial.hpp"
 #include "Light.hpp"
+#include "FlatPrimitives.hpp"
 #include "Image.hpp"
-
-struct HierarchicalNodeInfo {
-  const SceneNode *node;
-  glm::dmat4 mat;
-  glm::dmat4 inv;
-  glm::dmat3 invTranspose;
-
-  HierarchicalNodeInfo(const SceneNode *node, glm::dmat4 mat) : node(node), mat(mat) {
-    inv = glm::inverse(mat);
-    invTranspose = glm::transpose(glm::inverse(glm::dmat3(mat)));
-  }
-};
 
 void A4_Render(
 		// What to render

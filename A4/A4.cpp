@@ -3,9 +3,6 @@
 using namespace std;
 using namespace glm;
 
-double PI = 3.1415926535897932384;
-double INF = std::numeric_limits<double>::infinity();
-
 //fovy radians
 dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x, double y, const dvec3 &eye, const dvec3 &view, const dvec3 &up) {
   dvec4 p(x, y, 0, 1);
@@ -30,64 +27,13 @@ dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x
   return p - dvec4(eye, 1.0);
 }
 
-
-dvec4 ggReflection(const dvec4 &v, const dvec4 &n) {
-  return v - 2.0 * n * (dot(v,n));
-}
-
-dvec4 ggRefraction(const dvec4 &v, const dvec4 &n, double indexOfRefr) {
-  double n1 = 1.33;
-  double n2 = 1.67;
-
-  double t_i = acos(-dot(v,n)/length(v)/length(n));
-  double t_out = n1 * t_i/n2;
-
-  if (t_out >= PI/2) return dvec4(0,0,0,0);
-  return n1/n2 * v + (n1/n2*cos(t_i) - sqrt(1-pow(sin(t_out),2))) * n;
-}
-
-IntersectionPoint firstHitInNodeList(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_direction, double max_t) {
-  IntersectionPoint result;
-  double min_t = INF;
-
-  for (HierarchicalNodeInfo ninfo : nodes) {
-    dmat4 T = ninfo.mat;
-    dmat4 T_inv = ninfo.inv;
-    dmat3 T_invtrans = ninfo.invTranspose;
-
-    IntersectionInfo info = ninfo.node->testNode(T_inv * ray_origin, T_inv * ray_direction);
-    info.TRANSFORM_UP(T, T_invtrans);
-    IntersectionPoint ipt = info.getFirstValidIntersection(max_t);
-
-    if (ipt.valid && ipt.intersect_t_1 < min_t) {
-      result = ipt;
-      min_t = ipt.intersect_t_1;
-    }
-  }
-
-  return result;
-}
-
-dvec3 directLight(const vector<HierarchicalNodeInfo> &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
+dvec3 directLight(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
   for (Light * light : lights) {
-    dvec4 l_dir = dvec4(light->position, 1.0) - point;
-    IntersectionPoint pt = firstHitInNodeList(nodes, point, l_dir, 1.0);
-
-    if (!pt.valid) {
-      double d = length(l_dir);
-      double attenuation = 1.0/(light->falloff[0] + light->falloff[1]*d + light->falloff[2]*d*d);
-      dvec4 reflDirection = ggReflection(l_dir, normal);
-      double l_dot_n = dot(normal, normalize(l_dir));
-      double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
-
-      if (l_dot_n > 0)
-        color += attenuation * mat.m_kd * l_dot_n * light->colour;
-      if (r_dot_v > 0)
-        color += attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * light->colour;
-    }
+    color += light->shadowIntensity(nodes, mat, v_eye, point, normal);
   }
+
   return color;
 }
 
@@ -123,10 +69,10 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 
 //origin is point
 //direction is vector
-dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
+dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
   if (depth >= 7) return getBackgroundColor(ray_origin, ray_dir, depth);
 
-  IntersectionPoint pt = firstHitInNodeList(nodes, ray_origin, ray_dir, INF);
+  IntersectionPoint pt = nodes.firstHitInNodeList(ray_origin, ray_dir, std::numeric_limits<double>::infinity());
 
   if (pt.valid) {
     dvec3 color;
@@ -161,7 +107,7 @@ dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, 
 }
 
 void t_trace(size_t nx, size_t ny, double w, double h, double d,
-  const vector<HierarchicalNodeInfo> &nodes,
+  const FlatPrimitives &nodes,
   Image & image,
   const dvec3 & eye,
   const dvec3 & view,
@@ -193,7 +139,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
 }
 
 void t_aa(size_t nx, size_t ny, double w, double h, double d,
-  const vector<HierarchicalNodeInfo> &nodes,
+  const FlatPrimitives &nodes,
   Image & image,
   const dvec3 & eye,
   const dvec3 & view,
@@ -278,10 +224,10 @@ void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<Hierar
   }
 }
 
-vector<HierarchicalNodeInfo> buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans) {
+FlatPrimitives buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans) {
   vector<HierarchicalNodeInfo> result;
   buildTreeCache(root, accumulatedTrans, result);
-  return result;
+  return FlatPrimitives(result);
 }
 
 void A4_Render(
@@ -414,7 +360,7 @@ void A4_Render(
   double h = 2*d*tan(fovy*PI/180/2);
   double w = (double)nx/ny * h;
 
-  vector<HierarchicalNodeInfo> nodes = buildTreeCache(root, dmat4(1.0));
+  FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
 
   vector<dvec3> vertexColors((nx+2) * (ny+2));
   mutex counterLock;
