@@ -42,29 +42,21 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
 
 IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
   const double EPSILON = 1E-11;
-  IntersectionPoint result;
-  double min_t = std::numeric_limits<double>::infinity();
 
   for (IntersectionPoint pt : intersections) {
-    if (pt.intersect_t_1 < min_t && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
-      min_t = pt.intersect_t_1;
-      result = pt;
-      return result;
-    } else if (pt.intersect_t_2 < min_t && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
-      min_t = pt.intersect_t_2;
-
+    if (pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
+      return pt;
+    } else if (pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
       swap(pt.intersect_t_2, pt.intersect_t_1);
       swap(pt.normal_2, pt.normal_1);
       swap(pt.point_2, pt.point_1);
       swap(pt.m_material_2, pt.m_material_1);
       swap(pt.m_primitive_2, pt.m_primitive_1);
-      result = pt;
-
-      return result;
+      return pt;
     }
   }
 
-  return result;
+  return IntersectionPoint();
 }
 
 IntersectionPoint IntersectionPoint::UNION(const IntersectionPoint &other) {

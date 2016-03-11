@@ -124,7 +124,7 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 //origin is point
 //direction is vector
 dvec3 trace(const vector<HierarchicalNodeInfo> &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
-  if (depth >= 10) return getBackgroundColor(ray_origin, ray_dir, depth);
+  if (depth >= 7) return getBackgroundColor(ray_origin, ray_dir, depth);
 
   IntersectionPoint pt = firstHitInNodeList(nodes, ray_origin, ray_dir, INF);
 
