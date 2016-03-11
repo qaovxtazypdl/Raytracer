@@ -24,8 +24,9 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-primary_light = gr.planar_light({18, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
-spherical_light = gr.spherical_light({-18, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, 5.0)
+planar_light = gr.planar_light({18, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
+spherical_light = gr.spherical_light({-6, 19, -15}, {1.0, 1.0, 1.0}, {1, 0, 0}, 4.0)
+spherical_light_pt = gr.light({-6, 17, -15}, {1.0, 1.0, 1.0}, {1, 0, 0}, 4.0)
 
 --start script
 scene = gr.node('root')
@@ -39,7 +40,7 @@ scene:add_child(plane)
 
 central_cone = gr.cone('central_cone')
 central_cone:scale(1/50,1/50,1/100)
-central_cone:scale(5,6.8,10)
+central_cone:scale(5,10,10)
 central_cone:translate(0,0.07,0)
 central_cone:translate(0.05,0,0.36)
 central_cone:set_material(polgold)
@@ -74,5 +75,5 @@ planeLight:translate(18.001,18,-5)
 
 gr.render(scene, 'area_light.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {primary_light, spherical_light})
+    {0.3, 0.3, 0.3}, {spherical_light})
 

@@ -4,7 +4,7 @@ PROJECT                                    MAR 30
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
-Soft Shadows                               THU
+Soft Shadows                               FRI
 Anaglyph 3D                                FRI
 Refraction                                 FRI
 
@@ -37,4 +37,3 @@ PDF/web display/report
 todo - soft shadows
 ====================
 "light object" - physical representation of the light. - only primary rays can intersect. choose color with material.
-spherical

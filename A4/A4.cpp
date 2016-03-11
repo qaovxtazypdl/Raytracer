@@ -123,6 +123,9 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
   int maxCount = (ny+2) * (nx+2);
   for (int y = 0; y < ny + 2; ++y) {
     for (int x = 0; x < nx + 2; ++x) {
+      //if (!(x > 420 && x < 520 && y < ny-450-1 && y > ny-550-1)) continue;
+      //if (!(x == 446 && y == ny-500-1)) continue;
+
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
       dvec3 pixelColor = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
