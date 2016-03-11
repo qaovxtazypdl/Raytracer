@@ -112,7 +112,6 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
 
 void t_trace(size_t nx, size_t ny, double w, double h, double d,
   const FlatPrimitives &nodes,
-  Image & image,
   const dvec3 & eye,
   const dvec3 & view,
   const dvec3 & up,
@@ -147,7 +146,6 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
 
 void t_aa(size_t nx, size_t ny, double w, double h, double d,
   const FlatPrimitives &nodes,
-  Image & image,
   const dvec3 & eye,
   const dvec3 & view,
   const dvec3 & up,
@@ -204,15 +202,40 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
       pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
 
       for (int i = 0; i < 3; i++) {
-        image(x, ny - y - 1, i) = pixelColor[i];
+        vertexColors[(nx + 2) * (y+1) + (x+1)][i] = pixelColor[i];
       }
 
       counterLock.lock();
         count++;
         if (count*10/maxCount > (count-1)*10/maxCount) {
-          cout << "AA/Write - Progress: " << count*100/maxCount << endl;
+          cout << "AA - Progress: " << count*100/maxCount << endl;
         }
       counterLock.unlock();
+    }
+  }
+}
+
+void t_write(size_t nx, size_t ny, Image &image, const vector<dvec3> &vertexColors,  int thread_num, int num_threads) {
+  for (int y = 0; y < ny; ++y) {
+    for (int x = 0; x < nx; ++x) {
+      if ((y + x*ny + thread_num) % num_threads != 0) continue;
+      dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
+      image(x, ny - y - 1, 0) = pixelColor[0];
+      image(x, ny - y - 1, 1) = pixelColor[1];
+      image(x, ny - y - 1, 2) = pixelColor[2];
+    }
+  }
+}
+
+void t_write_stereo(size_t nx, size_t ny, Image &image, const vector<dvec3> &left, const vector<dvec3> &right, int thread_num, int num_threads) {
+  for (int y = 0; y < ny; ++y) {
+    for (int x = 0; x < nx; ++x) {
+      if ((y + x*ny + thread_num) % num_threads != 0) continue;
+      dvec3 lpix = left[(nx + 2) * (y+1) + (x+1)];
+      dvec3 rpix = right[(nx + 2) * (y+1) + (x+1)];
+      image(x, ny - y - 1, 0) = lpix[0];
+      image(x, ny - y - 1, 1) = rpix[1];
+      image(x, ny - y - 1, 2) = rpix[2];
     }
   }
 }
@@ -352,20 +375,47 @@ void A4_Render(
 
   FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
 
-  vector<dvec3> vertexColors((nx+2) * (ny+2));
+  dvec3 d_eye = dvec3(3, 0, 0);
+  dvec3 left_eye = eye - 0.5 * d_eye;
+  dvec3 right_eye = eye + 0.5 * d_eye;
+  vector<dvec3> leftColors((nx+2) * (ny+2));
+  vector<dvec3> rightColors((nx+2) * (ny+2));
   mutex counterLock;
   int trace_count = 0, aa_count = 0;
 
   vector<thread> trace_threads;
   for (int i = 0; i < MACRO_NUM_THREADS; i++) {
-    trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+    if (MACRO_USE_ANAGLYPH) {
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(left_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(right_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+    } else {
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+    }
   }
   for (thread &t : trace_threads) t.join();
 
-  vector<thread> aa_threads;
-  for (int i = 0; i < MACRO_NUM_THREADS; i++) {
-    aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(image), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(vertexColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+  if (MACRO_USE_SUPERSAMPLE) {
+    vector<thread> aa_threads;
+    for (int i = 0; i < MACRO_NUM_THREADS; i++) {
+      if (MACRO_USE_ANAGLYPH) {
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(left_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(right_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      } else {
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      }
+    }
+    for (thread &t : aa_threads) t.join();
   }
-  for (thread &t : aa_threads) t.join();
+
+  cout << "Writing to image..." << endl;
+  vector<thread> write_threads;
+  for (int i = 0; i < MACRO_NUM_THREADS; i++) {
+    if (MACRO_USE_ANAGLYPH) {
+      write_threads.push_back(thread(t_write_stereo, nx, ny, ref(image), ref(leftColors), ref(rightColors), i, MACRO_NUM_THREADS));
+    } else {
+      write_threads.push_back(thread(t_write, nx, ny, ref(image), ref(leftColors), i, MACRO_NUM_THREADS));
+    }
+  }
+  for (thread &t : write_threads) t.join();
 }
 

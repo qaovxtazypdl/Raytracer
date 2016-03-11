@@ -41,7 +41,7 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
 
 
 IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
-  const double EPSILON = 1E-11;
+  const double EPSILON = 1E-10;
 
   for (IntersectionPoint pt : intersections) {
     //check > 2 to check if its a shadow ray calculation.
