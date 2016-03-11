@@ -381,16 +381,82 @@ int gr_light_cmd(lua_State* L)
   gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
   data->light = 0;
 
-  Light l;
+  double colour[3];
+  double position[3];
+  double falloff[3];
+  get_tuple(L, 1, position, 3);
+  get_tuple(L, 2, colour, 3);
+  get_tuple(L, 3, falloff, 3);
 
-  double col[3];
-  get_tuple(L, 1, &l.position[0], 3);
-  get_tuple(L, 2, col, 3);
-  get_tuple(L, 3, l.falloff, 3);
+  data->light = new Light(
+    glm::vec3(colour[0], colour[1], colour[2]),
+    glm::vec3(position[0], position[1], position[2]),
+    glm::vec3(falloff[0], falloff[1], falloff[2])
+  );
 
-  l.colour = glm::vec3(col[0], col[1], col[2]);
+  luaL_newmetatable(L, "gr.light");
+  lua_setmetatable(L, -2);
 
-  data->light = new Light(l);
+  return 1;
+}
+
+// Make a planar light
+extern "C"
+int gr_planar_light_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
+  data->light = 0;
+
+  double colour[3];
+  double position[3];
+  double falloff[3];
+  double plane_vector_1[3];
+  double plane_vector_2[3];
+  get_tuple(L, 1, position, 3);
+  get_tuple(L, 2, colour, 3);
+  get_tuple(L, 3, falloff, 3);
+  get_tuple(L, 3, plane_vector_1, 3);
+  get_tuple(L, 3, plane_vector_2, 3);
+
+  data->light = new PlanarLight(
+    glm::vec3(colour[0], colour[1], colour[2]),
+    glm::vec3(position[0], position[1], position[2]),
+    glm::vec3(falloff[0], falloff[1], falloff[2]),
+    glm::vec3(plane_vector_1[0], plane_vector_1[1], plane_vector_1[2]),
+    glm::vec3(plane_vector_2[0], plane_vector_2[1], plane_vector_2[2])
+  );
+
+  luaL_newmetatable(L, "gr.light");
+  lua_setmetatable(L, -2);
+
+  return 1;
+}
+
+// Make a spherical light
+extern "C"
+int gr_spherical_light_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
+  data->light = 0;
+
+  double colour[3];
+  double position[3];
+  double falloff[3];
+  get_tuple(L, 1, position, 3);
+  get_tuple(L, 2, colour, 3);
+  get_tuple(L, 3, falloff, 3);
+  double radius = luaL_checknumber(L, 4);
+
+  data->light = new SphericalLight(
+    glm::vec3(colour[0], colour[1], colour[2]),
+    glm::vec3(position[0], position[1], position[2]),
+    glm::vec3(falloff[0], falloff[1], falloff[2]),
+    radius
+  );
 
   luaL_newmetatable(L, "gr.light");
   lua_setmetatable(L, -2);
@@ -649,6 +715,8 @@ static const luaL_Reg grlib_functions[] = {
   {"nh_box", gr_nh_box_cmd},
   {"mesh", gr_mesh_cmd},
   {"light", gr_light_cmd},
+  {"planar_light", gr_planar_light_cmd},
+  {"spherical_light", gr_spherical_light_cmd},
   {"render", gr_render_cmd},
   {0, 0}
 };

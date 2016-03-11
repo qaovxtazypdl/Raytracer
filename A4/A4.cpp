@@ -336,23 +336,6 @@ void A4_Render(
   }
   return;
   ***********************************/
-
-  std::cout << "Calling A4_Render(\n" <<
-		  "\t" << *root <<
-          "\t" << "Image(width:" << image.width() << ", height:" << image.height() << ")\n"
-          "\t" << "eye:  " << to_string(eye) << std::endl <<
-		  "\t" << "view: " << to_string(view) << std::endl <<
-		  "\t" << "up:   " << to_string(up) << std::endl <<
-		  "\t" << "fovy: " << fovy << std::endl <<
-          "\t" << "ambient: " << to_string(ambient) << std::endl <<
-		  "\t" << "lights{" << std::endl;
-
-	for(const Light * light : lights) {
-		std::cout << "\t\t" <<  *light << std::endl;
-	}
-	std::cout << "\t}" << std::endl;
-	std:: cout <<")" << std::endl;
-
 	size_t ny = image.height();
 	size_t nx = image.width();
 

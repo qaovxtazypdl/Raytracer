@@ -7,25 +7,9 @@
 using namespace glm;
 using namespace std;
 
-Light::Light()
-  : colour(0.0, 0.0, 0.0),
-    position(0.0, 0.0, 0.0)
+Light::Light(const dvec3 &colour, const dvec3 &position, const dvec3 &falloff)
+  : colour(colour), position(position), falloff(falloff)
 {
-  falloff[0] = 1.0;
-  falloff[1] = 0.0;
-  falloff[2] = 0.0;
-}
-
-std::ostream& operator<<(std::ostream& out, const Light& l)
-{
-  out << "L[" << glm::to_string(l.colour)
-  	  << ", " << glm::to_string(l.position) << ", ";
-  for (int i = 0; i < 3; i++) {
-    if (i > 0) out << ", ";
-    out << l.falloff[i];
-  }
-  out << "]";
-  return out;
 }
 
 dvec3 Light::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
@@ -48,3 +32,22 @@ dvec3 Light::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, c
 
   return color;
 }
+
+PlanarLight::PlanarLight(const glm::dvec3 &colour, const glm::dvec3 &position, const glm::dvec3 &falloff, const glm::dvec3 &plane_vector_1, const glm::dvec3 &plane_vector_2)
+  : Light(colour, position, falloff), plane_vector_1(plane_vector_1, 0.0), plane_vector_2(plane_vector_2, 0.0)
+{
+}
+
+SphericalLight::SphericalLight(const glm::dvec3 &colour, const glm::dvec3 &position, const glm::dvec3 &falloff, double radius)
+  : Light(colour, position, falloff), radius(radius)
+{
+}
+
+/*
+glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
+
+}
+
+glm::dvec3 SphericalLight::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
+
+}*/
