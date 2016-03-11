@@ -2,6 +2,7 @@ hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120)
+white = gr.material({6.0, 6.0, 6.0}, {0.0, 0.0, 0.0}, 0)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -23,7 +24,7 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-primary_light = gr.planar_light({30, 12, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 25}, {0, 25, 0})
+primary_light = gr.planar_light({36, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
 
 --start script
 scene = gr.node('root')
@@ -42,7 +43,6 @@ central_cone:translate(0,0.07,0)
 central_cone:translate(0.05,0,0.36)
 central_cone:set_material(polgold)
 plane:add_child(central_cone)
-
 
 central_torus = gr.torus('central_torus', 0.25)
 central_torus:scale(1/50,1/50,1/100)
@@ -64,7 +64,12 @@ central_cylinderUtorus:set_csg_children(central_cylinder, central_torus, 'DIFFER
 central_cylinderUtorus:translate(0,-0.25,-0.4)
 plane:add_child(central_cylinderUtorus)
 
-
+planeLight = gr.mesh('planeLight', 'Assets/plane.obj')
+planeLight:set_material(white)
+planeLight:scale(5,5,5)
+planeLight:rotate('z', 90)
+planeLight:translate(36.05,18,-5)
+scene:add_child(planeLight)
 
 gr.render(scene, 'area_light.png', 700, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
