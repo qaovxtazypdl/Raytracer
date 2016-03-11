@@ -24,13 +24,14 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-primary_light = gr.planar_light({36, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
+primary_light = gr.planar_light({18, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
+spherical_light = gr.spherical_light({-18, 18, -5}, {1.0, 1.0, 1.0}, {1, 0, 0}, 5.0)
 
 --start script
 scene = gr.node('root')
 
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
-plane:set_material(ruby)
+plane:set_material(pewter)
 plane:scale(50,50,100)
 plane:rotate('x', 15)
 plane:translate(0,-1,0)
@@ -68,10 +69,10 @@ planeLight = gr.mesh('planeLight', 'Assets/plane.obj')
 planeLight:set_material(white)
 planeLight:scale(5,5,5)
 planeLight:rotate('z', 90)
-planeLight:translate(36.05,18,-5)
-scene:add_child(planeLight)
+planeLight:translate(18.001,18,-5)
+--scene:add_child(planeLight)
 
-gr.render(scene, 'area_light.png', 700, 500,
+gr.render(scene, 'area_light.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {primary_light})
+    {0.3, 0.3, 0.3}, {primary_light, spherical_light})
 
