@@ -28,7 +28,7 @@ std::ostream& operator<<(std::ostream& out, const Light& l)
   return out;
 }
 
-dvec3 Light::shadowIntensity(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
+dvec3 Light::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
   dvec3 color;
   dvec4 l_dir = dvec4(position, 1.0) - point;
   IntersectionPoint pt = nodes.firstHitInNodeList(point, l_dir, 1.0);

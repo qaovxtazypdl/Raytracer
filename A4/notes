@@ -5,8 +5,9 @@ Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
 Soft Shadows                               THU
+Anaglyph 3D                                THU
 
-Refraction                                 THU
+Refraction                                 FRI
 
 
 
@@ -15,7 +16,6 @@ UNSCHEDULED
 ====================================
 Texture Map                                                   needed
 Bump Map                                                      bumps on walls, ground, suits.. etc
-Anaglyph 3D                                                   3d pop!
 Glossy reflection
 Scene                                                         !
 

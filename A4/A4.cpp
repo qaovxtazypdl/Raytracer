@@ -31,7 +31,7 @@ dvec3 directLight(const FlatPrimitives &nodes, const PhongMaterial &mat, const d
   dvec3 color;
 
   for (Light * light : lights) {
-    color += light->shadowIntensity(nodes, mat, v_eye, point, normal);
+    color += light->lightColor(nodes, mat, v_eye, point, normal);
   }
 
   return color;
