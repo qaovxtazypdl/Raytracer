@@ -4,9 +4,8 @@ PROJECT                                    MAR 30
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
-E.Threading                                DONE
+E.Threading/Flatten                        DONE
 
-E.Flatten                                  THU
 Soft Shadows                               THU
 Refraction                                 THU
 
