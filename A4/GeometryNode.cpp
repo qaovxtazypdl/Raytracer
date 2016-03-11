@@ -28,6 +28,9 @@ void GeometryNode::setMaterial( Material *mat )
 	m_material = mat;
 }
 
+IntersectionInfo GeometryNode::testNode(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
+  return m_primitive->checkRayIntersection(ray_origin, ray_dir, m_material);
+}
 
 IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
   IntersectionInfo intersectionInfo;
@@ -39,7 +42,7 @@ IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray
     intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
 
-  intersectionInfo = intersectionInfo.UNION(m_primitive->checkRayIntersection(T_inv * ray_origin, T_inv * ray_dir, m_material));
+  intersectionInfo = intersectionInfo.UNION(testNode(T_inv * ray_origin, T_inv * ray_dir));
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
   return intersectionInfo;
 }

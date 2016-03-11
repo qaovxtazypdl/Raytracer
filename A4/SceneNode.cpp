@@ -139,6 +139,10 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 	return os;
 }
 
+IntersectionInfo SceneNode::testNode(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
+  return IntersectionInfo();
+}
+
 IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
   IntersectionInfo intersectionInfo;
   dmat4 T = trans;

@@ -55,17 +55,13 @@ IntersectionPoint firstHitInNodeList(const vector<HierarchicalNodeInfo> &nodes, 
     dmat4 T_inv = ninfo.inv;
     dmat3 T_invtrans = ninfo.invTranspose;
 
-    IntersectionPoint ipt = ninfo.node->testHit(T_inv * ray_origin, T_inv * ray_direction).getFirstValidIntersection(max_t);
+    IntersectionInfo info = ninfo.node->testNode(T_inv * ray_origin, T_inv * ray_direction);
+    info.TRANSFORM_UP(T, T_invtrans);
+    IntersectionPoint ipt = info.getFirstValidIntersection(max_t);
 
     if (ipt.valid && ipt.intersect_t_1 < min_t) {
       result = ipt;
       min_t = ipt.intersect_t_1;
-
-      result.point_1 = T * result.point_1;
-      result.point_2 = T * result.point_2;
-
-      result.normal_1 = normalize(dvec4(T_invtrans * dvec3(result.normal_1), 0.0));
-      result.normal_2 = normalize(dvec4(T_invtrans * dvec3(result.normal_2), 0.0));
     }
   }
 

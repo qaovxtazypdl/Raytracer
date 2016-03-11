@@ -20,6 +20,7 @@ enum CSGAction {
 class CSGNode : public SceneNode {
 public:
   CSGNode(const std::string& name);
+  virtual IntersectionInfo testNode(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
   virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
   void setCSGChildren(SceneNode *left, SceneNode *right, const std::string &action);
 

@@ -41,6 +41,7 @@ public:
     void scale(const glm::vec3& amount);
     void translate(const glm::vec3& amount);
 
+  virtual IntersectionInfo testNode(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
   virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
 
 	friend std::ostream & operator << (std::ostream & os, const SceneNode & node);
