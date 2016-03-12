@@ -48,6 +48,7 @@
 #include "lua488.hpp"
 
 #include "Light.hpp"
+#include "Flags.hpp"
 #include "Mesh.hpp"
 #include "GeometryNode.hpp"
 #include "CSGNode.hpp"
@@ -504,10 +505,16 @@ int gr_render_cmd(lua_State* L)
     lights.push_back(ldata->light);
     lua_pop(L, 1);
   }
+  if (MACRO_3D_SIDE_BY_SIDE) {
+    Image im(2*width, height);
+    A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
+      im.savePng( filename );
+  } else {
+    Image im( width, height);
+    A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
+      im.savePng( filename );
+  }
 
-	Image im( width, height);
-	A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
-    im.savePng( filename );
 
 	return 0;
 }

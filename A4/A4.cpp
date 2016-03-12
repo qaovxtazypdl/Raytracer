@@ -199,8 +199,6 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
         }
       }
 
-      pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
-
       for (int i = 0; i < 3; i++) {
         vertexColors[(nx + 2) * (y+1) + (x+1)][i] = pixelColor[i];
       }
@@ -220,6 +218,8 @@ void t_write(size_t nx, size_t ny, Image &image, const vector<dvec3> &vertexColo
     for (int x = 0; x < nx; ++x) {
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec3 pixelColor = vertexColors[(nx + 2) * (y+1) + (x+1)];
+      pixelColor = min(pixelColor, dvec3(1.0, 1.0, 1.0));
+
       image(x, ny - y - 1, 0) = pixelColor[0];
       image(x, ny - y - 1, 1) = pixelColor[1];
       image(x, ny - y - 1, 2) = pixelColor[2];
@@ -233,9 +233,21 @@ void t_write_stereo(size_t nx, size_t ny, Image &image, const vector<dvec3> &lef
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec3 lpix = left[(nx + 2) * (y+1) + (x+1)];
       dvec3 rpix = right[(nx + 2) * (y+1) + (x+1)];
-      image(x, ny - y - 1, 0) = lpix[0];
-      image(x, ny - y - 1, 1) = rpix[1];
-      image(x, ny - y - 1, 2) = rpix[2];
+      lpix = min(lpix, dvec3(1.0, 1.0, 1.0));
+      rpix = min(rpix, dvec3(1.0, 1.0, 1.0));
+      if (MACRO_3D_SIDE_BY_SIDE) {
+        image(x + nx, ny - y - 1, 0) = rpix[0];
+        image(x + nx, ny - y - 1, 1) = rpix[1];
+        image(x + nx, ny - y - 1, 2) = rpix[2];
+
+        image(x, ny - y - 1, 0) = lpix[0];
+        image(x, ny - y - 1, 1) = lpix[1];
+        image(x, ny - y - 1, 2) = lpix[2];
+      } else {
+        image(x, ny - y - 1, 0) = lpix[0];
+        image(x, ny - y - 1, 1) = rpix[1];
+        image(x, ny - y - 1, 2) = rpix[2];
+      }
     }
   }
 }
@@ -367,7 +379,7 @@ void A4_Render(
   return;
   ***********************************/
 	size_t ny = image.height();
-	size_t nx = image.width();
+	size_t nx = MACRO_3D_SIDE_BY_SIDE?image.width()/2:image.width();
 
   double d = 100;
   double h = 2*d*tan(fovy*PI/180/2);
@@ -375,7 +387,7 @@ void A4_Render(
 
   FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
 
-  dvec3 d_eye = dvec3(3, 0, 0);
+  dvec3 d_eye = dvec3(60, 0, 0);
   dvec3 left_eye = eye - 0.5 * d_eye;
   dvec3 right_eye = eye + 0.5 * d_eye;
   vector<dvec3> leftColors((nx+2) * (ny+2));
