@@ -4,7 +4,7 @@ using namespace std;
 using namespace glm;
 
 //fovy radians
-dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x, double y, const dvec3 &eye, const dvec3 &view, const dvec3 &up) {
+dvec4 proj_point(double nx, double ny, double w, double h, double d, double x, double y, const dvec3 &eye, const dvec3 &view, const dvec3 &up, int eye_offset_multiplier) {
   dvec4 p(x, y, 0, 1);
 
   //translate_1  -n_x/2, -n_y/2 d
@@ -24,7 +24,7 @@ dvec4 ray_direction(double nx, double ny, double w, double h, double d, double x
   //translate to lookfrom
   p = translate(dvec3(eye[0], eye[1], eye[2])) * p;
 
-  return p - dvec4(eye, 1.0);
+  return p;
 }
 
 dvec3 directLight(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
@@ -113,6 +113,7 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
 void t_trace(size_t nx, size_t ny, double w, double h, double d,
   const FlatPrimitives &nodes,
   const dvec3 & eye,
+  int eye_offset_multiplier,
   const dvec3 & view,
   const dvec3 & up,
   const dvec3 & ambient,
@@ -130,8 +131,9 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
       //if (!(x == 446 && y == ny-500-1)) continue;
 
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
-      dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x-1, y-1, eye, view, up);
-      dvec3 pixelColor = trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+      dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
+      dvec4 ray_dir = proj_point(nx, ny, w, h, d, x-1, y-1, eye, view, up, eye_offset_multiplier) - ray_origin;
+      dvec3 pixelColor = trace(nodes, ray_origin, ray_dir, ambient, lights, 0);
       vertexColors[(nx + 2) * y + x] = pixelColor;
 
       counterLock.lock();
@@ -147,6 +149,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
 void t_aa(size_t nx, size_t ny, double w, double h, double d,
   const FlatPrimitives &nodes,
   const dvec3 & eye,
+  int eye_offset_multiplier,
   const dvec3 & view,
   const dvec3 & up,
   const dvec3 & ambient,
@@ -192,8 +195,9 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
           pixelColor = dvec3(0.0, 0.0, 0.0);
           for (int a = 0; a < MACRO_SUPERSAMPLE_SCALE; a++) {
             for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
-              dvec4 ray_dir = ray_direction(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up);
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, dvec4(eye, 1.0), ray_dir, ambient, lights, 0);
+              dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
+              dvec4 ray_dir = proj_point(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up, eye_offset_multiplier) - ray_origin;
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, ray_origin, ray_dir, ambient, lights, 0);
             }
           }
         }
@@ -387,9 +391,6 @@ void A4_Render(
 
   FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
 
-  dvec3 d_eye = dvec3(60, 0, 0);
-  dvec3 left_eye = eye - 0.5 * d_eye;
-  dvec3 right_eye = eye + 0.5 * d_eye;
   vector<dvec3> leftColors((nx+2) * (ny+2));
   vector<dvec3> rightColors((nx+2) * (ny+2));
   mutex counterLock;
@@ -398,10 +399,10 @@ void A4_Render(
   vector<thread> trace_threads;
   for (int i = 0; i < MACRO_NUM_THREADS; i++) {
     if (MACRO_USE_ANAGLYPH) {
-      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(left_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
-      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(right_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(eye), -1, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(eye), 1, ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
     } else {
-      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
+      trace_threads.push_back(thread(t_trace, nx, ny, w, h, d, ref(nodes), ref(eye), 0, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(trace_count), ref(counterLock), i, MACRO_NUM_THREADS));
     }
   }
   for (thread &t : trace_threads) t.join();
@@ -410,10 +411,10 @@ void A4_Render(
     vector<thread> aa_threads;
     for (int i = 0; i < MACRO_NUM_THREADS; i++) {
       if (MACRO_USE_ANAGLYPH) {
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(left_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(right_eye), ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), -1, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 1, ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
       } else {
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 0, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
       }
     }
     for (thread &t : aa_threads) t.join();

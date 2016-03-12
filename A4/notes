@@ -34,7 +34,5 @@ PDF/web display/report
 
 
 
-
-todo - soft shadows
-====================
-"light object" - physical representation of the light. - only primary rays can intersect. choose color with material.
+additional refs
+http://paulbourke.net/stereographics/stereorender/
