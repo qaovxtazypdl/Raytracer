@@ -8,6 +8,7 @@ Soft Shadows                               DONE
 Anaglyph 3D                                DONE
 Refraction                                 DONE
 
+
 Texture Map                                SAT
 Bump Map                                   SAT
 
@@ -16,8 +17,6 @@ Bump Map                                   SAT
 
 UNSCHEDULED
 ====================================
-Texture Map                                                   needed
-Bump Map                                                      bumps on walls, ground, suits.. etc
 Glossy reflection
 Scene                                                         !
 
