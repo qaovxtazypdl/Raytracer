@@ -8,7 +8,8 @@ dvec4 ggReflection(const dvec4 &v, const dvec4 &n) {
 }
 
 bool ggRefraction(const dvec4 &v, const dvec4 &n, double n1, double n2, dvec4 &out) {
-  dvec4 incidence = normalize(v);
+  double lv = length(v);
+  dvec4 incidence = v / lv;
   dvec4 norm = dot(incidence, n) > 0 ? -1.0*n : n;
 
   double cos_ti = -dot(incidence,norm);
@@ -19,6 +20,6 @@ bool ggRefraction(const dvec4 &v, const dvec4 &n, double n1, double n2, dvec4 &o
   }
 
   double sinsq_tout = n1*n1/n2/n2 * (1 - cos_ti*cos_ti);
-  out = n1/n2 * incidence + (n1/n2*cos_ti - sqrt(1 - sinsq_tout)) * norm;
+  out = lv * (n1/n2 * incidence + (n1/n2*cos_ti - sqrt(1 - sinsq_tout)) * norm);
   return true;
 }
