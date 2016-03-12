@@ -5,8 +5,7 @@ Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
 Soft Shadows                               DONE
-
-Anaglyph 3D                                FRI
+Anaglyph 3D                                DONE
 Refraction                                 FRI
 
 
@@ -19,10 +18,10 @@ Bump Map                                                      bumps on walls, gr
 Glossy reflection
 Scene                                                         !
 
-E.Uniform Space Partitioning                                    acceleration
+E.Threading/Flatten                                           DONE
+E.Uniform Space Partitioning                                  acceleration
 E.Perlin Noise for texture/bump
 E.Caustics
-E.Threading/Flatten                                           DONE
 
 SCENE
 =====
@@ -35,4 +34,5 @@ PDF/web display/report
 
 
 additional refs
+==============================
 http://paulbourke.net/stereographics/stereorender/
