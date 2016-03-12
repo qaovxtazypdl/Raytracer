@@ -75,7 +75,6 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 //direction is vector
 dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth) {
   if (depth >= 7) return getBackgroundColor(ray_origin, ray_dir, depth);
-
   IntersectionPoint pt = nodes.firstHitInNodeList(ray_origin, ray_dir, std::numeric_limits<double>::infinity());
 
   if (pt.valid) {
@@ -87,7 +86,6 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
 
     dvec3 k_s = mat.m_ks;
     dvec3 k_d = mat.m_kd;
-
     //light contributions
     color += k_d * ambient + directLight(nodes, mat, ray_dir, point, normal, lights);
 
@@ -135,7 +133,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
   for (int y = 0; y < ny + 2; ++y) {
     for (int x = 0; x < nx + 2; ++x) {
       //if (!(x > 420 && x < 520 && y < ny-450-1 && y > ny-550-1)) continue;
-      //if (!(x == 446 && y == ny-500-1)) continue;
+      //if (!(x == 311 && y == ny-527-1)) continue;
 
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
