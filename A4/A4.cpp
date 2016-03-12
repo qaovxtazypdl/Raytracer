@@ -82,31 +82,35 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     dvec4 point = pt.point_1;
     dvec4 normal = pt.normal_1;
 
+
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt.m_material_1);
 
     dvec3 k_s = mat.m_ks;
     dvec3 k_d = mat.m_kd;
-    //light contributions
-    color += k_d * ambient + directLight(nodes, mat, ray_dir, point, normal, lights);
 
-    //reflection
-    if (MACRO_REFLECTION_ON && length(k_s) > 0) {
-      dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
+    double n1 = ior;
+    double n2 = mat.m_indexOfRefraction;
+    if (abs(n1 - n2) < 1E-10) {
+      n1 = n2;
+      n2 = 1.0;
     }
 
-    if (MACRO_REFRACTION_ON && length(k_s) > 0) {
-      double n1 = ior;
-      double n2 = 1.0;
-      if (abs(n1 - n2) < 1E-10) {
-        n1 = n2;
-        n2 = 1.0;
-      }
+    pair<double, double> RT = fresnel(ray_dir, normal, n1, n2);
 
+    color += k_d * ambient;
+    color += directLight(nodes, mat, ray_dir, point, normal, lights);
+
+    //reflection
+    if (MACRO_REFLECTION_ON && RT.first > 0 && length(k_s) > 0) {
+      dvec4 reflDirection = ggReflection(ray_dir, normal);
+      color += 0.5 * RT.first * k_s * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
+    }
+
+    if (MACRO_REFRACTION_ON && RT.second > 0) {
       dvec4 refrDirection;
       bool valid = ggRefraction(ray_dir, normal, n1, n2, refrDirection);
       if (valid) {
-        color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
+        color += 0.5 * RT.second * k_s * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
       }
     }
     return color;
