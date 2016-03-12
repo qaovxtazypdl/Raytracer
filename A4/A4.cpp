@@ -73,7 +73,7 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
 
 //origin is point
 //direction is vector
-dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, int depth) {
+dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth) {
   if (depth >= 7) return getBackgroundColor(ray_origin, ray_dir, depth);
 
   IntersectionPoint pt = nodes.firstHitInNodeList(ray_origin, ray_dir, std::numeric_limits<double>::infinity());
@@ -88,21 +88,28 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     dvec3 k_s = mat.m_ks;
     dvec3 k_d = mat.m_kd;
 
-    color += k_d * ambient;
-
     //light contributions
-    color += directLight(nodes, mat, ray_dir, point, normal, lights);
+    color += k_d * ambient + directLight(nodes, mat, ray_dir, point, normal, lights);
 
     //reflection
     if (MACRO_REFLECTION_ON && length(k_s) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, depth+1);
+      color += 0.50 * k_s * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
     }
 
     if (MACRO_REFRACTION_ON && length(k_s) > 0) {
-      //dvec4 reflDirection = ggReflection(ray_dir, normal);
-      dvec4 refrDirection = ggRefraction(ray_dir, normal, 1.56);
-      color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, depth+1);
+      double n1 = ior;
+      double n2 = 1.0;
+      if (abs(n1 - n2) < 1E-10) {
+        n1 = n2;
+        n2 = 1.0;
+      }
+
+      dvec4 refrDirection;
+      bool valid = ggRefraction(ray_dir, normal, n1, n2, refrDirection);
+      if (valid) {
+        color += 0.50 * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
+      }
     }
     return color;
   } else {
@@ -133,7 +140,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
       dvec4 ray_dir = proj_point(nx, ny, w, h, d, x-1, y-1, eye, view, up, eye_offset_multiplier) - ray_origin;
-      dvec3 pixelColor = trace(nodes, ray_origin, ray_dir, ambient, lights, 0);
+      dvec3 pixelColor = trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0);
       vertexColors[(nx + 2) * y + x] = pixelColor;
 
       counterLock.lock();
@@ -197,7 +204,7 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
             for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
               dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
               dvec4 ray_dir = proj_point(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + ssrand(rng), eye, view, up, eye_offset_multiplier) - ray_origin;
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, ray_origin, ray_dir, ambient, lights, 0);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0);
             }
           }
         }

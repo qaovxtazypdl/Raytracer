@@ -1,7 +1,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtx/io.hpp>
+#include <iostream>
 #include "Flags.hpp"
 
 glm::dvec4 ggReflection(const glm::dvec4 &v, const glm::dvec4 &n);
-glm::dvec4 ggRefraction(const glm::dvec4 &v, const glm::dvec4 &n, double indexOfRefr);
+bool ggRefraction(const glm::dvec4 &v, glm::dvec4 n, double n1, double n2, glm::dvec4 &out);
