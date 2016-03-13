@@ -48,13 +48,12 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
     if ((max_t > 2 || !pt.m_material_1->isLight) && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
       return pt;
     } else if ((max_t > 2 || !pt.m_material_2->isLight) && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
-      IntersectionPoint newPt = pt;
-      swap(newPt.intersect_t_2, newPt.intersect_t_1);
-      swap(newPt.normal_2, newPt.normal_1);
-      swap(newPt.point_2, newPt.point_1);
-      swap(newPt.m_material_2, newPt.m_material_1);
-      swap(newPt.m_primitive_2, newPt.m_primitive_1);
-      return newPt;
+      swap(pt.intersect_t_2, pt.intersect_t_1);
+      swap(pt.normal_2, pt.normal_1);
+      swap(pt.point_2, pt.point_1);
+      swap(pt.m_material_2, pt.m_material_1);
+      swap(pt.m_primitive_2, pt.m_primitive_1);
+      swap(pt.uv_2, pt.uv_1);
     }
   }
 
