@@ -12,6 +12,6 @@ public:
   int nx, ny;
   int **pixels;
 
-  glm::dvec3 getColorAt(double u, double v);
-  glm::dvec4 normalD(double u, double v);
+  glm::dvec3 getColorAt(const std::pair<double, double> &uv);
+  glm::dvec4 normalD(const std::pair<double, double> &uv);
 };

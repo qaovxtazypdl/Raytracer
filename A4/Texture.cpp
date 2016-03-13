@@ -7,10 +7,10 @@ Texture::Texture(string filename) {
 
 }
 
-dvec3 Texture::getColorAt(double u, double v) {
+dvec3 Texture::getColorAt(const std::pair<double, double> &uv) {
   return dvec3();
 }
 
-dvec4 Texture::normalD(double u, double v) {
+dvec4 Texture::normalD(const std::pair<double, double> &uv) {
   return dvec4();
 }
