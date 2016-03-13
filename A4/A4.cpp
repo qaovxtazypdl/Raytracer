@@ -71,8 +71,12 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   return color;
 }
 
-dvec3 kdmult() {
-  return dvec3(1.0, 1.0, 1.0);
+dvec3 kdmult(Texture *texture, const pair<double,double> &uv) {
+  if (texture == NULL) {
+    return dvec3(1.0, 1.0, 1.0);
+  } else {
+    return texture->getColorAt(uv);
+  }
 }
 
 //origin is point
@@ -90,7 +94,7 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     PhongMaterial mat = *matpack.m_material;
 
     dvec3 ks = mat.m_ks;
-    dvec3 kd = mat.m_kd * kdmult();
+    dvec3 kd = mat.m_kd * kdmult(matpack.m_texture, pt.uv_1);
 
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;
