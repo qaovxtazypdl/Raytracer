@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, PhongMaterial *material, Primitive *primitive) {
+void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive) {
   if (m_added == 2) {
     std::cout << "ADDING TOO MUCH" << std::endl;
     throw "ADDING TOO MUCH";
@@ -45,9 +45,9 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
 
   for (IntersectionPoint pt : intersections) {
     //check > 2 to check if its a shadow ray calculation.
-    if ((max_t > 2 || !pt.m_material_1->isLight) && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
+    if ((max_t > 2 || !pt.m_material_1.m_material->isLight) && pt.intersect_t_1 > EPSILON && pt.intersect_t_1 < max_t) {
       return pt;
-    } else if ((max_t > 2 || !pt.m_material_2->isLight) && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
+    } else if ((max_t > 2 || !pt.m_material_2.m_material->isLight) && pt.intersect_t_2 > EPSILON && pt.intersect_t_2 < max_t) {
       swap(pt.intersect_t_2, pt.intersect_t_1);
       swap(pt.normal_2, pt.normal_1);
       swap(pt.point_2, pt.point_1);

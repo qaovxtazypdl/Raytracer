@@ -16,10 +16,6 @@ public:
   void setBumpMap(Texture *t, int channels);
   void setTextureMap(Texture *t);
 
-  Texture *m_texture;
-  Texture *m_bumps;
-  int bump_channel; //0x1 red, 0x2 green, 0x4 blue.
-
-	PhongMaterial *m_material;
+  MaterialPackage m_matpack;
 	Primitive *m_primitive;
 };

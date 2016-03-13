@@ -6,6 +6,7 @@
 #include <vector>
 #include "polyroots.hpp"
 #include "PhongMaterial.hpp"
+#include "PhongMaterial.hpp"
 #include <glm/gtx/io.hpp>
 #include "Intersection.hpp"
 
@@ -28,7 +29,7 @@ struct Triangle
 class Primitive {
 public:
   virtual ~Primitive();
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {return IntersectionInfo();}
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material) {return IntersectionInfo();}
 };
 
 class NonhierSphere : public Primitive {
@@ -38,7 +39,7 @@ public:
   {
   }
   virtual ~NonhierSphere();
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
 
 private:
   glm::vec3 m_pos;
@@ -55,7 +56,7 @@ public:
     : m_pos(pos), m_size(size)
   {
   }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~NonhierBox();
 
 private:
@@ -88,7 +89,7 @@ public:
   {
   }
 
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Cone();
 
 private:
@@ -103,7 +104,7 @@ public:
   {
   }
 
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Cylinder();
 };
 
@@ -113,7 +114,7 @@ public:
   Torus(double inner) : m_inner(inner)
   {
   }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Torus();
 private:
   double m_inner;
@@ -124,7 +125,7 @@ public:
   Hyperboloid(double inner) : m_inner(inner)
   {
   }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Hyperboloid();
 
 private:

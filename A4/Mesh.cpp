@@ -107,7 +107,7 @@ bool Mesh::computeBGT(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, T
   return true;
 }
 
-IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material) {
+IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material) {
   if (MACRO_RENDER_BOUNDING_BOX) {
     return boundingBox->checkRayIntersection(ray_origin, ray_dir, m_material);
   }

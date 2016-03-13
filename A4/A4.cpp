@@ -86,7 +86,8 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     dvec4 point = pt.point_1;
     dvec4 normal = pt.normal_1;
 
-    PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt.m_material_1);
+    MaterialPackage &matpack = pt.m_material_1;
+    PhongMaterial mat = *matpack.m_material;
 
     dvec3 ks = mat.m_ks;
     dvec3 kd = mat.m_kd * kdmult();

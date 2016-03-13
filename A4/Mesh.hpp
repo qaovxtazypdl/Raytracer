@@ -8,13 +8,14 @@
 
 #include "Primitive.hpp"
 #include "PhongMaterial.hpp"
+#include "Material.hpp"
 #include "Flags.hpp"
 
 // A polygonal mesh.
 class Mesh : public Primitive {
 public:
   Mesh( const std::string& fname );
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, PhongMaterial *m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
 
   ~Mesh() {
     delete boundingBox;

@@ -6,11 +6,8 @@ using namespace glm;
 GeometryNode::GeometryNode(
 	const std::string & name, Primitive *prim, PhongMaterial *mat )
 	: SceneNode( name )
-	, m_material( mat )
 	, m_primitive( prim )
-  , m_texture(NULL)
-  , m_bumps(NULL)
-  , bump_channel(0)
+  , m_matpack(NULL, NULL, 0, mat)
 {
 	m_nodeType = NodeType::GeometryNode;
 }
@@ -28,11 +25,11 @@ void GeometryNode::setMaterial( PhongMaterial *mat )
 	//     throw away all your data.  A memory leak won't build up and
 	//     crash the program.
 
-	m_material = mat;
+	m_matpack.m_material = mat;
 }
 
 IntersectionInfo GeometryNode::testNode(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
-  return m_primitive->checkRayIntersection(ray_origin, ray_dir, m_material);
+  return m_primitive->checkRayIntersection(ray_origin, ray_dir, m_matpack);
 }
 
 IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
@@ -52,10 +49,10 @@ IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray
 
 
 void GeometryNode::setBumpMap(Texture *t, int channels) {
-  m_bumps = t;
-  bump_channel = channels;
+  m_matpack.m_bumps = t;
+  m_matpack.bump_channel = channels;
 }
 
 void GeometryNode::setTextureMap(Texture *t) {
-  m_texture = t;
+  m_matpack.m_texture = t;
 }
