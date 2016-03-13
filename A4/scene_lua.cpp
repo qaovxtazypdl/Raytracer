@@ -673,7 +673,7 @@ int gr_node_set_texture_cmd(lua_State* L)
   gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
   luaL_argcheck(L, selfdata != 0, 1, "Node expected");
 
-  SceneNode* self = selfdata->node;
+  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
 
   gr_texture_ud* textdata = (gr_texture_ud*)luaL_checkudata(L, 2, "gr.texture");
   luaL_argcheck(L, textdata != 0, 2, "Texture expected");
@@ -694,7 +694,7 @@ int gr_node_set_bumps_cmd(lua_State* L)
   gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
   luaL_argcheck(L, selfdata != 0, 1, "Node expected");
 
-  SceneNode* self = selfdata->node;
+  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
 
   gr_texture_ud* textdata = (gr_texture_ud*)luaL_checkudata(L, 2, "gr.texture");
   luaL_argcheck(L, textdata != 0, 2, "Texture expected");

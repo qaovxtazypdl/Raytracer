@@ -23,10 +23,7 @@ SceneNode::SceneNode(const std::string& name)
 	m_nodeType(NodeType::SceneNode),
 	trans(dmat4()),
 	invtrans(dmat4()),
-	m_nodeId(nodeInstanceCount++),
-  m_texture(NULL),
-  m_bumps(NULL),
-  bump_channel(0)
+	m_nodeId(nodeInstanceCount++)
 {
 
 }
@@ -37,10 +34,7 @@ SceneNode::SceneNode(const SceneNode & other)
 	: m_nodeType(other.m_nodeType),
 	  m_name(other.m_name),
 	  trans(other.trans),
-	  invtrans(other.invtrans),
-    m_texture(other.m_texture),
-    m_bumps(other.m_bumps),
-    bump_channel(other.bump_channel)
+	  invtrans(other.invtrans)
 {
 	for(SceneNode * child : other.children) {
 		this->children.push_front(new SceneNode(*child));
@@ -162,14 +156,5 @@ IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_di
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
 
   return intersectionInfo;
-}
-
-void SceneNode::setBumpMap(Texture *t, int channels) {
-  m_bumps = t;
-  bump_channel = channels;
-}
-
-void SceneNode::setTextureMap(Texture *t) {
-  m_texture = t;
 }
 

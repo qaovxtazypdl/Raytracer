@@ -29,7 +29,21 @@ Texture::Texture(string filename) {
 }
 
 dvec3 Texture::getColorAt(const pair<double, double> &uv) {
-  return dvec3();
+  double di = (nx-1) * uv.first;
+  double dj = (ny-1) * uv.second;
+
+  int i = (int)di;
+  int j = (int)dj;
+
+  double up = di - (int)di;
+  double vp = dj - (int)dj;
+
+  dvec3 c00 = grid[i][j];
+  dvec3 c01 = grid[i][j+1];
+  dvec3 c10 = grid[i+1][j];
+  dvec3 c11 = grid[i+1][j+1];
+
+  return (1-up)*(1-vp)*c00 + (1-up)*(vp)*c01 + up*(1-vp)*c10 + (up)*(vp)*c11;
 }
 
 dvec4 Texture::normalD(const pair<double, double> &uv) {

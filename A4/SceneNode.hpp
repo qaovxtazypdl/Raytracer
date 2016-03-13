@@ -42,9 +42,6 @@ public:
     void scale(const glm::vec3& amount);
     void translate(const glm::vec3& amount);
 
-    void setBumpMap(Texture *t, int channels);
-    void setTextureMap(Texture *t);
-
   virtual IntersectionInfo testNode(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
   virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
 
@@ -60,10 +57,6 @@ public:
 	NodeType m_nodeType;
 	std::string m_name;
 	unsigned int m_nodeId;
-
-  Texture *m_texture;
-  Texture *m_bumps;
-  int bump_channel; //0x1 red, 0x2 green, 0x4 blue.
 
 private:
 	// The number of SceneNode instances.

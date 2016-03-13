@@ -71,6 +71,10 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   return color;
 }
 
+dvec3 kdmult() {
+  return dvec3(1.0, 1.0, 1.0);
+}
+
 //origin is point
 //direction is vector
 dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth) {
@@ -85,7 +89,7 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt.m_material_1);
 
     dvec3 ks = mat.m_ks;
-    dvec3 kd = mat.m_kd;
+    dvec3 kd = mat.m_kd * kdmult();
 
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;

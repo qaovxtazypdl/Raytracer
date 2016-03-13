@@ -8,6 +8,9 @@ GeometryNode::GeometryNode(
 	: SceneNode( name )
 	, m_material( mat )
 	, m_primitive( prim )
+  , m_texture(NULL)
+  , m_bumps(NULL)
+  , bump_channel(0)
 {
 	m_nodeType = NodeType::GeometryNode;
 }
@@ -45,4 +48,14 @@ IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray
   intersectionInfo = intersectionInfo.UNION(testNode(T_inv * ray_origin, T_inv * ray_dir));
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
   return intersectionInfo;
+}
+
+
+void GeometryNode::setBumpMap(Texture *t, int channels) {
+  m_bumps = t;
+  bump_channel = channels;
+}
+
+void GeometryNode::setTextureMap(Texture *t) {
+  m_texture = t;
 }
