@@ -26,4 +26,4 @@
 //parallax and 3D
 #define MACRO_USE_ANAGLYPH false
 #define MACRO_3D_SIDE_BY_SIDE (MACRO_USE_ANAGLYPH && false)
-#define MACRO_3D_PARALLAX 0.021
+#define MACRO_3D_PARALLAX 0.018

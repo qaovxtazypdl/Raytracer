@@ -1,11 +1,11 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
-mirror_water = gr.material_extended({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120, 1.333, 0)
-chrome_glass = gr.material_extended({0.4, 0.4, 0.4}, {1.4, 1.4, 1.4}, 76.8, 1.5, 0)
-ruby_crystal = gr.material_extended({0.61424, 0.04136, 0.04136}, {1.527811, 1.326959, 1.326959}, 76.8, 1.7, 0)
-light_material_orange = gr.material_extended({1.0, 0.6, 0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
-light_material_blue = gr.material_extended({0.0, 0.4, 1.0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
+mirror_water = gr.material_extended_refr({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120, 1.333, 0)
+chrome_glass = gr.material_extended_refr({0.4, 0.4, 0.4}, {1.4, 1.4, 1.4}, 76.8, 1.5, 0)
+ruby_crystal = gr.material_extended_refr({0.61424, 0.04136, 0.04136}, {1.527811, 1.326959, 1.326959}, 76.8, 1.7, 0)
+light_material_orange = gr.material_extended_refr({1.0, 0.6, 0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
+light_material_blue = gr.material_extended_refr({0.0, 0.4, 1.0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -25,7 +25,7 @@ polbronze = gr.material({0.4, 0.2368, 0.1036}, {0.774597, 0.458561, 0.200621}, 7
 polcopper = gr.material({0.5508, 0.2118, 0.066}, {0.580594, 0.223257, 0.0695701}, 51.2)
 polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006}, 83.2)
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
-ground = gr.material_extended({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615, 0, 0)
+ground = gr.material_extended_refr({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615, 0, 0)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
 planar_light_pt = gr.light({20, 18, 70}, {1.0, 0.6, 0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})

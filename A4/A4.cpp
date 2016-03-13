@@ -82,7 +82,6 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     dvec4 point = pt.point_1;
     dvec4 normal = pt.normal_1;
 
-
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt.m_material_1);
 
     dvec3 k_s = mat.m_ks;
@@ -90,12 +89,15 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
 
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;
+    double opacity = mat.m_opacity;
     if (abs(n1 - n2) < 1E-10) {
       n1 = n2;
       n2 = 1.0;
     }
 
     pair<double, double> RT = fresnel(ray_dir, normal, n1, n2);
+    RT.first = opacity + (1-opacity) * RT.first;
+    RT.second = (1-opacity) * RT.second;
 
     color += k_d * ambient;
     color += directLight(nodes, mat, ray_dir, point, normal, lights);
