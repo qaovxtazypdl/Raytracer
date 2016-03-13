@@ -46,6 +46,6 @@ dvec3 Texture::getColorAt(const pair<double, double> &uv) {
   return (1-up)*(1-vp)*c00 + (1-up)*(vp)*c01 + up*(1-vp)*c10 + (up)*(vp)*c11;
 }
 
-dvec4 Texture::getNormPerturbance(const pair<double, double> &uv) {
+dvec4 Texture::getNormPerturbance(const pair<double, double> &uv, int bump_channel) {
   return dvec4();
 }
