@@ -29,6 +29,8 @@ primary_light = gr.light({-100.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
 secondary_light = gr.light({0, 100.0, 0}, {0.1, 0.7, 0.5}, {1, 0.4, 0})
 frontal_light = gr.light({0, 0, 200}, {0.4, 0.4, 0.5}, {1, 0, 0})
 
+texture_checkerboard = gr.texture('Assets/checkerboard.png')
+
 --start script
 scene = gr.node('root')
 
@@ -88,6 +90,8 @@ central_sphere:scale(4,4,4)
 central_sphere:translate(0,0,-0.1)
 central_sphere:translate(0.3,0.075,0.65)
 central_sphere:set_material(perfectCanvas)
+central_sphere:set_texture(texture_checkerboard)
+central_sphere:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_sphere)
 
 gr.render(scene, 'texturebump.png', 500, 500,

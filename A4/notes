@@ -13,9 +13,7 @@ Texture Map                                SAT       handle images
 Bump Map                                   SAT
 
 
-Test Fresnel Effect after texture/bump     /     be able to make reflection more pronounced when length(ks) is low.. - base reflection, weighted 50%
-
-
+Test Fresnel Effect after texture/bump
 
 
 UNSCHEDULED

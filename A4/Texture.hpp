@@ -9,8 +9,8 @@ public:
   //file must be png.
   Texture(std::string filename);
 
-  int nx, ny;
-  int **pixels;
+  unsigned nx, ny;
+  std::vector<unsigned char> image;
 
   glm::dvec3 getColorAt(const std::pair<double, double> &uv);
   glm::dvec4 normalD(const std::pair<double, double> &uv);
