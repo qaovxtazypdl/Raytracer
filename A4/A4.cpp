@@ -79,6 +79,14 @@ dvec3 kdmult(Texture *texture, const pair<double,double> &uv) {
   }
 }
 
+dvec4 pertnorm(Texture *texture, int bump_channel, const pair<double,double> &uv) {
+  if (texture == NULL) {
+    return dvec3(0.0, 0.0, 0.0, 0.0);
+  } else {
+    return texture->getNormPerturbance(uv, bump_channel);
+  }
+}
+
 //origin is point
 //direction is vector
 dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth) {
@@ -88,11 +96,11 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
   if (pt.valid) {
     dvec3 color;
     dvec4 point = pt.point_1;
-    dvec4 normal = pt.normal_1;
 
     MaterialPackage &matpack = pt.m_material_1;
     PhongMaterial mat = *matpack.m_material;
 
+    dvec4 normal = pt.normal_1 + pertnorm(matpack.m_bumps, pt.uv_1, matpack.bump_channel);
     dvec3 ks = mat.m_ks;
     dvec3 kd = mat.m_kd * kdmult(matpack.m_texture, pt.uv_1);
 
