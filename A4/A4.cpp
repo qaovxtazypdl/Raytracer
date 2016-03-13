@@ -27,15 +27,15 @@ dvec4 proj_point(double nx, double ny, double w, double h, double d, double x, d
   return p;
 }
 
-dvec3 directLight(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
+dvec3 directLight(const FlatPrimitives &nodes, bool isLight, const dvec3 &kd, const dvec3 &ks, double shininess, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal, const std::list<Light *> &lights) {
   dvec3 color;
 
-  if (!mat.isLight) {
+  if (!isLight) {
      for (Light * light : lights) {
-      color += light->lightColor(nodes, mat, v_eye, point, normal);
+      color += light->lightColor(nodes, kd, ks, shininess, v_eye, point, normal);
     }
   } else {
-    color = mat.m_kd;
+    color = kd;
   }
 
   return color;
@@ -84,8 +84,8 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
 
     PhongMaterial mat = *dynamic_cast<PhongMaterial *>(pt.m_material_1);
 
-    dvec3 k_s = mat.m_ks;
-    dvec3 k_d = mat.m_kd;
+    dvec3 ks = mat.m_ks;
+    dvec3 kd = mat.m_kd;
 
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;
@@ -99,20 +99,20 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     RT.first = opacity + (1-opacity) * RT.first;
     RT.second = (1-opacity) * RT.second;
 
-    color += k_d * ambient;
-    color += directLight(nodes, mat, ray_dir, point, normal, lights);
+    color += kd * ambient;
+    color += directLight(nodes, mat.isLight, kd, ks, mat.m_shininess, ray_dir, point, normal, lights);
 
     //reflection
-    if (MACRO_REFLECTION_ON && RT.first > 0 && length(k_s) > 0) {
+    if (MACRO_REFLECTION_ON && RT.first > 0 && length(ks) > 0) {
       dvec4 reflDirection = ggReflection(ray_dir, normal);
-      color += 0.5 * RT.first * k_s * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
+      color += 0.5 * RT.first * ks * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
     }
 
     if (MACRO_REFRACTION_ON && RT.second > 0) {
       dvec4 refrDirection;
       bool valid = ggRefraction(ray_dir, normal, n1, n2, refrDirection);
       if (valid) {
-        color += 0.5 * RT.second * k_s * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
+        color += 0.5 * RT.second * ks * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
       }
     }
     return color;

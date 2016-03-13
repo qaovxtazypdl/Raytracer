@@ -13,7 +13,7 @@ class Light {
 public:
   Light(const glm::dvec3 &colour, const glm::dvec3 &position, const glm::dvec3 &falloff);
   virtual ~Light() {}
-  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
+  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const glm::dvec3 &kd, const glm::dvec3 &ks, double shininess, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
 protected:
   glm::dvec3 colour;
   glm::dvec3 position;
@@ -24,7 +24,7 @@ class PlanarLight : public Light {
 public:
   PlanarLight(const glm::dvec3 &colour, const glm::dvec3 &position, const glm::dvec3 &falloff, const glm::dvec3 &plane_vector_1, const glm::dvec3 &plane_vector_2);
   virtual ~PlanarLight() {}
-  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
+  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const glm::dvec3 &kd, const glm::dvec3 &ks, double shininess, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
 protected:
   std::default_random_engine rng;
   std::uniform_real_distribution<double> lightrand;
@@ -37,7 +37,7 @@ class SphericalLight : public Light {
 public:
   SphericalLight(const glm::dvec3 &colour, const glm::dvec3 &position, const glm::dvec3 &falloff, double radius);
   virtual ~SphericalLight() {}
-  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
+  virtual glm::dvec3 lightColor(const FlatPrimitives &nodes, const glm::dvec3 &kd, const glm::dvec3 &ks, double shininess, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal);
 protected:
   std::default_random_engine rng;
   std::uniform_real_distribution<double> radialrand;

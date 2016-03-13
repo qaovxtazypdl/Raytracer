@@ -11,7 +11,6 @@ public:
 
   glm::dvec3 m_kd;
   glm::dvec3 m_ks;
-  glm::dvec3 m_refr;
 
   double m_indexOfRefraction;
   double m_shininess;

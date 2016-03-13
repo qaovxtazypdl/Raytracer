@@ -12,7 +12,7 @@ Light::Light(const dvec3 &colour, const dvec3 &position, const dvec3 &falloff)
 {
 }
 
-dvec3 Light::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
+dvec3 Light::lightColor(const FlatPrimitives &nodes, const dvec3 &kd, const dvec3 &ks, double shininess, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
   dvec3 color;
   dvec4 l_dir = dvec4(position, 1.0) - point;
   IntersectionPoint pt = nodes.firstHitInNodeList(point, l_dir, 1.0);
@@ -25,9 +25,9 @@ dvec3 Light::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, c
     double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
 
     if (l_dot_n > 0)
-      color += attenuation * mat.m_kd * l_dot_n * colour;
+      color += attenuation * kd * l_dot_n * colour;
     if (r_dot_v > 0)
-      color += attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * colour;
+      color += attenuation * ks * pow(r_dot_v, shininess) * colour;
   }
 
   return color;
@@ -45,7 +45,7 @@ SphericalLight::SphericalLight(const glm::dvec3 &colour, const glm::dvec3 &posit
 {
 }
 
-glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
+glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const dvec3 &kd, const dvec3 &ks, double shininess, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
   dvec3 color;
 
   double sampleFactor = 1.0/(MACRO_NUM_PLANAR_LIGHT_SAMPLES*MACRO_NUM_PLANAR_LIGHT_SAMPLES);
@@ -68,9 +68,9 @@ glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const PhongMater
         double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
 
         if (l_dot_n > 0)
-          color += sampleFactor * attenuation * mat.m_kd * l_dot_n * colour;
+          color += sampleFactor * attenuation * kd * l_dot_n * colour;
         if (r_dot_v > 0)
-          color += sampleFactor * attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * colour;
+          color += sampleFactor * attenuation * ks * pow(r_dot_v, shininess) * colour;
       }
     }
   }
@@ -88,7 +88,7 @@ pair<dvec4, dvec4> generateCircleAxes(const dvec3 &normal) {
   return pair<dvec4, dvec4>(dvec4(first, 0.0), second);
 }
 
-glm::dvec3 SphericalLight::lightColor(const FlatPrimitives &nodes, const PhongMaterial &mat, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
+glm::dvec3 SphericalLight::lightColor(const FlatPrimitives &nodes, const dvec3 &kd, const dvec3 &ks, double shininess, const glm::dvec4 &v_eye, const glm::dvec4 &point, const glm::dvec4 &normal) {
   //based on direction to center, generate normal.
   //generate random radius
   //partition radius into sqrt segments, partition angle.
@@ -123,9 +123,9 @@ glm::dvec3 SphericalLight::lightColor(const FlatPrimitives &nodes, const PhongMa
         double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
 
         if (l_dot_n > 0)
-          color += weight * sampleFactor * attenuation * mat.m_kd * l_dot_n * colour;
+          color += weight * sampleFactor * attenuation * kd * l_dot_n * colour;
         if (r_dot_v > 0)
-          color += weight * sampleFactor * attenuation * mat.m_ks * pow(r_dot_v, mat.m_shininess) * colour;
+          color += weight * sampleFactor * attenuation * ks * pow(r_dot_v, shininess) * colour;
       }
     }
   }
