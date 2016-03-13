@@ -54,6 +54,7 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
       swap(pt.m_material_2, pt.m_material_1);
       swap(pt.m_primitive_2, pt.m_primitive_1);
       swap(pt.uv_2, pt.uv_1);
+      return pt;
     }
   }
 
