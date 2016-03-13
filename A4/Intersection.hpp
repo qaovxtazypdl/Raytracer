@@ -32,13 +32,14 @@ public:
 
   IntersectionPoint(
     double intersect_t_1, const glm::dvec4 &point_1, const glm::dvec4 &normal_1, const MaterialPackage &material_1, Primitive *primitive_1,
-    double intersect_t_2, const glm::dvec4 &point_2, const glm::dvec4 &normal_2, const MaterialPackage &material_2, Primitive *primitive_2
+    double intersect_t_2, const glm::dvec4 &point_2, const glm::dvec4 &normal_2, const MaterialPackage &material_2, Primitive *primitive_2,
+    const std::pair<double,double> &uv_1, const std::pair<double,double> &uv_2
   ) :
     intersect_t_1(intersect_t_1), normal_1(normal_1), point_1(point_1),
     intersect_t_2(intersect_t_2), normal_2(normal_2), point_2(point_2),
     m_material_1(material_1), m_primitive_1(primitive_1),
     m_material_2(material_2), m_primitive_2(primitive_2),
-    valid(true), m_added(2), uv_1(-1,-1), uv_2(-1,-1)
+    valid(true), m_added(2), uv_1(uv_1), uv_2(uv_2)
   {}
 
   IntersectionPoint(const IntersectionPoint &first, bool first_1, const IntersectionPoint &second, bool first_2) :
@@ -46,8 +47,7 @@ public:
     intersect_t_2(first_2?second.intersect_t_1:second.intersect_t_2), normal_2(first_2?second.normal_1:second.normal_2), point_2(first_2?second.point_1:second.point_2),
     m_material_1(first_1?first.m_material_1:first.m_material_2), m_primitive_1(first_1?first.m_primitive_1:first.m_primitive_2),
     m_material_2(first_2?second.m_material_1:second.m_material_2), m_primitive_2(first_2?second.m_primitive_1:second.m_primitive_2),
-    uv_1(first_1?first.uv_1:first.uv_2),
-    uv_2(first_2?second.uv_1:second.uv_2),
+    uv_1(first_1?first.uv_1:first.uv_2), uv_2(first_2?second.uv_1:second.uv_2),
     valid(true), m_added(2)
   {
     if (intersect_t_1 == intersect_t_2) {
@@ -56,7 +56,7 @@ public:
   }
 
   IntersectionPoint(): valid(false), m_added(0) {}
-  void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive);
+  void addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive, const std::pair<double,double> &uv);
 
   void reverseNormal(bool first);
   IntersectionPoint UNION(const IntersectionPoint &other);

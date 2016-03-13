@@ -42,6 +42,5 @@ http://paulbourke.net/stereographics/stereorender/
 http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
 
 
-add uv to intersection add
-add uv to constructor
-handle texture blending
+compute uv from primitive intersecitons and add.
+use uv from intersection to determine kd with function call.
