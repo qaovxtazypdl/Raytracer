@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "polyroots.hpp"
+#include "Flags.hpp"
 #include "PhongMaterial.hpp"
 #include "PhongMaterial.hpp"
 #include <glm/gtx/io.hpp>

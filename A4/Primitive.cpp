@@ -46,8 +46,6 @@ Torus::~Torus()
 }
 
 IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &matpack) {
-  //m_pos;
-  //m_radius;
   dvec4 a = ray_origin;
   dvec4 b = ray_dir + ray_origin;
   dvec4 c = dvec4(m_pos, 1.0);
@@ -64,10 +62,18 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
     dvec4 pt1 = t*ray_dir + ray_origin;
     dvec4 pt2 = t_2*ray_dir + ray_origin;
 
+    dvec3 d1 = dvec3(pt1 - dvec4(m_pos, 1.0));
+    dvec3 d2 = dvec3(pt2 - dvec4(m_pos, 1.0));
+
+    double u1 = atan2(d1[2], d1[0]) / (2*PI) + 0.5;
+    double u2 = atan2(d2[2], d2[0]) / (2*PI) + 0.5;
+    double v1 = asin(d1[1])/PI + 0.5;
+    double v2 = asin(d2[1])/PI + 0.5;
+
     return IntersectionInfo({IntersectionPoint(
       t, pt1, normalize(pt1-c), matpack, this,
       t_2, pt2, normalize(pt2-c), matpack, this,
-      {0,0}, {0,0}
+      {u1, v1}, {u2, v2}
     )});
   }
 }
@@ -86,6 +92,8 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
 
   double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
   double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
+
+  double v=0, u=0;
 
   //TODO: check
   if (tmin > tmax || (tmin < EPSILON && tmax < EPSILON)) {
@@ -112,7 +120,7 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
     return IntersectionInfo({IntersectionPoint(
       tmin, tmin*ray_dir + ray_origin, normalmin, matpack, this,
       tmax, tmax*ray_dir + ray_origin, normalmax, matpack, this,
-      {0,0}, {0,0}
+      {u,v}, {u,v}
     )});
   }
 }
@@ -120,13 +128,16 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
 IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &matpack) {
   IntersectionPoint result;
 
+  double v=0, u=0;
   dvec4 norm;
   dvec4 intersect;
   double roots[2];
   double tplane = (-1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplane*ray_dir;
   if (length(dvec3(intersect[0], intersect[2], 0)) < 1) {
-    result.addIntersection(tplane, tplane*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, {0,0});
+    u = intersect[0]/2 + 0.5;
+    v = intersect[2]/2 + 0.5;
+    result.addIntersection(tplane, tplane*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, {u,v});
   }
 
   size_t numRoots = quadraticRoots(
@@ -141,12 +152,16 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
 
     intersect = ray_origin + t_1*ray_dir;
     if (intersect[1] >= -1 && intersect[1] < -EPSILON) {
-      result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, {0,0});
+      v = intersect[1] + 1;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, {u,v});
     }
 
     intersect = ray_origin + t_2*ray_dir;
     if (intersect[1] >= -1 && intersect[1] < -EPSILON) {
-      result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, {0,0});
+      v = intersect[1] + 1;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, {u,v});
     }
   }
 
@@ -159,20 +174,25 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
   dvec4 norm;
   dvec4 intersect;
   double roots[2];
+  double v=0, u=0;
 
   //intersection with planes z=1, z=-1
   double tplaneupper = (1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplaneupper*ray_dir;
   if (length(dvec3(intersect[0], intersect[2], 0)) < 1) {
     //accept and update
-    result.addIntersection(tplaneupper, tplaneupper*ray_dir + ray_origin, dvec4(0,1,0,0), matpack, this, {0,0});
+    u = intersect[0]/2 + 0.5;
+    v = intersect[2]/2 + 0.5;
+    result.addIntersection(tplaneupper, tplaneupper*ray_dir + ray_origin, dvec4(0,1,0,0), matpack, this, {u,v});
   }
 
   double tplanelower = (-1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplanelower*ray_dir;
   if (length(dvec3(intersect[0], intersect[2], 0)) < 1) {
     //accept and update
-    result.addIntersection(tplanelower, tplanelower*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, {0,0});
+    u = intersect[0]/2 + 0.5;
+    v = intersect[2]/2 + 0.5;
+    result.addIntersection(tplanelower, tplanelower*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, {u,v});
   }
 
   size_t numRoots = quadraticRoots(
@@ -188,12 +208,16 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
 
     intersect = ray_origin + t_1*ray_dir;
     if (abs(intersect[1]) < 1){
-      result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, {0,0});
+      v = intersect[1]/2 + 0.5;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, {u,v});
     }
 
     intersect = ray_origin + t_2*ray_dir;
     if (abs(intersect[1]) < 1){
-      result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, {0,0});
+      v = intersect[1]/2 + 0.5;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, {u,v});
     }
   }
   return IntersectionInfo({result});
@@ -204,19 +228,26 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
   dvec4 intersect;
   dvec4 norm, pt;
   double roots[2];
+  double u=0, v=0;
 
-  vector<pair<double,dvec4>> ts;
+  vector<pair<pair<double,dvec4>, pair<double,double>>> ts;
+
+  double caprad = sqrt(1.0 + m_inner);
 
   double tplanetop = (1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplanetop*ray_dir;
   if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
-    ts.push_back({tplanetop, dvec4(0,1,0,0)});
+    u = intersect[0]/(2*caprad) + 0.5;
+    v = intersect[2]/(2*caprad) + 0.5;
+    ts.push_back({{tplanetop, dvec4(0,1,0,0)}, {u,v}});
   }
 
   double tplanebottom = (-1.0 - ray_origin[1]) / ray_dir[1];
   intersect = ray_origin + tplanebottom*ray_dir;
   if (intersect[0]*intersect[0] + intersect[2]*intersect[2] < 1.0 + m_inner) {
-    ts.push_back({tplanebottom, dvec4(0,-1,0,0)});
+    u = intersect[0]/(2*caprad) + 0.5;
+    v = intersect[2]/(2*caprad) + 0.5;
+    ts.push_back({{tplanebottom, dvec4(0,-1,0,0)}, {u,v}});
   }
 
   size_t numRoots = quadraticRoots(
@@ -233,46 +264,50 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
 
     intersect = ray_origin + t_1*ray_dir;
     if (abs(intersect[1]) < 1){
-      ts.push_back({t_1, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))});
+      v = intersect[1]/2 + 0.5;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      ts.push_back({{t_1, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},{u,v}});
     }
 
     intersect = ray_origin + t_2*ray_dir;
     if (abs(intersect[1]) < 1){
-      ts.push_back({t_2, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))});
+      v = intersect[1]/2 + 0.5;
+      u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
+      ts.push_back({{t_2, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},{u,v}});
     }
   }
 
-  sort(ts.begin(), ts.end(), [](const pair<double, dvec4> &left, const pair<double, dvec4> &right) {
-    return left.first < right.first;
+  sort(ts.begin(), ts.end(), [](const pair<pair<double,dvec4>, pair<double,double>> &left, const pair<pair<double,dvec4>, pair<double,double>> &right) {
+    return left.first.first < right.first.first;
   });
 
   if (ts.size() == 3 || ts.size() == 1) {
-    cout << "TORUS ROOT ASSUMPTION" << endl;
-    throw "TORUS ROOT ASSUMPTION";
+    cout << "HYPERBOLOID ROOT ASSUMPTION" << endl;
+    throw "HYPERBOLOID ROOT ASSUMPTION";
   } else if (ts.size() == 0) {
     return IntersectionInfo();
   }
 
-  t = ts[0].first;
+  t = ts[0].first.first;
   pt = ray_origin + ray_dir * t;
-  norm = ts[0].second;
-  result1.addIntersection(t, pt, norm, matpack, this, {0,0});
+  norm = ts[0].first.second;
+  result1.addIntersection(t, pt, norm, matpack, this, ts[0].second);
 
-  t = ts[1].first;
+  t = ts[1].first.first;
   pt = ray_origin + ray_dir * t;
-  norm = ts[1].second;
-  result1.addIntersection(t, pt, norm, matpack, this, {0,0});
+  norm = ts[1].first.second;
+  result1.addIntersection(t, pt, norm, matpack, this, ts[1].second);
 
   if (ts.size() == 4) {
-    t = ts[2].first;
+    t = ts[2].first.first;
     pt = ray_origin + ray_dir * t;
-    norm = ts[2].second;
-    result2.addIntersection(t, pt, norm, matpack, this, {0,0});
+    norm = ts[2].first.second;
+    result2.addIntersection(t, pt, norm, matpack, this, ts[2].second);
 
-    t = ts[3].first;
+    t = ts[3].first.first;
     pt = ray_origin + ray_dir * t;
-    norm = ts[3].second;
-    result2.addIntersection(t, pt, norm, matpack, this, {0,0});
+    norm = ts[3].first.second;
+    result2.addIntersection(t, pt, norm, matpack, this, ts[3].second);
   }
 
   return IntersectionInfo({result1, result2});
@@ -309,6 +344,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
     sort(ts.begin(), ts.end());
 
     double t;
+    double v=0, u=0;
     dvec4 pt;
     dvec4 norm;
 
@@ -320,7 +356,10 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
-    result1.addIntersection(t, pt, norm, matpack, this, {0,0});
+    v = asin(pt[2]/r);
+    u = acos(pt[0]/(R+r*cos(v))) / PI;
+    v = v/PI + 0.5;
+    result1.addIntersection(t, pt, norm, matpack, this, {u,v});
 
     t = ts[1];
     pt = ray_origin + ray_dir * t;
@@ -330,7 +369,10 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
-    result1.addIntersection(t, pt, norm, matpack, this, {0,0});
+    v = asin(pt[2]/r);
+    u = acos(pt[0]/(R+r*cos(v))) / PI;
+    v = v/PI + 0.5;
+    result1.addIntersection(t, pt, norm, matpack, this, {u,v});
 
     if (numRoots == 4) {
       t = ts[2];
@@ -341,7 +383,10 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
-      result2.addIntersection(t, pt, norm, matpack, this, {0,0});
+      v = asin(pt[2]/r);
+      u = acos(pt[0]/(R+r*cos(v))) / PI;
+      v = v/PI + 0.5;
+      result2.addIntersection(t, pt, norm, matpack, this, {u,v});
 
       t = ts[3];
       pt = ray_origin + ray_dir * t;
@@ -351,7 +396,10 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
-      result2.addIntersection(t, pt, norm, matpack, this, {0,0});
+      v = asin(pt[2]/r);
+      u = acos(pt[0]/(R+r*cos(v))) / PI;
+      v = v/PI + 0.5;
+      result2.addIntersection(t, pt, norm, matpack, this, {u,v});
     }
   }
 

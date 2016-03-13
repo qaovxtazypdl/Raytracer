@@ -1,6 +1,11 @@
 CS488
 PROJECT                                    MAR 30
 
+E.Threading/Flatten                                           DONE
+E.Uniform Space Partitioning                                  acceleration
+E.Perlin Noise for texture/bump   --  function defined textures.
+E.Caustics
+
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
 Constructive Solid Geometry                DONE
@@ -9,26 +14,19 @@ Anaglyph 3D                                DONE
 Refraction                                 DONE
 
 
-Texture Map                                SAT       handle images
-Bump Map                                   SAT
+Texture Map                                SUN
+  compute uv for each prim
+  Test Fresnel Effect after texture/bump
+Bump Map                                   SUN
+
+Glossy reflection                          SOMEDAY
+SCENE                                      SOMEDAY
 
 
-Test Fresnel Effect after texture/bump
-
-
-UNSCHEDULED
-====================================
-Glossy reflection
-Scene                                                         !
-
-E.Threading/Flatten                                           DONE
-E.Uniform Space Partitioning                                  acceleration
-E.Perlin Noise for texture/bump   --  function defined textures.
-E.Caustics
 
 SCENE
 =====
--suits of armor in castle hallway lit by /torches
+-suits of armor in castle hallway lit by  window and storches
 -semi-transparent ice pillars
 -transparent crystal statue in middle
 
@@ -42,4 +40,11 @@ http://paulbourke.net/stereographics/stereorender/
 http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
 
 
-compute uv
+
+
+
+GRAPHICS: 4 days left
+PHYSICS: start next week
+MATH: do sunday
+458: ??
+489: MON TUES WED
