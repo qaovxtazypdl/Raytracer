@@ -314,6 +314,14 @@ void A4_Render(
 		const std::list<Light *> & lights
 ) {
 
+  /**********************************************
+  dvec3 pt(0,0.7,0);
+  double r = 0.3, R = 1.0;
+  double u = asin(pt[2]/r)/PI + 0.5;
+  double v = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
+  cout << u<< " " << v << endl;
+  return;
+  ***********************************************/
   /**********************************
   IntersectionInfo int1 = IntersectionInfo({
     IntersectionPoint(3, dvec4(), dvec4(), NULL, NULL, 3, dvec4(), dvec4(), NULL, NULL),

@@ -79,6 +79,7 @@ plane:add_child(central_hyperboloid)
 central_torus = gr.torus('central_torus', 0.3)
 central_torus:scale(1/50,1/50,1/100)
 central_torus:scale(10,10,20)
+central_torus:rotate('y', 25)
 central_torus:translate(0,0.13,-0.1)
 central_torus:translate(0,0.2,0.2)
 central_torus:set_material(perfectCanvas)
@@ -106,7 +107,7 @@ central_sphere:set_texture(texture_checkerboard)
 central_sphere:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_sphere)
 
-gr.render(scene, 'texturebump.png', 500, 500,
+gr.render(scene, 'texturebump.png', 1000, 1000,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 

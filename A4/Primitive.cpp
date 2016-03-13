@@ -93,34 +93,77 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
   double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
   double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
 
-  double v=0, u=0;
-
   //TODO: check
   if (tmin > tmax || (tmin < EPSILON && tmax < EPSILON)) {
     return IntersectionInfo();
   } else {
     vector<IntersectionPoint> result;
 
+    double u1=0, u2=0, v1=0, v2=0;
+    dvec3 pt;
+
     dvec4 normalmin;
-    if (tmin == tx_first) normalmin = dvec4(-1,0,0,0);
-    else if (tmin == tx_second) normalmin = dvec4(1,0,0,0);
-    else if (tmin == ty_first) normalmin = dvec4(0,-1,0,0);
-    else if (tmin == ty_second) normalmin = dvec4(0,1,0,0);
-    else if (tmin == tz_first) normalmin = dvec4(0,0,-1,0);
-    else if (tmin == tz_second) normalmin = dvec4(0,0,1,0);
+    dvec4 intersectionmin = tmin*ray_dir + ray_origin;
+    pt = (dvec3(intersectionmin) - m_pos) / m_size / 3;
+    if (tmin == tx_first) {
+      //left face
+      u1=pt[2]; v1=pt[1]+1.0/3;
+      normalmin = dvec4(-1,0,0,0);
+    } else if (tmin == tx_second) {
+      //right face
+      u1=-pt[2]+1.0/2; v1=pt[1]+1.0/3;
+      normalmin = dvec4(1,0,0,0);
+    } else if (tmin == ty_first) {
+      //bottom face
+      u1=pt[0]+1.0/4; v1=pt[2];
+      normalmin = dvec4(0,-1,0,0);
+    } else if (tmin == ty_second) {
+      //top face
+      u1=pt[0]+1.0/4; v1=-pt[2]+2.0/3;
+      normalmin = dvec4(0,1,0,0);
+    } else if (tmin == tz_first) {
+      //back face
+      u1=-pt[0]+3.0/4; v1=pt[1]+1.0/3;
+      normalmin = dvec4(0,0,-1,0);
+    } else if (tmin == tz_second) {
+      //front face
+      u1=pt[0]+1.0/4; v1=pt[1]+1.0/3;
+      normalmin = dvec4(0,0,1,0);
+    }
 
     dvec4 normalmax;
-    if (tmax == tx_first) normalmax = dvec4(-1,0,0,0);
-    else if (tmax == tx_second) normalmax = dvec4(1,0,0,0);
-    else if (tmax == ty_first) normalmax = dvec4(0,-1,0,0);
-    else if (tmax == ty_second) normalmax = dvec4(0,1,0,0);
-    else if (tmax == tz_first) normalmax = dvec4(0,0,-1,0);
-    else if (tmax == tz_second) normalmax = dvec4(0,0,1,0);
+    dvec4 intersectionmax = tmax*ray_dir + ray_origin;
+    pt = (dvec3(intersectionmax) - m_pos) / m_size / 3.0;
+    if (tmax == tx_first) {
+      //left face
+      u2=pt[2]; v2=pt[1]+1.0/3;
+      normalmax = dvec4(-1,0,0,0);
+    } else if (tmax == tx_second) {
+      //right face
+      u2=-pt[2]+1.0/2; v2=pt[1]+1.0/3;
+      normalmax = dvec4(1,0,0,0);
+    } else if (tmax == ty_first) {
+      //bottom face
+      u2=pt[0]+1.0/4; v2=pt[2];
+      normalmax = dvec4(0,-1,0,0);
+    } else if (tmax == ty_second) {
+      //top face
+      u2=pt[0]+1.0/4; v2=-pt[2]+2.0/3;
+      normalmax = dvec4(0,1,0,0);
+    } else if (tmax == tz_first) {
+      //back face
+      u2=-pt[0]+3.0/4; v2=pt[1]+1.0/3;
+      normalmax = dvec4(0,0,-1,0);
+    } else if (tmax == tz_second) {
+      //front face
+      u2=pt[0]+1.0/4; v2=pt[1]+1.0/3;
+      normalmax = dvec4(0,0,1,0);
+    }
 
     return IntersectionInfo({IntersectionPoint(
-      tmin, tmin*ray_dir + ray_origin, normalmin, matpack, this,
-      tmax, tmax*ray_dir + ray_origin, normalmax, matpack, this,
-      {u,v}, {u,v}
+      tmin, intersectionmin, normalmin, matpack, this,
+      tmax, intersectionmax, normalmax, matpack, this,
+      {u1,v1}, {u2,v2}
     )});
   }
 }
@@ -356,9 +399,9 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
-    v = asin(pt[2]/r);
-    u = acos(pt[0]/(R+r*cos(v))) / PI;
-    v = v/PI + 0.5;
+    v = (asin(pt[2]/r)/PI + 0.5) / 2;
+    if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
+    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
     result1.addIntersection(t, pt, norm, matpack, this, {u,v});
 
     t = ts[1];
@@ -369,9 +412,9 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
-    v = asin(pt[2]/r);
-    u = acos(pt[0]/(R+r*cos(v))) / PI;
-    v = v/PI + 0.5;
+    v = (asin(pt[2]/r)/PI + 0.5) / 2;
+    if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
+    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
     result1.addIntersection(t, pt, norm, matpack, this, {u,v});
 
     if (numRoots == 4) {
@@ -383,9 +426,9 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
-      v = asin(pt[2]/r);
-      u = acos(pt[0]/(R+r*cos(v))) / PI;
-      v = v/PI + 0.5;
+      v = (asin(pt[2]/r)/PI + 0.5) / 2;
+      if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
+      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
       result2.addIntersection(t, pt, norm, matpack, this, {u,v});
 
       t = ts[3];
@@ -396,9 +439,9 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
-      v = asin(pt[2]/r);
-      u = acos(pt[0]/(R+r*cos(v))) / PI;
-      v = v/PI + 0.5;
+      v = (asin(pt[2]/r)/PI + 0.5) / 2;
+      if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
+      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
       result2.addIntersection(t, pt, norm, matpack, this, {u,v});
     }
   }

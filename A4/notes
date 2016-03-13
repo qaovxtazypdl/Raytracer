@@ -5,6 +5,7 @@ E.Threading/Flatten                                           DONE
 E.Uniform Space Partitioning                                  acceleration
 E.Perlin Noise for texture/bump   --  function defined textures.
 E.Caustics
+E.texture map to conic caps
 
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
@@ -12,11 +13,9 @@ Constructive Solid Geometry                DONE
 Soft Shadows                               DONE
 Anaglyph 3D                                DONE
 Refraction                                 DONE
+Texture Map                                DONE
+  test fresnel
 
-
-Texture Map                                SUN
-  compute uv for each prim
-  Test Fresnel Effect after texture/bump
 Bump Map                                   SUN
 
 Glossy reflection                          SOMEDAY

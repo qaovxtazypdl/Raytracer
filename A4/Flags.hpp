@@ -2,7 +2,7 @@
 
 //anti-aliasing
 #define MACRO_USE_SUPERSAMPLE_TEST false
-#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || false)
+#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || true)
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 //refl and refr
@@ -10,7 +10,7 @@
 #define MACRO_REFRACTION_ON false
 
 //threading
-#define MACRO_NUM_THREADS 1
+#define MACRO_NUM_THREADS 16
 
 //area lights
 #define MACRO_NUM_PLANAR_LIGHT_SAMPLES 4
