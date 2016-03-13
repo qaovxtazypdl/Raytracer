@@ -9,8 +9,11 @@ Anaglyph 3D                                DONE
 Refraction                                 DONE
 
 
-Texture Map                                SAT
+Texture Map                                SAT       handle images
 Bump Map                                   SAT
+
+
+Test Fresnel Effect after texture/bump     /     be able to make reflection more pronounced when length(ks) is low.. - base reflection, weighted 50%
 
 
 
@@ -22,7 +25,7 @@ Scene                                                         !
 
 E.Threading/Flatten                                           DONE
 E.Uniform Space Partitioning                                  acceleration
-E.Perlin Noise for texture/bump
+E.Perlin Noise for texture/bump   --  function defined textures.
 E.Caustics
 
 SCENE

@@ -11,6 +11,7 @@
 #include <glm/ext.hpp>
 
 #include "Utils.hpp"
+#include "Texture.hpp"
 #include "SceneNode.hpp"
 #include "CSGNode.hpp"
 #include "JointNode.hpp"

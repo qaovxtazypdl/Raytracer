@@ -80,6 +80,7 @@ OBJECTS := \
 	$(OBJDIR)/Primitive.o \
 	$(OBJDIR)/scene_lua.o \
 	$(OBJDIR)/SceneNode.o \
+	$(OBJDIR)/Texture.o \
 	$(OBJDIR)/Utils.o \
 
 RESOURCES := \
@@ -201,6 +202,10 @@ $(OBJDIR)/scene_lua.o: ../scene_lua.cpp
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/SceneNode.o: ../SceneNode.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Texture.o: ../Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
