@@ -103,6 +103,7 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
     vector<IntersectionPoint> result;
 
     double u1=0, u2=0, v1=0, v2=0;
+    dvec4 Ou1, Ou2, Ov1, Ov2;
     dvec3 pt;
 
     dvec4 normalmin;
@@ -112,26 +113,38 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
       //left face
       u1=pt[2]; v1=pt[1]+1.0/3;
       normalmin = dvec4(-1,0,0,0);
+      Ou1 = dvec4(0,0,1,0);
+      Ov1 = dvec4(0,1,0,0);
     } else if (tmin == tx_second) {
       //right face
       u1=-pt[2]+1.0/2; v1=pt[1]+1.0/3;
       normalmin = dvec4(1,0,0,0);
+      Ou1 = dvec4(0,0,-1,0);
+      Ov1 = dvec4(0,1,0,0);
     } else if (tmin == ty_first) {
       //bottom face
       u1=pt[0]+1.0/4; v1=pt[2];
       normalmin = dvec4(0,-1,0,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,0,1,0);
     } else if (tmin == ty_second) {
       //top face
       u1=pt[0]+1.0/4; v1=-pt[2]+2.0/3;
       normalmin = dvec4(0,1,0,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,0,-1,0);
     } else if (tmin == tz_first) {
       //back face
       u1=-pt[0]+3.0/4; v1=pt[1]+1.0/3;
       normalmin = dvec4(0,0,-1,0);
+      Ou1 = dvec4(-1,0,0,0);
+      Ov1 = dvec4(0,1,0,0);
     } else if (tmin == tz_second) {
       //front face
       u1=pt[0]+1.0/4; v1=pt[1]+1.0/3;
       normalmin = dvec4(0,0,1,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,1,0,0);
     }
 
     dvec4 normalmax;
@@ -141,30 +154,42 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
       //left face
       u2=pt[2]; v2=pt[1]+1.0/3;
       normalmax = dvec4(-1,0,0,0);
+      Ou2 = dvec4(0,0,1,0);
+      Ov2 = dvec4(0,1,0,0);
     } else if (tmax == tx_second) {
       //right face
       u2=-pt[2]+1.0/2; v2=pt[1]+1.0/3;
       normalmax = dvec4(1,0,0,0);
+      Ou2 = dvec4(0,0,-1,0);
+      Ov2 = dvec4(0,1,0,0);
     } else if (tmax == ty_first) {
       //bottom face
       u2=pt[0]+1.0/4; v2=pt[2];
       normalmax = dvec4(0,-1,0,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,0,1,0);
     } else if (tmax == ty_second) {
       //top face
       u2=pt[0]+1.0/4; v2=-pt[2]+2.0/3;
       normalmax = dvec4(0,1,0,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,0,-1,0);
     } else if (tmax == tz_first) {
       //back face
       u2=-pt[0]+3.0/4; v2=pt[1]+1.0/3;
       normalmax = dvec4(0,0,-1,0);
+      Ou2 = dvec4(-1,0,0,0);
+      Ov2 = dvec4(0,1,0,0);
     } else if (tmax == tz_second) {
       //front face
       u2=pt[0]+1.0/4; v2=pt[1]+1.0/3;
       normalmax = dvec4(0,0,1,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,1,0,0);
     }
 
-    UVPackage uvp_1 = UVPackage({u1,v1}, dvec4(0.0), dvec4(0.0));
-    UVPackage uvp_2 = UVPackage({u2,v2}, dvec4(0.0), dvec4(0.0));
+    UVPackage uvp_1 = UVPackage({u1,v1}, Ou1, Ov1);
+    UVPackage uvp_2 = UVPackage({u2,v2}, Ou2, Ov2);
 
     return IntersectionInfo({IntersectionPoint(
       tmin, intersectionmin, normalmin, matpack, this,
@@ -178,6 +203,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
   IntersectionPoint result;
 
   double v=0, u=0;
+  dvec4 Ou, Ov;
   UVPackage uvp;
   dvec4 norm;
   dvec4 intersect;
@@ -187,7 +213,9 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
   if (length(dvec3(intersect[0], intersect[2], 0)) < 1) {
     u = intersect[0]/2 + 0.5;
     v = intersect[2]/2 + 0.5;
-    uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+    Ou = dvec4(1,0,0,0);
+    Ov = dvec4(0,0,1,0);
+    uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
     result.addIntersection(tplane, tplane*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, uvp);
   }
 
@@ -205,7 +233,9 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     if (intersect[1] >= -1 && intersect[1] < -EPSILON) {
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+      Ov = dvec4(-cos(u), -sin(u), 1, 0);
+      Ou = dvec4(-(1-v)*sin(u),(1-v)*cos(u),0,0);
+      uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }
 
@@ -213,7 +243,9 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     if (intersect[1] >= -1 && intersect[1] < -EPSILON) {
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+      Ov = dvec4(-cos(u), -sin(u), 1, 0);
+      Ou = dvec4(-(1-v)*sin(u),(1-v)*cos(u),0,0);
+      uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }
   }
@@ -272,7 +304,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(0,1,0,0);
-      Ou = dvec4(-2*PI*sin(2*PI*u),0,2*PI*cos(2*PI*u),0);
+      Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
@@ -282,7 +314,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(0,1,0,0);
-      Ou = dvec4(-2*PI*sin(2*PI*u),0,2*PI*cos(2*PI*u),0);
+      Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
