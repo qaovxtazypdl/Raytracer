@@ -289,9 +289,13 @@ IntersectionInfo IntersectionInfo::INTERSECT(const IntersectionInfo &other) {
 void IntersectionInfo::TRANSFORM_UP(const glm::dmat4 &T, const glm::dmat3 &T_invtrans) {
   for (IntersectionPoint &pt : intersections) {
     pt.normal_1 = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.normal_1), 0.0));
+    pt.uvp_1.Ou = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.uvp_1.Ou), 0.0));
+    pt.uvp_1.Ov = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.uvp_1.Ov), 0.0));
     pt.point_1 = T * pt.point_1;
 
     pt.normal_2 = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.normal_2), 0.0));
+    pt.uvp_2.Ou = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.uvp_2.Ou), 0.0));
+    pt.uvp_2.Ov = glm::normalize(glm::dvec4(T_invtrans * glm::dvec3(pt.uvp_2.Ov), 0.0));
     pt.point_2 = T * pt.point_2;
   }
 }
