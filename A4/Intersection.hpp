@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <glm/gtx/io.hpp>
-#include "Material.hpp"
+#include "Packages.hpp"
 #include "PhongMaterial.hpp"
 #include <algorithm>
 
