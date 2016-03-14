@@ -49,9 +49,10 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
   dvec4 a = ray_origin;
   dvec4 b = ray_dir + ray_origin;
   dvec4 c = dvec4(m_pos, 1.0);
+  double r = m_radius;
 
   double roots[2];
-  size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-m_radius*m_radius, roots);
+  size_t numRoots = quadraticRoots(dot(b-a, b-a), 2*dot(b-a, a-c), dot(c-a, c-a)-r*r, roots);
 
   if (numRoots != 2 || (roots[0] < EPSILON && roots[1] < EPSILON)) {
     return IntersectionInfo();
@@ -69,9 +70,15 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
     double u2 = atan2(d2[2], d2[0]) / (2*PI) + 0.5;
     double v1 = asin(d1[1])/PI + 0.5;
     double v2 = asin(d2[1])/PI + 0.5;
+    dvec4 Ou1, Ou2, Ov1, Ov2;
 
-    UVPackage uvp_1 = UVPackage({u1,v1}, dvec4(0.0), dvec4(0.0));
-    UVPackage uvp_2 = UVPackage({u2,v2}, dvec4(0.0), dvec4(0.0));
+    Ou1 = dvec4(-r*sin(PI*(v1-0.5))*sin(2*PI*(u1-0.5)),r*sin(PI*(v1-0.5))*cos(2*PI*(u1-0.5)),1,0);
+    Ov1 = dvec4(sin(2*PI*(u1-0.5))*cos(PI*(v1-0.5)), cos(2*PI*(u1-0.5))*cos(PI*(v1-0.5)), -sin(PI*(v1-0.5)),0);
+    Ou2 = dvec4(-r*sin(PI*(v2-0.5))*sin(2*PI*(u2-0.5)),r*sin(PI*(v2-0.5))*cos(2*PI*(u2-0.5)),1,0);
+    Ov2 = dvec4(sin(2*PI*(u2-0.5))*cos(PI*(v2-0.5)), cos(2*PI*(u2-0.5))*cos(PI*(v2-0.5)), -sin(PI*(v2-0.5)),0);
+
+    UVPackage uvp_1 = UVPackage({u1,v1}, Ou1, Ov1);
+    UVPackage uvp_2 = UVPackage({u2,v2}, Ou2, Ov2);
 
     return IntersectionInfo({IntersectionPoint(
       t, pt1, normalize(pt1-c), matpack, this,
@@ -234,7 +241,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(-cos(u), -sin(u), 1, 0);
-      Ou = dvec4(-(1-v)*sin(u),(1-v)*cos(u),0,0);
+      Ou = dvec4(-(1-v)*sin(2*PI*(u-0.5)),(1-v)*cos(2*PI*(u-0.5)),0,0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }
@@ -244,7 +251,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(-cos(u), -sin(u), 1, 0);
-      Ou = dvec4(-(1-v)*sin(u),(1-v)*cos(u),0,0);
+      Ou = dvec4(-(1-v)*sin(2*PI*(u-0.5)),(1-v)*cos(2*PI*(u-0.5)),0,0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }

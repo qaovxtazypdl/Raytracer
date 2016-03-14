@@ -99,7 +99,8 @@ central_sphere:scale(4,4,4)
 central_sphere:translate(0,0,-0.1)
 central_sphere:translate(0.3,0.075,0.65)
 central_sphere:set_material(perfectCanvas)
---central_sphere:set_bumps(texture_checkerboard, 'rgb')
+central_sphere:set_texture(texture_checkerboard, 'rgb')
+central_sphere:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_sphere)
 
 gr.render(scene, 'bumpall.png', 500, 500,
