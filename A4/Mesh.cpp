@@ -135,10 +135,11 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       //found! update if t value of intersection is less. (find minimum t)
       intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0));
       if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
+
       result.intersections.push_back(IntersectionPoint(
         t, t*ray_dir + ray_origin, intersect_normal, m_material, this,
         t, t*ray_dir + ray_origin, intersect_normal, m_material, this,
-        {0,0}, {0,0}
+        UVPackage({0,0}, dvec4(0.0), dvec4(0.0)), UVPackage({0,0}, dvec4(0.0), dvec4(0.0))
       ));
 
       std::sort(result.intersections.begin(), result.intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {

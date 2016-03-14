@@ -3,7 +3,7 @@
 using namespace std;
 using namespace glm;
 
-void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive, const pair<double,double> &uv) {
+void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive, const UVPackage &uvp) {
   if (m_added == 2) {
     std::cout << "ADDING TOO MUCH" << std::endl;
     throw "ADDING TOO MUCH";
@@ -14,7 +14,7 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
     point_1 = point;
     m_material_1 = material;
     m_primitive_1 = primitive;
-    uvp_1 = UVPackage(uv, dvec4(), dvec4());
+    uvp_1 = uvp;
     m_added++;
   } else if (m_added == 1) {
     if (intersect_t_1 > intersect_t) {
@@ -29,14 +29,14 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
       normal_1 = normal;
       point_1 = point;
       m_material_1 = material;
-      uvp_1 = UVPackage(uv, dvec4(), dvec4());;
+      uvp_1 = uvp;
     } else {
       intersect_t_2 = intersect_t;
       normal_2 = normal;
       point_2 = point;
       m_material_2 = material;
       m_primitive_2 = primitive;
-      uvp_2 = UVPackage(uv, dvec4(), dvec4());;
+      uvp_2 = uvp;
     }
     valid = true;
     m_added++;
