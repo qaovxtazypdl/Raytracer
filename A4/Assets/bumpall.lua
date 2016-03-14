@@ -47,7 +47,7 @@ central_cylinder:scale(5,5,10)
 central_cylinder:translate(0,0.13,-0.1)
 central_cylinder:translate(0.33,0.2,.5)
 central_cylinder:set_material(perfectCanvas)
-central_cylinder:set_bumps(texture_checkerboard, 'rgb')
+central_cylinder:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_cylinder)
 
 central_cone = gr.cone('central_cone')
