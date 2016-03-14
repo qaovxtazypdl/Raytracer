@@ -28,9 +28,14 @@ Texture::Texture(string filename) {
   }
 }
 
-dvec3 Texture::getColorAt(const pair<double, double> &uv) {
-  double di = (nx-1) * uv.first;
-  double dj = (ny-1) * uv.second;
+dvec3 Texture::getColorAt(pair<double, double> uv) {
+  if (uv.first < 0) uv.first = 0;
+  if (uv.second < 0) uv.second = 0;
+  if (uv.first > 1) uv.first = 1;
+  if (uv.second > 1) uv.second = 1;
+
+  double di = (nx-2) * uv.first;
+  double dj = (ny-2) * uv.second;
 
   int i = (int)di;
   int j = (int)dj;
@@ -46,6 +51,13 @@ dvec3 Texture::getColorAt(const pair<double, double> &uv) {
   return (1-up)*(1-vp)*c00 + (1-up)*(vp)*c01 + up*(1-vp)*c10 + (up)*(vp)*c11;
 }
 
-dvec4 Texture::getNormPerturbance(const pair<double, double> &uv, int bump_channel) {
-  return dvec4();
+dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const pair<double, double> &uv, int bump_channel) {
+  double epsilon = 1.0/64;
+  dvec4 X = norm[0]*dvec4(1,0,0,0);
+  dvec4 Y = norm[1]*dvec4(0,1,0,0);
+
+  double Bu = (length(getColorAt({uv.first+epsilon, uv.second})) - length(getColorAt({uv.first-epsilon, uv.second}))) / 2 / epsilon;
+  double Bv = (length(getColorAt({uv.first, uv.second+epsilon})) - length(getColorAt({uv.first, uv.second-epsilon}))) / 2 / epsilon;
+
+  return 0.1*(Bu*X + Bu*Y);
 }

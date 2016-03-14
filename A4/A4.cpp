@@ -79,11 +79,11 @@ dvec3 kdmult(Texture *texture, const pair<double,double> &uv) {
   }
 }
 
-dvec4 pertnorm(Texture *texture, int bump_channel, const pair<double,double> &uv) {
+dvec4 pertnorm(Texture *texture, int bump_channel, const pair<double,double> &uv, const dvec4 &norm) {
   if (texture == NULL) {
     return dvec4(0.0, 0.0, 0.0, 0.0);
   } else {
-    return texture->getNormPerturbance(uv, bump_channel);
+    return texture->getNormPerturbance(norm, uv, bump_channel);
   }
 }
 
@@ -100,7 +100,7 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     MaterialPackage &matpack = pt.m_material_1;
     PhongMaterial mat = *matpack.m_material;
 
-    dvec4 normal = pt.normal_1 + pertnorm(matpack.m_bumps, matpack.bump_channel, pt.uv_1);
+    dvec4 normal = normalize(pt.normal_1 + pertnorm(matpack.m_bumps, matpack.bump_channel, pt.uv_1, pt.normal_1));
     dvec3 ks = mat.m_ks;
     dvec3 kd = mat.m_kd * kdmult(matpack.m_texture, pt.uv_1);
 
