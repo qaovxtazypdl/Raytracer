@@ -81,7 +81,7 @@ dvec3 kdmult(Texture *texture, const pair<double,double> &uv) {
 
 dvec4 pertnorm(Texture *texture, int bump_channel, const UVPackage &uvp, const dvec4 &norm) {
   if (texture == NULL) {
-    return dvec4(0.0, 0.0, 0.0, 0.0);
+    return norm;
   } else {
     cout << normalize(norm + texture->getNormPerturbance(norm, uvp, bump_channel)) << endl;
     return normalize(norm + texture->getNormPerturbance(norm, uvp, bump_channel));
