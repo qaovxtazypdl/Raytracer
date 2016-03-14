@@ -25,8 +25,8 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-primary_light = gr.light({-300.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
-primary_light_oppo = gr.light({300.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
+primary_light = gr.light({-300.0, 0, 400.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
+primary_light_oppo = gr.light({300.0, 0, 400.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
 
 texture_checkerboard = gr.texture('Assets/checkerboard.png')
 texture_noise = gr.texture('Assets/perlin1.png')
@@ -43,10 +43,11 @@ scene:add_child(plane)
 
 central_cylinder = gr.cylinder('central_cylinder')
 central_cylinder:scale(1/50,1/50,1/100)
-central_cylinder:scale(5,5,10)
+central_cylinder:scale(14,14,14)
 central_cylinder:translate(0,0.13,-0.1)
 central_cylinder:translate(0.33,0.2,.5)
 central_cylinder:set_material(perfectCanvas)
+central_cylinder:set_texture(texture_noise)
 central_cylinder:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_cylinder)
 

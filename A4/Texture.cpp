@@ -52,13 +52,27 @@ dvec3 Texture::getColorAt(pair<double, double> uv) {
 }
 
 double brightness(const dvec3 &color, int bump_channel) {
-  return (color[0] + color[1] + color[2]) / 3;
+  return (color[0] + color[1] + color[2]) / 3.0;
 }
 
 dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const UVPackage &uvp, int bump_channel) {
   dvec3 norm3 = dvec3(norm);
-  double epsilon = 1.0/64;
+  double epsilon = 1.0/1024;
   double Bu = (brightness(getColorAt({uvp.uv.first+epsilon, uvp.uv.second}), bump_channel) - brightness(getColorAt({uvp.uv.first-epsilon, uvp.uv.second}), bump_channel)) / 2.0 / epsilon;
   double Bv = (brightness(getColorAt({uvp.uv.first, uvp.uv.second+epsilon}), bump_channel) - brightness(getColorAt({uvp.uv.first, uvp.uv.second-epsilon}), bump_channel)) / 2.0 / epsilon;
   return dvec4(Bu * cross(norm3, dvec3(uvp.Ov)) - Bv * cross(norm3, dvec3(uvp.Ou)), 0.0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
