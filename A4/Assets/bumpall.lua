@@ -43,12 +43,12 @@ scene:add_child(plane)
 
 central_cylinder = gr.cylinder('central_cylinder')
 central_cylinder:scale(1/50,1/50,1/100)
-central_cylinder:scale(14,14,14)
+central_cylinder:scale(7,7,7)
 central_cylinder:translate(0,0.13,-0.1)
-central_cylinder:translate(0.33,0.2,.5)
+central_cylinder:translate(0.3,0.2,.5)
 central_cylinder:set_material(perfectCanvas)
-central_cylinder:set_texture(texture_noise)
-central_cylinder:set_bumps(texture_noise, 'rgb')
+central_cylinder:set_texture(texture_checkerboard)
+central_cylinder:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_cylinder)
 
 central_cone = gr.cone('central_cone')
@@ -102,5 +102,5 @@ plane:add_child(central_sphere)
 
 gr.render(scene, 'bumpall.png', 500, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {primary_light_oppo})
+    {0.3, 0.3, 0.3}, {primary_light})
 
