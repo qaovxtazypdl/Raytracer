@@ -52,12 +52,12 @@ dvec3 Texture::getColorAt(pair<double, double> uv) {
 }
 
 dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const pair<double, double> &uv, int bump_channel) {
-  double epsilon = 1.0/64;
-  dvec4 X = norm[0]*dvec4(1,0,0,0);
-  dvec4 Y = norm[1]*dvec4(0,1,0,0);
+  //double epsilon = 1.0/64;
+  //dvec4 X = norm[0]*dvec4(1,0,0,0);
+  //dvec4 Y = norm[1]*dvec4(0,1,0,0);
 
-  double Bu = (length(getColorAt({uv.first+epsilon, uv.second})) - length(getColorAt({uv.first-epsilon, uv.second}))) / 2 / epsilon;
-  double Bv = (length(getColorAt({uv.first, uv.second+epsilon})) - length(getColorAt({uv.first, uv.second-epsilon}))) / 2 / epsilon;
-
-  return 0.1*(Bu*X + Bu*Y);
+  //double Bu = (length(getColorAt({uv.first+epsilon, uv.second})) - length(getColorAt({uv.first-epsilon, uv.second}))) / 2 / epsilon;
+  //double Bv = (length(getColorAt({uv.first, uv.second+epsilon})) - length(getColorAt({uv.first, uv.second-epsilon}))) / 2 / epsilon;
+  return dvec4();
+  //return 0.1*(Bu*X + Bu*Y);
 }
