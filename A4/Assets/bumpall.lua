@@ -25,11 +25,11 @@ polgold = gr.material({0.34615, 0.3143, 0.0903}, {0.797357, 0.723991, 0.208006},
 pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569}, 9.84615)
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
-primary_light = gr.light({-100.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
-secondary_light = gr.light({0, 100.0, 0}, {0.1, 0.7, 0.5}, {1, 0.4, 0})
-frontal_light = gr.light({0, 0, 200}, {0.4, 0.4, 0.5}, {1, 0, 0})
+primary_light = gr.light({-300.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
+primary_light_oppo = gr.light({300.0, 350.0, 200.0}, {1.0, 1.0, 1.0}, {1, 0, 0})
 
 texture_checkerboard = gr.texture('Assets/checkerboard.png')
+texture_noise = gr.texture('Assets/perlin1.png')
 
 --start script
 scene = gr.node('root')
@@ -57,7 +57,7 @@ central_cone:rotate('x', -48)
 central_cone:translate(0,0.13,-0.1)
 central_cone:translate(-0.32,0.2,0.5)
 central_cone:set_material(perfectCanvas)
-central_cone:set_bumps(texture_checkerboard, 'rgb')
+--central_cone:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_cone)
 
 central_hyperboloid = gr.hyperboloid('central_hyperboloid', 0.1)
@@ -68,7 +68,7 @@ central_hyperboloid:rotate('y', 25)
 central_hyperboloid:translate(0,0.13,-0.1)
 central_hyperboloid:translate(0,0,0.5)
 central_hyperboloid:set_material(perfectCanvas)
-central_hyperboloid:set_bumps(texture_checkerboard, 'rgb')
+--central_hyperboloid:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_hyperboloid)
 
 central_torus = gr.torus('central_torus', 0.3)
@@ -78,7 +78,7 @@ central_torus:rotate('y', 25)
 central_torus:translate(0,0.13,-0.1)
 central_torus:translate(0,0.2,0.2)
 central_torus:set_material(perfectCanvas)
-central_torus:set_bumps(texture_checkerboard, 'rgb')
+--central_torus:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_torus)
 
 central_cube = gr.cube('central_cube')
@@ -87,7 +87,7 @@ central_cube:scale(4,4,4)
 central_cube:translate(0,0,-0.1)
 central_cube:translate(-0.3,0,0.65)
 central_cube:set_material(perfectCanvas)
-central_cube:set_bumps(texture_checkerboard, 'rgb')
+--central_cube:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_cube)
 
 central_sphere = gr.sphere('central_sphere')
@@ -96,10 +96,10 @@ central_sphere:scale(4,4,4)
 central_sphere:translate(0,0,-0.1)
 central_sphere:translate(0.3,0.075,0.65)
 central_sphere:set_material(perfectCanvas)
-central_sphere:set_bumps(texture_checkerboard, 'rgb')
+--central_sphere:set_bumps(texture_noise, 'rgb')
 plane:add_child(central_sphere)
 
 gr.render(scene, 'bumpall.png', 500, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
-    {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
+    {0.3, 0.3, 0.3}, {primary_light_oppo})
 

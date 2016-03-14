@@ -228,6 +228,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
   dvec4 intersect;
   double roots[2];
   double v=0, u=0;
+  dvec4 Ou, Ov;
   UVPackage uvp;
 
   //intersection with planes z=1, z=-1
@@ -237,7 +238,9 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
     //accept and update
     u = intersect[0]/2 + 0.5;
     v = intersect[2]/2 + 0.5;
-    uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+    Ou = dvec4(1,0,0,0);
+    Ov = dvec4(0,0,1,0);
+    uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
     result.addIntersection(tplaneupper, tplaneupper*ray_dir + ray_origin, dvec4(0,1,0,0), matpack, this, uvp);
   }
 
@@ -247,7 +250,9 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
     //accept and update
     u = intersect[0]/2 + 0.5;
     v = intersect[2]/2 + 0.5;
-    uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+    Ou = dvec4(1,0,0,0);
+    Ov = dvec4(0,0,1,0);
+    uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
     result.addIntersection(tplanelower, tplanelower*ray_dir + ray_origin, dvec4(0,-1,0,0), matpack, this, uvp);
   }
 
@@ -266,7 +271,9 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
     if (abs(intersect[1]) < 1){
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+      Ov = dvec4(0,1,0,0);
+      Ou = dvec4(-2*PI*sin(2*PI*u),0,2*PI*cos(2*PI*u),0);
+      uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
 
@@ -274,7 +281,9 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
     if (abs(intersect[1]) < 1){
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      uvp = UVPackage({u,v}, dvec4(0.0), dvec4(0.0));
+      Ov = dvec4(0,1,0,0);
+      Ou = dvec4(-2*PI*sin(2*PI*u),0,2*PI*cos(2*PI*u),0);
+      uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
   }

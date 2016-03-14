@@ -83,6 +83,7 @@ dvec4 pertnorm(Texture *texture, int bump_channel, const UVPackage &uvp, const d
   if (texture == NULL) {
     return dvec4(0.0, 0.0, 0.0, 0.0);
   } else {
+    cout << texture->getNormPerturbance(norm, uvp, bump_channel) << endl;
     return texture->getNormPerturbance(norm, uvp, bump_channel);
   }
 }
