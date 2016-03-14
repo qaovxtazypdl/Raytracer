@@ -16,6 +16,17 @@ struct MaterialPackage {
   MaterialPackage() : m_texture(NULL), m_bumps(NULL), bump_channel(0), m_material(NULL) {}
 };
 
+struct UVPackage {
+  std::pair<double, double> uv;
+  glm::dvec4 Ou,Ov;
+
+  UVPackage(const std::pair<double, double> &uv, const glm::dvec4 &Ou, const glm::dvec4 &Ov)
+  : uv(uv), Ou(Ou), Ov(Ov) {}
+
+  UVPackage() {}
+};
+
+
 class Material {
 public:
   virtual ~Material();

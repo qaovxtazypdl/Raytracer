@@ -107,7 +107,7 @@ central_sphere:set_texture(texture_checkerboard)
 central_sphere:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_sphere)
 
-gr.render(scene, 'texturebump.png', 1000, 1000,
+gr.render(scene, 'texture.png', 1000, 1000,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 

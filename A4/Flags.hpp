@@ -6,8 +6,8 @@
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 //refl and refr
-#define MACRO_REFLECTION_ON true
-#define MACRO_REFRACTION_ON true
+#define MACRO_REFLECTION_ON false
+#define MACRO_REFRACTION_ON false
 
 //threading
 #define MACRO_NUM_THREADS 1

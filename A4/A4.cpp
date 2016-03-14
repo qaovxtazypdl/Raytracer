@@ -100,9 +100,9 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     MaterialPackage &matpack = pt.m_material_1;
     PhongMaterial mat = *matpack.m_material;
 
-    dvec4 normal = normalize(pt.normal_1 + pertnorm(matpack.m_bumps, matpack.bump_channel, pt.uv_1, pt.normal_1));
+    dvec4 normal = normalize(pt.normal_1 + pertnorm(matpack.m_bumps, matpack.bump_channel, pt.uvp_1.uv, pt.normal_1));
     dvec3 ks = mat.m_ks;
-    dvec3 kd = mat.m_kd * kdmult(matpack.m_texture, pt.uv_1);
+    dvec3 kd = mat.m_kd * kdmult(matpack.m_texture, pt.uvp_1.uv);
 
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;

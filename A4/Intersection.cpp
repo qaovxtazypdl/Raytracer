@@ -1,6 +1,7 @@
 #include "Intersection.hpp"
 
 using namespace std;
+using namespace glm;
 
 void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal, const MaterialPackage &material, Primitive *primitive, const pair<double,double> &uv) {
   if (m_added == 2) {
@@ -13,7 +14,7 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
     point_1 = point;
     m_material_1 = material;
     m_primitive_1 = primitive;
-    uv_1 = uv;
+    uvp_1 = UVPackage(uv, dvec4(), dvec4());
     m_added++;
   } else if (m_added == 1) {
     if (intersect_t_1 > intersect_t) {
@@ -22,20 +23,20 @@ void IntersectionPoint::addIntersection(double intersect_t, const glm::dvec4 &po
       point_2 = point_1;
       m_material_2 = m_material_1;
       m_primitive_2 = m_primitive_1;
-      uv_2 = uv_1;
+      uvp_2 = uvp_1;
 
       intersect_t_1 = intersect_t;
       normal_1 = normal;
       point_1 = point;
       m_material_1 = material;
-      uv_1 = uv;
+      uvp_1 = UVPackage(uv, dvec4(), dvec4());;
     } else {
       intersect_t_2 = intersect_t;
       normal_2 = normal;
       point_2 = point;
       m_material_2 = material;
       m_primitive_2 = primitive;
-      uv_2 = uv;
+      uvp_2 = UVPackage(uv, dvec4(), dvec4());;
     }
     valid = true;
     m_added++;
@@ -56,7 +57,7 @@ IntersectionPoint IntersectionInfo::getFirstValidIntersection(double max_t) {
       swap(pt.point_2, pt.point_1);
       swap(pt.m_material_2, pt.m_material_1);
       swap(pt.m_primitive_2, pt.m_primitive_1);
-      swap(pt.uv_2, pt.uv_1);
+      swap(pt.uvp_2, pt.uvp_1);
       return pt;
     }
   }

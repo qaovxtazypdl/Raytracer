@@ -17,12 +17,12 @@ public:
   double intersect_t_1;
   glm::dvec4 normal_1;
   glm::dvec4 point_1;
-  std::pair<double, double> uv_1;
+  UVPackage uvp_1;
 
   double intersect_t_2;
   glm::dvec4 normal_2;
   glm::dvec4 point_2;
-  std::pair<double, double> uv_2;
+  UVPackage uvp_2;
 
   MaterialPackage m_material_1;
   Primitive *m_primitive_1;
@@ -39,7 +39,7 @@ public:
     intersect_t_2(intersect_t_2), normal_2(normal_2), point_2(point_2),
     m_material_1(material_1), m_primitive_1(primitive_1),
     m_material_2(material_2), m_primitive_2(primitive_2),
-    valid(true), m_added(2), uv_1(uv_1), uv_2(uv_2)
+    valid(true), m_added(2), uvp_1(uv_1, glm::dvec4(), glm::dvec4()), uvp_2(uv_2, glm::dvec4(), glm::dvec4())
   {}
 
   IntersectionPoint(const IntersectionPoint &first, bool first_1, const IntersectionPoint &second, bool first_2) :
@@ -47,7 +47,7 @@ public:
     intersect_t_2(first_2?second.intersect_t_1:second.intersect_t_2), normal_2(first_2?second.normal_1:second.normal_2), point_2(first_2?second.point_1:second.point_2),
     m_material_1(first_1?first.m_material_1:first.m_material_2), m_primitive_1(first_1?first.m_primitive_1:first.m_primitive_2),
     m_material_2(first_2?second.m_material_1:second.m_material_2), m_primitive_2(first_2?second.m_primitive_1:second.m_primitive_2),
-    uv_1(first_1?first.uv_1:first.uv_2), uv_2(first_2?second.uv_1:second.uv_2),
+    uvp_1(first_1?first.uvp_1:first.uvp_2), uvp_2(first_2?second.uvp_1:second.uvp_2),
     valid(true), m_added(2)
   {
     if (intersect_t_1 == intersect_t_2) {
