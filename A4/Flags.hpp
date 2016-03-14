@@ -10,7 +10,7 @@
 #define MACRO_REFRACTION_ON false
 
 //threading
-#define MACRO_NUM_THREADS 1
+#define MACRO_NUM_THREADS 12
 
 //area lights
 #define MACRO_NUM_PLANAR_LIGHT_SAMPLES 4
