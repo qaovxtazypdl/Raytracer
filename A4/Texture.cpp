@@ -61,6 +61,9 @@ dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const UVPackage &uvp, 
 
 /*
 if (!(dot(norm, uvp.Ov) < 1E-6 && dot(norm, uvp.Ou) < 1E-6 && dot(uvp.Ou, uvp.Ov) < 1E-6)) {
+  cout << norm3 << endl;
+  cout << uvp.Ov << endl;
+  cout << uvp.Ou << endl;
   cout << (abs(dot(norm3, dvec3(uvp.Ov)))) << endl;
   cout << (abs(dot(norm3, dvec3(uvp.Ou)))) << endl;
   cout << (abs(dot(dvec3(uvp.Ou), dvec3(uvp.Ov)))) << endl;

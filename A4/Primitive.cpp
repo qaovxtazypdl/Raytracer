@@ -439,7 +439,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
   IntersectionPoint result1, result2;
 
   double R = 1.0;
-  double r = m_inner;
+  double r = m_inner+1E-10;
   double a = dot(ray_dir, ray_dir);
   double b = 2 * dot(ray_origin, ray_dir);
   double c = dot(ray_origin, ray_origin) - 1 - r*r - R*R;
