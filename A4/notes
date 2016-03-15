@@ -1,11 +1,7 @@
-CS488
-PROJECT                                    MAR 30
-
 E.Threading/Flatten                                           DONE
 E.Uniform Space Partitioning                                  acceleration
 E.Perlin Noise for texture/bump   --  function defined textures.
-E.Caustics
-E.texture map to conic caps
+E.Caustics + texture map to conic caps
 
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
@@ -18,7 +14,6 @@ Bump Map                                   DONE
 
 Glossy reflection                          SOMEDAY
 SCENE                                      SOMEDAY
-
 
 
 SCENE
@@ -35,13 +30,5 @@ additional refs
 ==============================
 http://paulbourke.net/stereographics/stereorender/
 http://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf
+http://dl.acm.org/citation.cfm?id=507101
 
-
-
-
-
-GRAPHICS: 4 days left
-PHYSICS: start next week
-MATH: do sunday
-458: ??
-489: MON TUES WED

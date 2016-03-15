@@ -4,6 +4,66 @@
 		"selected_items":
 		[
 			[
+				"texture",
+				"texture_checkerboard"
+			],
+			[
+				"perfect",
+				"perfect_canvas"
+			],
+			[
+				"text",
+				"texture_checkerboard"
+			],
+			[
+				"chrom",
+				"chrome_glass"
+			],
+			[
+				"sph",
+				"spherical_light"
+			],
+			[
+				"sp",
+				"spherical_light_pt"
+			],
+			[
+				"intersect_t",
+				"intersect_t_1"
+			],
+			[
+				"gr_node",
+				"gr_node_set_csg_children_cmd"
+			],
+			[
+				"MACRO_USE_",
+				"MACRO_USE_SUPERSAMPLE"
+			],
+			[
+				"MACRO_",
+				"MACRO_USE_SUPERSAMPLE"
+			],
+			[
+				"n",
+				"noboolalpha	ios"
+			],
+			[
+				"vector",
+				"I-vector	inc"
+			],
+			[
+				"ggRef",
+				"ggRefraction"
+			],
+			[
+				"intersec",
+				"intersectionPoint"
+			],
+			[
+				"inter",
+				"intersectionPoint"
+			],
+			[
 				"norma",
 				"normalized_dir"
 			],
@@ -40,16 +100,8 @@
 				"T_invtrans"
 			],
 			[
-				"intersec",
-				"intersectionInfo"
-			],
-			[
 				"intersect",
 				"intersect_t"
-			],
-			[
-				"inter",
-				"intersect_normal"
 			],
 			[
 				"r",
@@ -331,16 +383,36 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 69.0,
-		"last_filter": "packag",
+		"height": 392.0,
+		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"snake",
+				"Snake: Start Game"
+			],
+			[
+				"scala",
+				"Scalariver: Format file"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
 			[
 				"packag",
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 392.0
+		"width": 746.0
 	},
 	"console":
 	{
@@ -360,49 +432,92 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/qaovxtazypdl/cs488",
 		"/Users/qaovxtazypdl/cs488/A4",
 		"/Users/qaovxtazypdl/cs488/A4/Assets"
 	],
 	"file_history":
 	[
-		"/Users/qaovxtazypdl/cs488/A4/README",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/sample.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Main.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/A4.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/Flags.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/macho-cows.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/simple.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/simple-cows.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/instance.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/hier.lua",
-		"/Users/qaovxtazypdl/cs488/A4/A4.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Image.cpp",
-		"/Users/qaovxtazypdl/cs488/A3/scene_lua.hpp",
-		"/Users/qaovxtazypdl/cs488/A3/scene_lua.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/scene_lua.cpp",
 		"/Users/qaovxtazypdl/cs488/A4/notes",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier2.lua",
-		"/Users/qaovxtazypdl/cs488/A3/SceneNode.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/JointNode.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Flags.hpp",
 		"/Users/qaovxtazypdl/cs488/A4/Primitive.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Texture.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/bumpall.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/bumps.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/test.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Packages.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Intersection.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Intersection.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/Refraction.lua",
+		"/Users/qaovxtazypdl/cs488/A4/A4.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Light.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Texture.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Material.hpp",
 		"/Users/qaovxtazypdl/cs488/A4/Mesh.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/PhongMaterial.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/PhongMaterial.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/Light.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/SceneNode.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/Mesh.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/texture.lua",
 		"/Users/qaovxtazypdl/cs488/A4/Primitive.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/JointNode.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/SceneNode.hpp",
-		"/Users/qaovxtazypdl/cs488/A3/Material.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/ok",
-		"/Users/qaovxtazypdl/cs488/A4/polyroots.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/A4.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/PhongMaterial.cpp",
+		"/Users/qaovxtazypdl/cs488/shared/include/glm/gtc/noise.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/texturebump.lua",
+		"/Users/qaovxtazypdl/cs488/A4/SceneNode.cpp",
+		"/Users/qaovxtazypdl/cs488/shared/cs488-framework/MathUtils.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Mesh.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/GeometryNode.cpp",
 		"/Users/qaovxtazypdl/cs488/A4/GeometryNode.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/scene_lua.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/SceneNode.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Light.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/PhongMaterial.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/Anaglyph.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/AreaLight.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Image.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Image.cpp",
+		"/Users/qaovxtazypdl/cs488/Texture.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/FlatPrimitives.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Utils.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Utils.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/sample.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/simple.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/CSG.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Material.cpp",
+		"/Users/qaovxtazypdl/cs488/A3/Material.hpp",
+		"/Users/qaovxtazypdl/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/qaovxtazypdl/cs488/A4/SphericalLight.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/SphericalLight.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/PlanarLight.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/PlanarLight.hpp",
+		"/Users/qaovxtazypdl/cs488/AreaLight.lua",
+		"/Users/qaovxtazypdl/cs488/A4/FlatPrimitives.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/CSGNode.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/CSGNode.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/hier.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Main.cpp",
+		"/Users/qaovxtazypdl/Downloads/A4/A4.cpp",
+		"/Users/qaovxtazypdl/Downloads/A4/A4.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/shapes.lua",
+		"/Users/qaovxtazypdl/cs488/A3/scene_lua.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/lua488.hpp",
+		"/Users/qaovxtazypdl/cs488/A3/scene_lua.hpp",
+		"/Users/qaovxtazypdl/cs488/A3/SceneNode.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Makefile",
+		"/Users/qaovxtazypdl/cs488/A4/JointNode.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/instance.lua",
+		"/Users/qaovxtazypdl/cs488/A3/GeometryNode.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/simple-cows.lua",
+		"/Users/qaovxtazypdl/cs488/A3/GeometryNode.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/JointNode.hpp",
+		"/Users/qaovxtazypdl/cs488/A4/polyroots.cpp",
+		"/Users/qaovxtazypdl/Downloads/check_assignment5_public_altiscale.py",
+		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/scala/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment5/Q7.scala",
+		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/scala/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment5/Q6.scala",
+		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/scala/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment5/Q4.scala",
+		"/Users/qaovxtazypdl/cs488/A4/README",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/macho-cows.lua",
+		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier2.lua",
+		"/Users/qaovxtazypdl/cs488/A4/ok",
 		"/Users/qaovxtazypdl/cs488/A3/JointNode.hpp",
 		"/Users/qaovxtazypdl/cs488/A3/A3.cpp",
-		"/Users/qaovxtazypdl/cs488/A3/GeometryNode.hpp",
 		"/Users/qaovxtazypdl/cs488/A3/Assets/VertexShader.vs",
 		"/Users/qaovxtazypdl/cs488/A3/Assets/FragmentShader.fs",
 		"/Users/qaovxtazypdl/cs488/A4/Point.hpp",
@@ -423,13 +538,11 @@
 		"/Users/qaovxtazypdl/cs488/A3/StateStack.hpp",
 		"/Users/qaovxtazypdl/cs488/A1/A1.cpp",
 		"/Users/qaovxtazypdl/cs488/A3/StateStack.cpp",
-		"/Users/qaovxtazypdl/cs488/A3/GeometryNode.cpp",
 		"/Users/qaovxtazypdl/cs488/shared/cs488-framework/CS488Window.cpp",
 		"/Users/qaovxtazypdl/cs488/shared/cs488-framework/CS488Window.hpp",
 		"/Users/qaovxtazypdl/cs488/A2/A2.hpp",
 		"/Users/qaovxtazypdl/cs488/A1/Assets/VertexShader.vs",
 		"/Users/qaovxtazypdl/cs488/A3/Assets/anivia.lua",
-		"/Users/qaovxtazypdl/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Users/qaovxtazypdl/cs488/A3/Assets/simpleScene.lua",
 		"/Users/qaovxtazypdl/cs488/A3/Assets/test.lua",
 		"/Users/qaovxtazypdl/cs488/A3/Main.cpp",
@@ -451,49 +564,7 @@
 		"/Users/qaovxtazypdl/Downloads/check_assignment4_public_altiscale.py",
 		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/pagerank/RunPageRankBasic.java",
 		"/Users/qaovxtazypdl/Downloads/check_assignment4_public_linux (1).py",
-		"/Users/qaovxtazypdl/Downloads/check_assignment4_public_linux.py",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/assignment3.md",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/MultiSourcePageRankNode.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/PartitionGraph.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/DumpPageRankRecordsToPlainText.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/PageRankNode.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/SequentialPersonalizedPageRank.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/FindMaxPageRankNodes.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/RunPageRankBasic.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/BuildPageRankRecords.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/data/p2p-Gnutella08-adj.txt",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/RangePartitioner.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/NonSplitableSequenceFileInputFormat.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/RunPageRankSchimmy.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/SequentialPageRank.java",
-		"/Users/qaovxtazypdl/cs488/A2/README",
-		"/Users/qaovxtazypdl/cs488/A1/A1.hpp",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BooleanRetrieval.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BooleanRetrievalCompressed.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BuildInvertedIndexCompressed.java",
-		"/Users/qaovxtazypdl/Downloads/check_assignment3_public_linux.py",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/cheri.txt",
-		"/Users/qaovxtazypdl/Downloads/check_assignment3_public_altiscale.py",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/data/trial.txt",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/assignment1.md",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/assignment3.md",
-		"/Users/qaovxtazypdl/Downloads/interview",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BuildInvertedIndex.java",
-		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/search/BuildInvertedIndex.java",
-		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/search/BooleanRetrieval.java",
-		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/search/BuildInvertexIndex.java",
-		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/bigram/ComputeBigramRelativeFrequencyPairs.java",
-		"/Users/qaovxtazypdl/cs488/shared/glfw-3.1.1/include/GLFW/glfw3.h",
-		"/Users/qaovxtazypdl/cs488/shared/include/glm/detail/func_matrix.hpp",
-		"/Users/qaovxtazypdl/cs488/A2/Main.cpp",
-		"/Users/qaovxtazypdl/cs488/A0/Assets/VertexShader.vs",
-		"/Users/qaovxtazypdl/Downloads/sploit4.c",
-		"/Users/qaovxtazypdl/Downloads/backup.c",
-		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/bigram/ComputeBigramRelativeFrequencyStripes.java",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/hello2.txt",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/hello.txt",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/data/Shakespeare.txt",
-		"/Users/qaovxtazypdl/cs489/bigdata2016w/data/Shakespearex10"
+		"/Users/qaovxtazypdl/Downloads/check_assignment4_public_linux.py"
 	],
 	"find":
 	{
@@ -523,134 +594,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"256",
-			"ray_origin",
-			"getBackgroundColor",
-			"bgWidth",
-			"pixels",
-			"filename",
-			"a4.hpp",
-			"a4",
-			"a4.hpp",
-			"emcpy",
-			"-0.34",
-			"mesh",
-			"cout",
-			"cout ",
-			"cout",
-			"(float)",
-			"vec3",
-			"float",
-			"0f",
-			".0f",
-			"vec3",
-			"vec4",
-			"0f",
-			"mat4",
-			"134",
-			"mat4",
-			"vec4",
-			"vec3",
-			"dvec3",
-			"vec3",
-			"vec4",
-			"mat3",
-			"mat4",
-			"vec4",
-			"vec3",
-			"macho-cows",
-			"cout",
-			"'plane'",
-			"vec3",
-			"vec4",
-			"EPSILON",
-			"cout <<",
-			"vec4",
-			"vec3",
-			"float",
-			"mat3",
-			"vec3",
-			"mat3",
-			"vec3",
-			"cout",
-			"secon",
-			"shininess",
-			"EPSILON",
-			"double",
-			"EPSILON",
-			"mesh",
-			"mirror_1",
-			"_instan",
-			"plane_instance_1",
-			"carpet",
-			"nhsphere",
-			"s3",
-			"hide",
-			"add_child",
-			"mirror_plane",
-			"mesh",
-			"bottom_sphere_4",
-			"bottom_sphere_1",
-			"--central_sphere:add_child(bottom_sphere_1)",
-			"central_sphere",
-			"new PhongMat",
-			"buildTreeCache",
-			"PhongMaterial",
-			", {0, 10, -10}, 2",
-			"nh_sphere",
-			"scene",
-			"central_sphere",
-			"= gr.material(",
-			"mirror",
-			"gr_material",
-			"s5",
-			"frontal_light",
-			"set_material",
-			"stone",
-			"mirror_1",
-			"scaledown",
-			"childdata",
-			"add_child",
-			"planescaledown",
+			"set_texture",
+			"v = (asin(pt[2]/r)/PI + 0.5) / 2;",
+			"cout << u << \" \" << v << endl;",
+			"cout << Ov << endl;",
 			"plane",
-			"mirror",
-			"scene_root",
-			"stone",
-			"f",
-			"{0, 0, 0}, ",
-			"mat2",
-			"mat1",
-			", {0.4, 0.5, 0.6}",
-			"{0.31, 0.32, 0.33}",
-			"get_tuple",
-			"number",
-			"expected",
-			"bad argument",
-			"gr_material_ud",
-			"material",
-			"run_lua",
-			"lua_State",
-			"table",
-			"luaL_argcheck",
-			"arg",
-			"tuple",
-			"gr_render_cmd",
-			"luaL_argcheck",
-			"table",
-			"get_tuple",
-			"cout",
-			"ks",
-			"phongma",
-			"new Phong",
-			"Material(",
-			"new Material",
-			"testHit",
-			"matched_comp",
-			"EPSILON",
+			"--",
 			"-",
-			"buildTreeCache",
-			"supersampleScale",
-			" + ssrand(rng)"
+			"true",
+			"false",
+			"set_texture",
+			"cone",
+			"cone::",
+			"uvp.",
+			"set_texture",
+			"----",
+			"sinv",
+			"sinv2",
+			"sinv",
+			"normo",
+			"sinv",
+			"cos(2*PI*v)",
+			"sin(2*PI*v)",
+			"----",
+			" + 0.5",
+			"v2-0.5",
+			"v1-0.5",
+			"r*",
+			"dvec3(uvp.Ou)",
+			"dvec4(intersect[0],-intersect[1],intersect[2],0))",
+			"normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))",
+			"Ov",
+			"v-1",
+			"Ou",
+			"cone",
+			" < 1E-8",
+			"set_texture",
+			"uvp_1",
+			"normal_1",
+			"(u)",
+			"(v)",
+			"v",
+			"dvec4(0.0), dvec4(0.0)",
+			"v",
+			"Ou, Ov",
+			"m_inner",
+			"dvec4(0.0), dvec4(0.0)",
+			"v1",
+			"u1",
+			"v1",
+			"u1",
+			"m_radius",
+			", Ou, Ov",
+			"dvec4(0.0), dvec4(0.0)",
+			"texture_noise",
+			"Ou1",
+			"Ou2",
+			"Ou1",
+			"Ou2",
+			"Ou1",
+			"normalmax",
+			"Ou1",
+			"Ou2",
+			"=0",
+			"texture_noise",
+			"texture_checkerboard",
+			"texture_noise",
+			"texture_checkerboard",
+			"directLight",
+			"normal",
+			"normal_1",
+			"set_bumps",
+			"texture_checkerboard",
+			"uv",
+			"length",
+			"set_bumps",
+			"set_texture",
+			"sort",
+			"{u,v}",
+			"<double",
+			"UVPackage(uv, dvec4(), dvec4())",
+			"true",
+			"uv",
+			"0.0",
+			"MaterialPackage",
+			".uv_1",
+			".uv_2",
+			".uv_1",
+			"uv_2",
+			"uv_1",
+			"uv_2",
+			"uv_1",
+			"pertnorm",
+			"intersect_t_1",
+			"normal_1",
+			"perfectCanvas",
+			"central_cylinder",
+			"--pla",
+			"perfect_crystal",
+			"shininess",
+			"kd",
+			"2.0",
+			"near_sphere",
+			"false",
+			"v=",
+			"u=",
+			"v=",
+			"u",
+			"vec3",
+			"min",
+			"intersectionmin",
+			"normalmin",
+			"intersect",
+			"pt",
+			"pair<double, dvec4>",
+			"{u,v}",
+			"+ 1",
+			"addIntersection",
+			"TORUS",
+			"{0,0}",
+			"pt",
+			"central_sphere",
+			"      v = acos(pt[1]/R) / (2*PI);\n      u = 2*PI*acos(pt[0]/(R+r*cos(2*PI*v)));",
+			"    v = acos(pt[1]/R) / (2*PI);\n    u = 2*PI*acos(pt[0]/(R+r*cos(2*PI*v)));",
+			"0,0",
+			"result1.addIntersection(t, pt, norm, matpack, this, {u,v});",
+			"0,0",
+			";",
+			" + 0.5;"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -709,11 +780,15 @@
 	{
 		"height": 0.0
 	},
+	"output.sftp":
+	{
+		"height": 0.0
+	},
 	"pinned_build_system": "",
 	"project": "subl.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -723,19 +798,435 @@
 		"selected_items":
 		[
 			[
-				"a4",
-				"cs488/A4/A4.cpp"
+				"notes",
+				"cs488/A4/notes"
 			],
 			[
 				"flag",
 				"cs488/A4/Flags.hpp"
 			],
 			[
-				"simple.",
+				"bump",
+				"cs488/A4/Assets/bumpall.lua"
+			],
+			[
+				"bumps",
+				"cs488/A4/Assets/bumps.lua"
+			],
+			[
+				"fla",
+				"cs488/A4/Flags.hpp"
+			],
+			[
+				"primiti",
+				"cs488/A4/Primitive.cpp"
+			],
+			[
+				"test",
+				"cs488/A4/Assets/test.lua"
+			],
+			[
+				"primi",
+				"cs488/A4/Primitive.cpp"
+			],
+			[
+				"package",
+				"cs488/A4/Packages.hpp"
+			],
+			[
+				"textu",
+				"cs488/A4/Texture.cpp"
+			],
+			[
+				"prim",
+				"cs488/A4/Primitive.cpp"
+			],
+			[
+				"flags",
+				"cs488/A4/Flags.hpp"
+			],
+			[
+				"tex",
+				"cs488/A4/Texture.cpp"
+			],
+			[
+				"refr",
+				"cs488/A4/Assets/Refraction.lua"
+			],
+			[
+				"packa",
+				"cs488/A4/Packages.hpp"
+			],
+			[
+				"inter",
+				"cs488/A4/Intersection.hpp"
+			],
+			[
+				"interse",
+				"cs488/A4/Intersection.cpp"
+			],
+			[
+				"intersec",
+				"cs488/A4/Intersection.hpp"
+			],
+			[
+				"text",
+				"cs488/A4/Texture.cpp"
+			],
+			[
+				"a4",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"light.c",
+				"cs488/A4/Light.cpp"
+			],
+			[
+				"a4.c",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"pack",
+				"cs488/A4/Packages.hpp"
+			],
+			[
+				"mater",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"texture",
+				"cs488/A4/Texture.cpp"
+			],
+			[
+				"mesh",
+				"cs488/A4/Mesh.cpp"
+			],
+			[
+				"material",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"a4.h",
+				"cs488/A4/A4.hpp"
+			],
+			[
+				"materia",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"materi",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"light",
+				"cs488/A4/Light.cpp"
+			],
+			[
+				"phong",
+				"cs488/A4/PhongMaterial.cpp"
+			],
+			[
+				"noise",
+				"cs488/shared/include/glm/gtc/noise.hpp"
+			],
+			[
+				"ref",
+				"cs488/A4/Assets/Refraction.lua"
+			],
+			[
+				"textureb",
+				"cs488/A4/Assets/texturebump.lua"
+			],
+			[
+				"textur",
+				"cs488/A4/Texture.hpp"
+			],
+			[
+				"not",
+				"cs488/A4/notes"
+			],
+			[
+				"refl",
+				"cs488/A4/Assets/Refraction.lua"
+			],
+			[
+				"note",
+				"cs488/A4/notes"
+			],
+			[
+				"primit",
+				"cs488/A4/Primitive.hpp"
+			],
+			[
+				"mathu",
+				"cs488/shared/cs488-framework/MathUtils.hpp"
+			],
+			[
+				"scenenode",
+				"cs488/A4/SceneNode.cpp"
+			],
+			[
+				"primitive",
+				"cs488/A4/Primitive.cpp"
+			],
+			[
+				"nonhier",
+				"cs488/A4/Assets/nonhier.lua"
+			],
+			[
+				"refra",
+				"cs488/A4/Assets/Refraction.lua"
+			],
+			[
+				"material.h",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"material.",
+				"cs488/A4/Material.hpp"
+			],
+			[
+				"geomet",
+				"cs488/A4/GeometryNode.hpp"
+			],
+			[
+				"mesh.c",
+				"cs488/A4/Mesh.cpp"
+			],
+			[
+				"primii",
+				"cs488/A4/Primitive.cpp"
+			],
+			[
+				"geometry",
+				"cs488/A4/GeometryNode.cpp"
+			],
+			[
+				"scene_",
+				"cs488/A4/scene_lua.cpp"
+			],
+			[
+				"geome",
+				"cs488/A4/GeometryNode.cpp"
+			],
+			[
+				"sceneno",
+				"cs488/A4/SceneNode.hpp"
+			],
+			[
+				"light.h",
+				"cs488/A4/Light.hpp"
+			],
+			[
+				"light.",
+				"cs488/A4/Light.cpp"
+			],
+			[
+				"scene",
+				"cs488/A4/scene_lua.cpp"
+			],
+			[
+				"intersect",
+				"cs488/A4/Intersection.hpp"
+			],
+			[
+				"refrac",
+				"cs488/A4/Assets/Refraction.lua"
+			],
+			[
+				"phon",
+				"cs488/A4/PhongMaterial.cpp"
+			],
+			[
+				"phongma",
+				"cs488/A4/PhongMaterial.hpp"
+			],
+			[
+				"cenenode",
+				"cs488/A4/SceneNode.cpp"
+			],
+			[
+				"image",
+				"cs488/A4/Image.cpp"
+			],
+			[
+				"a4.hp",
+				"cs488/A4/A4.hpp"
+			],
+			[
+				"scene_lua",
+				"cs488/A4/scene_lua.cpp"
+			],
+			[
+				"u",
+				"cs488/A4/Utils.cpp"
+			],
+			[
+				"utils",
+				"cs488/A4/Utils.cpp"
+			],
+			[
+				"util",
+				"cs488/A4/Utils.hpp"
+			],
+			[
+				"sample",
+				"cs488/A4/Assets/sample.lua"
+			],
+			[
+				"sampl",
+				"cs488/A4/Assets/sample.lua"
+			],
+			[
+				"nonh",
+				"cs488/A4/Assets/nonhier.lua"
+			],
+			[
+				"intersection",
+				"cs488/A4/Intersection.hpp"
+			],
+			[
+				"ut",
+				"cs488/A4/Utils.hpp"
+			],
+			[
+				"anag",
+				"cs488/A4/Assets/Anaglyph.lua"
+			],
+			[
+				"area",
+				"cs488/A4/Assets/AreaLight.lua"
+			],
+			[
+				"fl",
+				"cs488/A4/Flags.hpp"
+			],
+			[
+				"anagly",
+				"cs488/A4/Assets/Anaglyph.lua"
+			],
+			[
+				"simpl",
 				"cs488/A4/Assets/simple.lua"
 			],
 			[
-				"simple-cows",
+				"anagl",
+				"cs488/A4/Assets/Anaglyph.lua"
+			],
+			[
+				"csg",
+				"cs488/A4/Assets/CSG.lua"
+			],
+			[
+				"geometr",
+				"cs488/A4/GeometryNode.hpp"
+			],
+			[
+				"a4.",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"phongmat",
+				"cs488/A4/PhongMaterial.cpp"
+			],
+			[
+				"4.cpp",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"a4.hpp",
+				"cs488/A4/A4.hpp"
+			],
+			[
+				"mesh.cpp",
+				"cs488/A4/Mesh.cpp"
+			],
+			[
+				"csgnod",
+				"cs488/A4/CSGNode.hpp"
+			],
+			[
+				"csgnode",
+				"cs488/A4/CSGNode.cpp"
+			],
+			[
+				"hier",
+				"cs488/A4/Assets/hier.lua"
+			],
+			[
+				"main",
+				"cs488/A4/Main.cpp"
+			],
+			[
+				"simple",
+				"cs488/A4/Assets/simple.lua"
+			],
+			[
+				"csgno",
+				"cs488/A4/CSGNode.cpp"
+			],
+			[
+				"nod",
+				"cs488/A4/SceneNode.hpp"
+			],
+			[
+				"no",
+				"cs488/A4/notes"
+			],
+			[
+				"scene_lu",
+				"cs488/A4/scene_lua.cpp"
+			],
+			[
+				"csg.lu",
+				"cs488/A4/Assets/CSG.lua"
+			],
+			[
+				"shapes",
+				"cs488/A4/Assets/shapes.lua"
+			],
+			[
+				"lua488",
+				"cs488/A4/lua488.hpp"
+			],
+			[
+				"scenelu",
+				"cs488/A3/scene_lua.cpp"
+			],
+			[
+				"intersection.h",
+				"cs488/A4/Intersection.hpp"
+			],
+			[
+				"makefile",
+				"cs488/A4/Makefile"
+			],
+			[
+				"geometrynode",
+				"cs488/A4/GeometryNode.hpp"
+			],
+			[
+				"a4.cp",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"scenen",
+				"cs488/A4/SceneNode.hpp"
+			],
+			[
+				"instance",
+				"cs488/A4/Assets/instance.lua"
+			],
+			[
+				"imple",
+				"cs488/A4/Assets/simple.lua"
+			],
+			[
+				"a4.cpp",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"imple-c",
 				"cs488/A4/Assets/simple-cows.lua"
 			],
 			[
@@ -747,35 +1238,15 @@
 				"cs488/A4/README"
 			],
 			[
-				"flags",
-				"cs488/A4/Flags.hpp"
-			],
-			[
-				"main",
-				"cs488/A4/Main.cpp"
-			],
-			[
-				"simple",
+				"simple.",
 				"cs488/A4/Assets/simple.lua"
 			],
 			[
-				"sample",
-				"cs488/A4/Assets/sample.lua"
-			],
-			[
-				"a4.h",
-				"cs488/A4/A4.hpp"
+				"simple-cows",
+				"cs488/A4/Assets/simple-cows.lua"
 			],
 			[
 				"image.c",
-				"cs488/A4/Image.cpp"
-			],
-			[
-				"scene",
-				"cs488/A3/scene_lua.cpp"
-			],
-			[
-				"image",
 				"cs488/A4/Image.cpp"
 			],
 			[
@@ -783,68 +1254,20 @@
 				"cs488/A4/README"
 			],
 			[
-				"notes",
-				"cs488/A4/notes"
-			],
-			[
-				"simpl",
-				"cs488/A4/Assets/simple.lua"
-			],
-			[
 				"scenenod",
 				"cs488/A3/SceneNode.cpp"
-			],
-			[
-				"phong",
-				"cs488/A4/PhongMaterial.cpp"
-			],
-			[
-				"note",
-				"cs488/A4/notes"
 			],
 			[
 				"macho",
 				"cs488/A4/Assets/macho-cows.lua"
 			],
 			[
-				"primit",
-				"cs488/A4/Primitive.cpp"
-			],
-			[
-				"mesh.c",
-				"cs488/A4/Mesh.cpp"
-			],
-			[
-				"a4.hpp",
-				"cs488/A4/A4.hpp"
-			],
-			[
-				"scenenode",
-				"cs488/A4/SceneNode.cpp"
-			],
-			[
 				"mesh.h",
 				"cs488/A4/Mesh.hpp"
 			],
 			[
-				"mesh",
-				"cs488/A4/Mesh.cpp"
-			],
-			[
-				"primi",
-				"cs488/A4/Primitive.cpp"
-			],
-			[
-				"nonhier",
-				"cs488/A4/Assets/nonhier.lua"
-			],
-			[
 				"mai",
 				"cs488/A4/Main.cpp"
-			],
-			[
-				"prim",
-				"cs488/A4/Primitive.cpp"
 			],
 			[
 				"nonhi",
@@ -855,36 +1278,12 @@
 				"cs488/A4/Assets/macho-cows.lua"
 			],
 			[
-				"phongmat",
-				"cs488/A4/PhongMaterial.cpp"
-			],
-			[
 				"phone",
 				"cs488/A4/PhongMaterial.cpp"
 			],
 			[
-				"material",
-				"cs488/A4/PhongMaterial.cpp"
-			],
-			[
-				"phongma",
-				"cs488/A4/PhongMaterial.cpp"
-			],
-			[
-				"sampl",
-				"cs488/A4/Assets/sample.lua"
-			],
-			[
-				"primiti",
-				"cs488/A4/Primitive.cpp"
-			],
-			[
 				"simple-",
 				"cs488/A4/Assets/simple-cows.lua"
-			],
-			[
-				"primitive",
-				"cs488/A4/Primitive.hpp"
 			],
 			[
 				"polyro",
@@ -909,330 +1308,6 @@
 			[
 				"jointnode",
 				"cs488/A4/JointNode.cpp"
-			],
-			[
-				"light",
-				"cs488/A4/Light.hpp"
-			],
-			[
-				"mesh.hpp",
-				"cs488/A4/Mesh.hpp"
-			],
-			[
-				"hier",
-				"cs488/A4/Assets/nonhier2.lua"
-			],
-			[
-				"fragmentshader",
-				"cs488/A3/Assets/FragmentShader.fs"
-			],
-			[
-				"vertexshader",
-				"cs488/A3/Assets/VertexShader.vs"
-			],
-			[
-				"pickingexm",
-				"cs488/Picking_Example/PickingExample.cpp"
-			],
-			[
-				"puppet",
-				"cs488/A3/Assets/puppet.lua"
-			],
-			[
-				"a3.hp",
-				"cs488/A3/A3.hpp"
-			],
-			[
-				"a3.hpp",
-				"cs488/A3/A3.hpp"
-			],
-			[
-				"sceneno",
-				"cs488/A3/SceneNode.cpp"
-			],
-			[
-				"a3.",
-				"cs488/A3/A3.cpp"
-			],
-			[
-				"geomet",
-				"cs488/A3/GeometryNode.hpp"
-			],
-			[
-				"jointno",
-				"cs488/A3/JointNode.hpp"
-			],
-			[
-				"a3.cpp",
-				"cs488/A3/A3.cpp"
-			],
-			[
-				"puppe",
-				"cs488/A3/Assets/puppet.lua"
-			],
-			[
-				"not",
-				"cs489/notes"
-			],
-			[
-				"vertexsha",
-				"cs488/A3/Assets/VertexShader.vs"
-			],
-			[
-				"fragment",
-				"cs488/A3/Assets/FragmentShader.fs"
-			],
-			[
-				"pup",
-				"cs488/A3/Assets/puppet.lua"
-			],
-			[
-				"a1.cpp",
-				"cs488/A1/A1.cpp"
-			],
-			[
-				"a2.cpp",
-				"cs488/A2/A2.cpp"
-			],
-			[
-				"joint",
-				"cs488/A3/JointNode.cpp"
-			],
-			[
-				"a3.h",
-				"cs488/A3/A3.hpp"
-			],
-			[
-				"geome",
-				"cs488/A3/GeometryNode.hpp"
-			],
-			[
-				"jointn",
-				"cs488/A3/JointNode.hpp"
-			],
-			[
-				"geometr",
-				"cs488/A3/GeometryNode.cpp"
-			],
-			[
-				"node",
-				"cs488/A3/GeometryNode.hpp"
-			],
-			[
-				"geom",
-				"cs488/A3/GeometryNode.hpp"
-			],
-			[
-				"cs488wind",
-				"cs488/shared/cs488-framework/CS488Window.cpp"
-			],
-			[
-				"a2.hpp",
-				"cs488/A2/A2.hpp"
-			],
-			[
-				"verte",
-				"cs488/A1/Assets/VertexShader.vs"
-			],
-			[
-				"geometry",
-				"cs488/A3/GeometryNode.cpp"
-			],
-			[
-				"test",
-				"cs488/A3/Assets/test.lua"
-			],
-			[
-				"main.cpp",
-				"cs488/A3/Main.cpp"
-			],
-			[
-				"a2",
-				"cs488/A2/A2.cpp"
-			],
-			[
-				"a2.",
-				"cs488/A2/A2.cpp"
-			],
-			[
-				"shader",
-				"cs488/A3/Assets/VertexShader.vs"
-			],
-			[
-				"fragments",
-				"cs488/A3/Assets/FragmentShader.fs"
-			],
-			[
-				"pupp",
-				"cs488/A3/Assets/puppet.lua"
-			],
-			[
-				"cs488window",
-				"cs488/shared/cs488-framework/CS488Window.hpp"
-			],
-			[
-				"geometrn",
-				"cs488/A3/GeometryNode.cpp"
-			],
-			[
-				"geometrynode",
-				"cs488/A3/GeometryNode.hpp"
-			],
-			[
-				"batchin",
-				"cs488/shared/cs488-framework/BatchInfo.hpp"
-			],
-			[
-				"4.md",
-				"cs489/bigdata2016w/assignment4.md"
-			],
-			[
-				"runpagerank",
-				"cs489/bespin/src/main/java/io/bespin/java/mapreduce/pagerank/RunPageRankBasic.java"
-			],
-			[
-				"runpage",
-				"cs489/bespin/src/main/java/io/bespin/java/mapreduce/pagerank/RunPageRankBasic.java"
-			],
-			[
-				"runpag",
-				"cs489/bespin/src/main/java/io/bespin/java/mapreduce/pagerank/RunPageRankBasic.java"
-			],
-			[
-				"partitiongraph",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/PartitionGraph.java"
-			],
-			[
-				"partitiongra",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/PartitionGraph.java"
-			],
-			[
-				"equential",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment4/SequentialPersonalizedPageRank.java"
-			],
-			[
-				"a1.hpp",
-				"cs488/A1/A1.hpp"
-			],
-			[
-				"booleanre",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BooleanRetrieval.java"
-			],
-			[
-				"buildinverted",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment3/BuildInvertedIndex.java"
-			],
-			[
-				"vertexsh",
-				"cs488/A1/Assets/VertexShader.vs"
-			],
-			[
-				"bigramrel",
-				"cs489/bespin/src/main/java/io/bespin/java/mapreduce/bigram/ComputeBigramRelativeFrequencyStripes.java"
-			],
-			[
-				"relative",
-				"cs489/bespin/src/main/java/io/bespin/java/mapreduce/bigram/ComputeBigramRelativeFrequencyPairs.java"
-			],
-			[
-				"fragmentsh",
-				"cs488/A2/Assets/FragmentShader.fs"
-			],
-			[
-				"assi",
-				"cs489/bigdata2016w/assignment1.md"
-			],
-			[
-				"assignment",
-				"cs489/bigdata2016w/assignment0.md"
-			],
-			[
-				"check_",
-				"cs489/bigdata2016w/check_assignment1_public_altiscale.py"
-			],
-			[
-				"grid",
-				"cs488/A1/grid.hpp"
-			],
-			[
-				".py",
-				"cs489/bigdata2016w/check_assignment1_public_linux.py"
-			],
-			[
-				"assig",
-				"cs489/bigdata2016w/assignment1.md"
-			],
-			[
-				"pmi",
-				"cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment1/PairsPMI.java"
-			],
-			[
-				"gitig",
-				"cs488/.gitignore"
-			],
-			[
-				"gitigno",
-				"cs488/.gitignore"
-			],
-			[
-				"type_vec",
-				"cs488/shared/include/glm/detail/type_vec3.hpp"
-			],
-			[
-				"grid.hpp",
-				"cs488/A1/grid.hpp"
-			],
-			[
-				".vs",
-				"cs488/A1/Assets/VertexShader.vs"
-			],
-			[
-				"a1.h",
-				"cs488/A1/A1.hpp"
-			],
-			[
-				"fragmentshad",
-				"cs488/A1/Assets/FragmentShader.fs"
-			],
-			[
-				"imgui.",
-				"cs488/A0/imgui.ini"
-			],
-			[
-				"imgui",
-				"cs488/shared/imgui/imgui.cpp"
-			],
-			[
-				"grid.",
-				"cs488/A1/grid.hpp"
-			],
-			[
-				"a0.cpp",
-				"cs488/A0/A0.cpp"
-			],
-			[
-				"shaderpr",
-				"cs488/shared/cs488-framework/ShaderProgram.hpp"
-			],
-			[
-				"shaderprogram",
-				"cs488/shared/cs488-framework/ShaderProgram.cpp"
-			],
-			[
-				"a0",
-				"cs488/A0/A0.cpp"
-			],
-			[
-				"a0.hpp",
-				"A0/A0.hpp"
-			],
-			[
-				"vec3",
-				"shared/include/glm/detail/type_vec3.hpp"
-			],
-			[
-				"a0.h",
-				"A0/A0.hpp"
 			]
 		],
 		"width": 0.0
