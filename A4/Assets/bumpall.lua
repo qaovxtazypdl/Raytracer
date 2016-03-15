@@ -104,7 +104,7 @@ plane:add_child(central_torus)
 
 
 
-gr.render(scene, 'bumpall.png', 1000, 1000,
+gr.render(scene, 'bumpall.png', 998, 998,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.1, 0.1, 0.1}, {primary_light_oppo, primary_light})
 

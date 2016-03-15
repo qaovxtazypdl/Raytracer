@@ -49,7 +49,7 @@ central_cylinder:translate(0.3,0.2,.5)
 central_cylinder:set_material(perfectCanvas)
 central_cylinder:set_texture(texture_checkerboard)
 central_cylinder:set_bumps(texture_checkerboard, 'rgb')
---plane:add_child(central_cylinder)
+plane:add_child(central_cylinder)
 
 central_cube = gr.cube('central_cube')
 central_cube:scale(1/50,1/50,1/100)
@@ -104,7 +104,7 @@ central_torus:set_bumps(texture_checkerboard, 'rgb')
 
 
 
-gr.render(scene, 'bumpall.png', 1000, 1000,
+gr.render(scene, 'bumpall.png', 900, 900,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.1, 0.1, 0.1}, {primary_light_oppo, primary_light})
 
