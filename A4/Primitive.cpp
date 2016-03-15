@@ -439,7 +439,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
   IntersectionPoint result1, result2;
 
   double R = 1.0;
-  double r = m_inner+1E-10;
+  double r = m_inner;
   double a = dot(ray_dir, ray_dir);
   double b = 2 * dot(ray_origin, ray_dir);
   double c = dot(ray_origin, ray_origin) - 1 - r*r - R*R;
@@ -480,7 +480,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       0
     ));
     u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-    v = (asin(pt[2]/r)/PI + 0.5) / 2;
+    v = (asin(pt[2]/(r+1E-10))/PI + 0.5) / 2;
     if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
     Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
     Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
@@ -496,7 +496,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       0
     ));
     u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-    v = (asin(pt[2]/r)/PI + 0.5) / 2;
+    v = (asin(pt[2]/(r+1E-10))/PI + 0.5) / 2;
     if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
     Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
     Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
@@ -513,7 +513,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         0
       ));
       u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-      v = (asin(pt[2]/r)/PI + 0.5) / 2;
+      v = (asin(pt[2]/(r+1E-10))/PI + 0.5) / 2;
       if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
       Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
       Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
@@ -529,7 +529,7 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         0
       ));
       u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-      v = (asin(pt[2]/r)/PI + 0.5) / 2;
+      v = (asin(pt[2]/(r+1E-10))/PI + 0.5) / 2;
       if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
       Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
       Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
