@@ -68,17 +68,17 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
 
     double u1 = atan2(d1[2], d1[0]) / (2*PI) + 0.5;
     double u2 = atan2(d2[2], d2[0]) / (2*PI) + 0.5;
-    double v1 = asin(d1[1])/PI + 0.5;
-    double v2 = asin(d2[1])/PI + 0.5;
+    double v1 = acos(d1[1])/PI;
+    double v2 = acos(d2[1])/PI;
     dvec4 Ou1, Ou2, Ov1, Ov2;
 
-    Ou1 = dvec4(-r*sin(PI*(v1-0.5))*sin(2*PI*(u1-0.5)),r*sin(PI*(v1-0.5))*cos(2*PI*(u1-0.5)),1,0);
-    Ov1 = dvec4(sin(2*PI*(u1-0.5))*cos(PI*(v1-0.5)), cos(2*PI*(u1-0.5))*cos(PI*(v1-0.5)), -sin(PI*(v1-0.5)),0);
-    Ou2 = dvec4(-r*sin(PI*(v2-0.5))*sin(2*PI*(u2-0.5)),r*sin(PI*(v2-0.5))*cos(2*PI*(u2-0.5)),1,0);
-    Ov2 = dvec4(sin(2*PI*(u2-0.5))*cos(PI*(v2-0.5)), cos(2*PI*(u2-0.5))*cos(PI*(v2-0.5)), -sin(PI*(v2-0.5)),0);
+    Ou1 = dvec4(-sin(PI*(v1))*sin(2*PI*(u1-0.5)),0,sin(PI*(v1))*cos(2*PI*(u1-0.5)),0);
+    Ov1 = dvec4(cos(2*PI*(u1-0.5))*cos(PI*(v1)), -sin(PI*(v1)), sin(2*PI*(u1-0.5))*cos(PI*(v1)),0);
+    Ou2 = dvec4(-sin(PI*(v2))*sin(2*PI*(u2-0.5)),0,sin(PI*(v2))*cos(2*PI*(u2-0.5)),0);
+    Ov2 = dvec4(cos(2*PI*(u2-0.5))*cos(PI*(v2)), -sin(PI*(v2)), sin(2*PI*(u2-0.5))*cos(PI*(v2)),0);
 
-    UVPackage uvp_1 = UVPackage({u1,v1}, Ou1, Ov1);
-    UVPackage uvp_2 = UVPackage({u2,v2}, Ou2, Ov2);
+    UVPackage uvp_1 = UVPackage({u1,v1}, normalize(Ou1), normalize(Ov1));
+    UVPackage uvp_2 = UVPackage({u2,v2}, normalize(Ou2), normalize(Ov2));
 
     return IntersectionInfo({IntersectionPoint(
       t, pt1, normalize(pt1-c), matpack, this,
@@ -381,8 +381,8 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
     if (abs(intersect[1]) < 1){
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(u),1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(u),1,0);
-      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(u),sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(u),0,0);
+      Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(2*PI*(u-0.5)),1,1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(2*PI*(u-0.5)),0);
+      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       ts.push_back({{t_1, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},uvp});
     }
@@ -391,8 +391,8 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
     if (abs(intersect[1]) < 1){
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
-      Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(u),1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(u),1,0);
-      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(u),sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(u),0,0);
+      Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(2*PI*(u-0.5)),1,1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(2*PI*(u-0.5)),0);
+      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       ts.push_back({{t_2, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},uvp});
     }

@@ -59,13 +59,13 @@ dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const UVPackage &uvp, 
   dvec3 norm3 = dvec3(norm);
   double epsilon = 1.0/512;
 
-
+/*
 if (!(dot(norm, uvp.Ov) < 1E-6 && dot(norm, uvp.Ou) < 1E-6 && dot(uvp.Ou, uvp.Ov) < 1E-6)) {
   cout << (abs(dot(norm3, dvec3(uvp.Ov)))) << endl;
   cout << (abs(dot(norm3, dvec3(uvp.Ou)))) << endl;
   cout << (abs(dot(dvec3(uvp.Ou), dvec3(uvp.Ov)))) << endl;
   cout << endl;
-}
+}*/
 
 
   double Bu = (brightness(getColorAt({uvp.uv.first+epsilon, uvp.uv.second}), bump_channel) - brightness(getColorAt({uvp.uv.first-epsilon, uvp.uv.second}), bump_channel)) / 2.0 / epsilon;
