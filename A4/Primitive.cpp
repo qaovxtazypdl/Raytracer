@@ -479,11 +479,11 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
+    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
     v = (asin(pt[2]/r)/PI + 0.5) / 2;
     if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
-    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-    Ov = dvec4(-sin(2*PI*v)*cos(2*PI*(u-0.5)),-sin(2*PI*v)*sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0);
-    Ou = dvec4(-(R+r*cos(2*PI*v))*sin(2*PI*(u-0.5)),(R+r*cos(2*PI*v))*cos(2*PI*(u-0.5)),0,0);
+    Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
+    Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
     uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
     result1.addIntersection(t, pt, norm, matpack, this, uvp);
 
@@ -495,11 +495,11 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
       4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
       0
     ));
+    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
     v = (asin(pt[2]/r)/PI + 0.5) / 2;
     if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
-    u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-    Ov = dvec4(-sin(2*PI*v)*cos(2*PI*(u-0.5)),-sin(2*PI*v)*sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0);
-    Ou = dvec4(-(R+r*cos(2*PI*v))*sin(2*PI*(u-0.5)),(R+r*cos(2*PI*v))*cos(2*PI*(u-0.5)),0,0);
+    Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
+    Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
     uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
     result1.addIntersection(t, pt, norm, matpack, this, uvp);
 
@@ -512,11 +512,11 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
+      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
       v = (asin(pt[2]/r)/PI + 0.5) / 2;
       if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
-      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-      Ov = dvec4(-sin(2*PI*v)*cos(2*PI*(u-0.5)),-sin(2*PI*v)*sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0);
-      Ou = dvec4(-(R+r*cos(2*PI*v))*sin(2*PI*(u-0.5)),(R+r*cos(2*PI*v))*cos(2*PI*(u-0.5)),0,0);
+      Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
+      Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result2.addIntersection(t, pt, norm, matpack, this, uvp);
 
@@ -528,11 +528,11 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
         4 * (pt[0]*pt[0] + pt[1]*pt[1] + pt[2]*pt[2] - r*r - R*R) * pt[2] + 8*R*R*pt[2],
         0
       ));
+      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
       v = (asin(pt[2]/r)/PI + 0.5) / 2;
       if (length(dvec3(pt[0],pt[1],0)) < R) v = 1 - v;
-      u = atan2(pt[1], pt[0]) / (2*PI) + 0.5;
-      Ov = dvec4(-sin(2*PI*v)*cos(2*PI*(u-0.5)),-sin(2*PI*v)*sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0);
-      Ou = dvec4(-(R+r*cos(2*PI*v))*sin(2*PI*(u-0.5)),(R+r*cos(2*PI*v))*cos(2*PI*(u-0.5)),0,0);
+      Ou = dvec4(-sin(2*PI*(u-0.5)),cos(2*PI*(u-0.5)),0,0);
+      Ov = dvec4(-sin(v*2*PI-PI/2)*cos(2*PI*(u-0.5)),-sin(v*2*PI-PI/2)*sin(2*PI*(u-0.5)),cos(v*2*PI-PI/2),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result2.addIntersection(t, pt, norm, matpack, this, uvp);
     }
