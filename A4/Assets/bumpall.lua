@@ -29,6 +29,7 @@ primary_light = gr.light({-300.0, 200, 400.0}, {1.0, 0.6, 0}, {1, 0, 0})
 primary_light_oppo = gr.light({300.0, 200, 400.0}, {0, 0.4, 1.0}, {1, 0, 0})
 
 texture_checkerboard = gr.texture('Assets/checkerboard.png')
+texture_bricks = gr.texture('Assets/bricks.png')
 texture_noise = gr.texture('Assets/perlin1.png')
 
 --start script
@@ -101,7 +102,6 @@ central_torus:set_material(perfectCanvas)
 central_torus:set_texture(texture_checkerboard)
 central_torus:set_bumps(texture_checkerboard, 'rgb')
 plane:add_child(central_torus)
-
 
 
 gr.render(scene, 'bumpall.png', 998, 998,

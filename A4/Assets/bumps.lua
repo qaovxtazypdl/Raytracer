@@ -37,7 +37,9 @@ secondary_light = gr.light({0, 100.0, 0}, {0.1, 0.7, 0.5}, {1, 0.4, 0})
 frontal_light = gr.light({0, 0, 200}, {0.4, 0.4, 0.5}, {1, 0, 0})
 
 texture_bricks = gr.texture('Assets/bricks.png')
+texture_checkerboard = gr.texture('Assets/checkerboard.png')
 texture_noise = gr.texture('Assets/perlin1.png')
+texture_greynoise = gr.texture('Assets/greynoise.png')
 
 
 planar_light_pt = gr.light({20, 18, 70}, {1.0, 0.6, 0}, {1, 0, 0}, {0, 0, 5}, {0, 5, 0})
@@ -77,8 +79,8 @@ really_near_sphere:scale(6,6,6)
 really_near_sphere:translate(0,0.13,0)
 really_near_sphere:translate(0,0.1,0.6)
 really_near_sphere:set_material(perfect_crystal)
---really_near_sphere:set_texture(texture_noise)
-really_near_sphere:set_bumps(texture_noise, 'rgb')
+--really_near_sphere:set_texture(texture_greynoise)
+really_near_sphere:set_bumps(texture_greynoise, 'rgb')
 plane:add_child(really_near_sphere)
 
 gr.render(scene, 'bumps.png', 800, 700,
