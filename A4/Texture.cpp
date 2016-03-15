@@ -67,6 +67,8 @@ if (!(dot(norm, uvp.Ov) < 1E-6 && dot(norm, uvp.Ou) < 1E-6 && dot(uvp.Ou, uvp.Ov
   cout << endl;
 }*/
 
+  //cout << cross(dvec3(uvp.Ou), dvec3(uvp.Ov)) / dvec3(norm) << endl;
+
   double Bu = (brightness(getColorAt({uvp.uv.first+epsilon, uvp.uv.second}), bump_channel) - brightness(getColorAt({uvp.uv.first-epsilon, uvp.uv.second}), bump_channel)) / 2.0 / epsilon;
   double Bv = (brightness(getColorAt({uvp.uv.first, uvp.uv.second+epsilon}), bump_channel) - brightness(getColorAt({uvp.uv.first, uvp.uv.second-epsilon}), bump_channel)) / 2.0 / epsilon;
   return dvec4(Bu * cross(norm3, dvec3(uvp.Ov)) - Bv * cross(norm3, dvec3(uvp.Ou)), 0.0);

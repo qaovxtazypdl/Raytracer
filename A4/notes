@@ -14,10 +14,8 @@ Soft Shadows                               DONE
 Anaglyph 3D                                DONE
 Refraction                                 DONE
 Texture Map                                DONE
-
-Bump Map                                   SOMEDAY
-  what the fuck - check normal acceptance
-
+Bump Map                                   DONE
+  cone hyperboloid cylinder
 Glossy reflection                          SOMEDAY
 SCENE                                      SOMEDAY
 
