@@ -241,7 +241,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(-cos(2*PI*(u-0.5)),1,-sin(2*PI*(u-0.5)), 0);
-      Ou = dvec4(-(1-v)*sin(2*PI*(u-0.5)),0,(1-v)*cos(2*PI*(u-0.5)),0);
+      Ou = -dvec4(-(1-v)*sin(2*PI*(u-0.5)),0,(1-v)*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }
@@ -251,7 +251,7 @@ IntersectionInfo Cone::checkRayIntersection(const glm::dvec4 &ray_origin, const 
       v = intersect[1] + 1;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(-cos(2*PI*(u-0.5)),1,-sin(2*PI*(u-0.5)), 0);
-      Ou = dvec4(-(1-v)*sin(2*PI*(u-0.5)),0,(1-v)*cos(2*PI*(u-0.5)),0);
+      Ou = -dvec4(-(1-v)*sin(2*PI*(u-0.5)),0,(1-v)*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0)), matpack, this, uvp);
     }
@@ -311,7 +311,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(0,1,0,0);
-      Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
+      -Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_1, t_1*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
@@ -321,7 +321,7 @@ IntersectionInfo Cylinder::checkRayIntersection(const glm::dvec4 &ray_origin, co
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(0,1,0,0);
-      Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
+      -Ou = dvec4(-2*PI*sin(2*PI*(u-0.5)),0,2*PI*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       result.addIntersection(t_2, t_2*ray_dir + ray_origin, normalize(dvec4(intersect[0],0,intersect[2],0)), matpack, this, uvp);
     }
@@ -382,7 +382,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(2*PI*(u-0.5)),1,1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(2*PI*(u-0.5)),0);
-      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
+      -Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       ts.push_back({{t_1, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},uvp});
     }
@@ -392,7 +392,7 @@ IntersectionInfo Hyperboloid::checkRayIntersection(const glm::dvec4 &ray_origin,
       v = intersect[1]/2 + 0.5;
       u = atan2(intersect[2], intersect[0]) / (2*PI) + 0.5;
       Ov = dvec4(1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*cos(2*PI*(u-0.5)),1,1/sqrt(k+2*(v-0.5)*2*(v-0.5))*2*(v-0.5)*sin(2*PI*(u-0.5)),0);
-      Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
+      -Ou = dvec4(-sqrt(k+2*(v-0.5)*2*(v-0.5))*sin(2*PI*(u-0.5)),0,sqrt(k+2*(v-0.5)*2*(v-0.5))*cos(2*PI*(u-0.5)),0);
       uvp = UVPackage({u,v}, normalize(Ou), normalize(Ov));
       ts.push_back({{t_2, normalize(dvec4(intersect[0],-intersect[1],intersect[2],0))},uvp});
     }
