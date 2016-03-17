@@ -259,6 +259,12 @@ void t_write(size_t nx, size_t ny, Image &image, const vector<dvec3> &vertexColo
   }
 }
 
+//implements Digital CCIR601 luminance
+dvec3 convertToGreyscale(const dvec3 &color) {
+  double luminance = 0.299*color[0] + 0.587*color[1] + 0.114*color[2];
+  return dvec3(luminance, luminance, luminance);
+}
+
 void t_write_stereo(size_t nx, size_t ny, Image &image, const vector<dvec3> &left, const vector<dvec3> &right, int thread_num, int num_threads) {
   for (int y = 0; y < ny; ++y) {
     for (int x = 0; x < nx; ++x) {
@@ -267,6 +273,11 @@ void t_write_stereo(size_t nx, size_t ny, Image &image, const vector<dvec3> &lef
       dvec3 rpix = right[(nx + 2) * (y+1) + (x+1)];
       lpix = min(lpix, dvec3(1.0, 1.0, 1.0));
       rpix = min(rpix, dvec3(1.0, 1.0, 1.0));
+      if (MACRO_3D_GREYSCALE) {
+        lpix = convertToGreyscale(lpix);
+        rpix = convertToGreyscale(rpix);
+      }
+
       if (MACRO_3D_SIDE_BY_SIDE) {
         image(x + nx, ny - y - 1, 0) = rpix[0];
         image(x + nx, ny - y - 1, 1) = rpix[1];

@@ -568,7 +568,7 @@ int gr_material_cmd(lua_State* L)
 
 // Create a material
 extern "C"
-int gr_material_extended_refr_cmd(lua_State* L)
+int gr_material_extended_cmd(lua_State* L)
 {
   GRLUA_DEBUG_CALL;
 
@@ -581,36 +581,11 @@ int gr_material_extended_refr_cmd(lua_State* L)
   double shininess = luaL_checknumber(L, 3);
   double indexOfRefraction = luaL_checknumber(L, 4);
   double opacity = luaL_checknumber(L, 5);
+  bool isLight = luaL_checknumber(L, 6) > 0;
 
   data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
                                      glm::vec3(ks[0], ks[1], ks[2]),
-                                     shininess, indexOfRefraction, opacity);
-
-  luaL_newmetatable(L, "gr.material");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Create a material
-extern "C"
-int gr_material_extended_light_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_material_ud* data = (gr_material_ud*)lua_newuserdata(L, sizeof(gr_material_ud));
-  data->material = 0;
-
-  double kd[3], ks[3];
-  get_tuple(L, 1, kd, 3);
-  get_tuple(L, 2, ks, 3);
-  double shininess = luaL_checknumber(L, 3);
-
-  data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
-                                     glm::vec3(ks[0], ks[1], ks[2]),
-                                     shininess);
-  PhongMaterial* material = dynamic_cast<PhongMaterial *>(data->material);
-  material->isLight = true;
+                                     shininess, indexOfRefraction, opacity, isLight);
 
   luaL_newmetatable(L, "gr.material");
   lua_setmetatable(L, -2);
@@ -838,8 +813,7 @@ static const luaL_Reg grlib_functions[] = {
   {"joint", gr_joint_cmd},
   {"material", gr_material_cmd},
   {"texture", gr_texture_cmd},
-  {"material_extended_light", gr_material_extended_light_cmd},
-  {"material_extended_refr", gr_material_extended_refr_cmd},
+  {"material_extended", gr_material_extended_cmd},
   // New for assignment 4
   {"csg", gr_csg_cmd},
   {"cube", gr_cube_cmd},

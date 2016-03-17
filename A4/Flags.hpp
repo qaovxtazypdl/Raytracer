@@ -26,4 +26,5 @@
 //parallax and 3D
 #define MACRO_USE_ANAGLYPH false
 #define MACRO_3D_SIDE_BY_SIDE (MACRO_USE_ANAGLYPH && false)
-#define MACRO_3D_PARALLAX 0.018
+#define MACRO_3D_GREYSCALE (MACRO_USE_ANAGLYPH && true)
+#define MACRO_3D_PARALLAX 0.015

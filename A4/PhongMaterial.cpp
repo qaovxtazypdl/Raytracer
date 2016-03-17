@@ -9,13 +9,13 @@ PhongMaterial::PhongMaterial(const glm::dvec3& kd, const glm::dvec3& ks, double 
   , m_opacity(1.0)
 {}
 
-PhongMaterial::PhongMaterial(const glm::dvec3& kd, const glm::dvec3& ks, double shininess, double indexOfRefraction, double opacity)
-  : isLight(false)
-  , m_kd(kd)
+PhongMaterial::PhongMaterial(const glm::dvec3& kd, const glm::dvec3& ks, double shininess, double indexOfRefraction, double opacity, bool isLight)
+  : m_kd(kd)
   , m_ks(ks)
   , m_indexOfRefraction(indexOfRefraction)
   , m_shininess(shininess)
   , m_opacity(opacity)
+  , isLight(isLight)
 {}
 
 PhongMaterial::~PhongMaterial()
