@@ -9,6 +9,8 @@
 #define MACRO_REFLECTION_ON true
 #define MACRO_REFRACTION_ON false
 #define MACRO_GLOSSY_ON true
+#define MACRO_GLOSSY_ON true
+#define MACRO_GLOSSY_ON true
 
 //threading
 #define MACRO_NUM_THREADS 16

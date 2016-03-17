@@ -94,8 +94,10 @@ vector<dvec4> glossyRays(const dvec4 &ray_origin, const dvec4 &ray_dir, double g
 
     for (int i = 0; i < MACRO_NUM_GLOSSY_SAMPLES_RADIAL; i++) {
       for (int j = 0; j < MACRO_NUM_GLOSSY_SAMPLES_ANGULAR; j++) {
-        double rsqCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL * i + 0.5/MACRO_NUM_GLOSSY_SAMPLES_RADIAL;// + radialrand(rng);
-        double thetaCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR * j;// + angularrand(rng);
+        double rsqCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL * i + 0.5/MACRO_NUM_GLOSSY_SAMPLES_RADIAL +
+          Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL);
+        double thetaCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR * j +
+          Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR);
 
         double r = sqrt(rsqCenter) * glossiness;
         double theta = thetaCenter * 2 * PI;
@@ -134,6 +136,7 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;
     double opacity = mat.m_opacity;
+    double glossyMultiplier = 1/MACRO_NUM_GLOSSY_SAMPLES_RADIAL/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR;
     if (abs(n1 - n2) < 1E-10) {
       n1 = n2;
       n2 = 1.0;
@@ -149,14 +152,18 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     //reflection
     if (MACRO_REFLECTION_ON && RT.first > 0 && length(ks) > 0) {
       dvec4 reflDirection = Utils::ggReflection(ray_dir, normal);
-      color += 0.5 * RT.first * ks * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1);
+      for (const dvec4 &dir : glossyRays(point, reflDirection, mat.m_glossiness)) {
+        color += glossyMultiplier * 0.5 * RT.first * ks * trace(nodes, point, dir, ambient, lights, ior, depth+1);
+      }
     }
 
     if (MACRO_REFRACTION_ON && RT.second > 0) {
       dvec4 refrDirection;
       bool valid = Utils::ggRefraction(ray_dir, normal, n1, n2, refrDirection);
       if (valid) {
-        color += 0.5 * RT.second * ks * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1);
+        for (const dvec4 &dir : glossyRays(point, refrDirection, mat.m_glossiness)) {
+          color += glossyMultiplier * 0.5 * RT.second * ks * trace(nodes, point, dir, ambient, lights, n2, depth+1);
+        }
       }
     }
     return color;
