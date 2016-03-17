@@ -1,8 +1,10 @@
 #include <iostream>
 #include "scene_lua.hpp"
+#include "Utils.hpp"
 
 int main(int argc, char** argv)
 {
+  Utils();
   std::string filename = "Assets/simple.lua";
   if (argc >= 2) {
     filename = argv[1];
