@@ -88,7 +88,7 @@ dvec4 pertnorm(Texture *texture, int bump_channel, const UVPackage &uvp, const d
 }
 
 vector<dvec4> glossyRays(const dvec4 &ray_origin, const dvec4 &ray_dir, double glossiness) {
-  if (MACRO_GLOSSY_ON && glossiness > 0) {
+  if (MACRO_GLOSSY_ON && glossiness > 1E-5) {
     vector<dvec4> result;
     dvec4 circCenter = ray_origin + 4.0*ray_dir;
 

@@ -2,8 +2,8 @@ hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
 mirror = gr.material({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120)
-light_material_orange = gr.material_extended({1.0, 0.6, 0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
-light_material_blue = gr.material_extended({0.0, 0.4, 1.0}, {0.0, 0.0, 0.0}, 0, 1.0, 1)
+light_material_orange = gr.material_extended({1.0, 0.6, 0}, {0.0, 0.0, 0.0}, 0, 1, 0.5, 0, 1)
+light_material_blue = gr.material_extended({0.0, 0.4, 1.0}, {0.0, 0.0, 0.0}, 0, 1, 0.5, 0, 1)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)

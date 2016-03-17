@@ -2,14 +2,12 @@
 
 //anti-aliasing
 #define MACRO_USE_SUPERSAMPLE_TEST false
-#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || false)
+#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || true)
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 //refl and refr
 #define MACRO_REFLECTION_ON true
-#define MACRO_REFRACTION_ON false
-#define MACRO_GLOSSY_ON true
-#define MACRO_GLOSSY_ON true
+#define MACRO_REFRACTION_ON true
 #define MACRO_GLOSSY_ON true
 
 //threading
