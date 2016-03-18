@@ -1,6 +1,6 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
-carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
+carpet = gr.material({0.75, 0.75, 0.75}, {0,0,0}, 0)
 mirror = gr.material({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120)
 
 perfectCanvas = gr.material({1.0, 1.0, 1.0}, {0, 0, 0}, 0)
@@ -64,7 +64,7 @@ plane:add_child(central_cube)
 
 central_cone = gr.cone('central_cone')
 central_cone:scale(1/50,1/50,1/100)
-central_cone:scale(5,5,5)
+central_cone:scale(7,7,7)
 central_cone:translate(0,0.13,-0.1)
 central_cone:translate(-0.32,0.2,0.5)
 central_cone:set_material(perfectCanvas)

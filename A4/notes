@@ -3,6 +3,8 @@ E.Uniform Space Partitioning                                  acceleration
 E.Perlin Noise for texture/bump   --  function defined textures.
 E.Caustics + texture map to conic caps
 E.Gravity: GR black holes
+E.Fog/Light rays: GR black holes
+
 
 Adaptive Stochastic Jitter Supersampling   DONE
 Cylinders, Cones, Torus                    DONE
@@ -14,6 +16,7 @@ Bump Map                                   DONE
 Anaglyph 3D                                DONE
 Glossy reflection                          DONE
 
+E.Uniform Space Partitioning                                  1d
 Demo scenes                                FRI                1d
 SCENE                                      SOMEDAY            2d
 PDF and Report                             SOMEDAY            1d
