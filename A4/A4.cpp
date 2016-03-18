@@ -88,38 +88,42 @@ dvec4 pertnorm(Texture *texture, int bump_channel, const UVPackage &uvp, const d
 }
 
 vector<dvec4> glossyRays(const dvec4 &ray_origin, const dvec4 &ray_dir, double glossiness) {
-  if (MACRO_GLOSSY_ON && glossiness > 1E-5) {
-    vector<dvec4> result;
-    dvec4 circCenter = ray_origin + 4.0*ray_dir;
+  vector<dvec4> result;
+  dvec4 circCenter = ray_origin + 4.0*ray_dir;
 
-    for (int i = 0; i < MACRO_NUM_GLOSSY_SAMPLES_RADIAL; i++) {
-      for (int j = 0; j < MACRO_NUM_GLOSSY_SAMPLES_ANGULAR; j++) {
-        double rsqCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL * i + 0.5/MACRO_NUM_GLOSSY_SAMPLES_RADIAL +
-          Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL);
-        double thetaCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR * j +
-          Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR);
+/*
+  for (int i = 0; i < MACRO_NUM_GLOSSY_SAMPLES_RADIAL; i++) {
+    for (int j = 0; j < MACRO_NUM_GLOSSY_SAMPLES_ANGULAR; j++) {
 
-        double r = sqrt(rsqCenter) * glossiness;
-        double theta = thetaCenter * 2 * PI;
+      double rsqCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL * i + 0.5/MACRO_NUM_GLOSSY_SAMPLES_RADIAL +
+        Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_RADIAL);
+      double thetaCenter = 1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR * j +
+        Utils::randbtwn(-0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR, 0.4*1.0/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR);
 
-        pair<dvec4, dvec4> axes = Utils::generateCircleAxes(dvec3(ray_dir));
-        dvec4 point = circCenter +
-          r * cos(theta) * axes.first +
-          r * sin(theta) * axes.second;
+      double r = sqrt(rsqCenter) * glossiness;
+      double theta = thetaCenter * 2 * PI;
 
-        result.push_back(point-ray_origin);
-      }
+
     }
-    return result;
-  } else {
-    return {ray_dir};
+  }*/
+
+  pair<dvec4, dvec4> axes = Utils::generateCircleAxes(dvec3(ray_dir));
+
+  for (int i = 0; i < MACRO_NUM_GLOSSY_SAMPLES_RADIAL*MACRO_NUM_GLOSSY_SAMPLES_ANGULAR-1; i++) {
+    double theta = 2*PI/(MACRO_NUM_GLOSSY_SAMPLES_RADIAL*MACRO_NUM_GLOSSY_SAMPLES_ANGULAR-1) * i;
+    dvec4 point = circCenter +
+    glossiness * cos(theta) * axes.first +
+    glossiness * sin(theta) * axes.second;
+    result.push_back(point - ray_origin);
   }
+  result.push_back(ray_dir);
+  return result;
 }
 
 //origin is point
 //direction is vector
-dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth) {
-  if (depth >= 7) return getBackgroundColor(ray_origin, ray_dir, depth);
+dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth, int glossDepth) {
+  if (depth >= 6) return getBackgroundColor(ray_origin, ray_dir, depth);
   IntersectionPoint pt = nodes.firstHitInNodeList(ray_origin, ray_dir, std::numeric_limits<double>::infinity());
 
   if (pt.valid) {
@@ -136,7 +140,8 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     double n1 = ior;
     double n2 = mat.m_indexOfRefraction;
     double opacity = mat.m_opacity;
-    double glossyMultiplier = 1/MACRO_NUM_GLOSSY_SAMPLES_RADIAL/MACRO_NUM_GLOSSY_SAMPLES_ANGULAR;
+    bool doGlossy = MACRO_GLOSSY_ON && mat.m_glossiness > 1E-5 && glossDepth < 1;
+    double glossyMultiplier = 1.0/(MACRO_NUM_GLOSSY_SAMPLES_RADIAL*MACRO_NUM_GLOSSY_SAMPLES_ANGULAR+1);
     if (abs(n1 - n2) < 1E-10) {
       n1 = n2;
       n2 = 1.0;
@@ -152,8 +157,12 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
     //reflection
     if (MACRO_REFLECTION_ON && RT.first > 0 && length(ks) > 0) {
       dvec4 reflDirection = Utils::ggReflection(ray_dir, normal);
-      for (const dvec4 &dir : glossyRays(point, reflDirection, mat.m_glossiness)) {
-        color += glossyMultiplier * 0.5 * RT.first * ks * trace(nodes, point, dir, ambient, lights, ior, depth+1);
+      if (doGlossy) {
+        for (const dvec4 &dir : glossyRays(point, reflDirection, mat.m_glossiness)) {
+          color += glossyMultiplier * 0.5 * RT.first * ks * trace(nodes, point, dir, ambient, lights, ior, depth+1, glossDepth+1);
+        }
+      } else {
+          color += glossyMultiplier * 0.5 * RT.first * ks * trace(nodes, point, reflDirection, ambient, lights, ior, depth+1, glossDepth);
       }
     }
 
@@ -161,9 +170,14 @@ dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &r
       dvec4 refrDirection;
       bool valid = Utils::ggRefraction(ray_dir, normal, n1, n2, refrDirection);
       if (valid) {
-        for (const dvec4 &dir : glossyRays(point, refrDirection, mat.m_glossiness)) {
-          color += glossyMultiplier * 0.5 * RT.second * ks * trace(nodes, point, dir, ambient, lights, n2, depth+1);
+        if (doGlossy) {
+          for (const dvec4 &dir : glossyRays(point, refrDirection, mat.m_glossiness)) {
+            color += glossyMultiplier * 0.5 * RT.second * ks * trace(nodes, point, dir, ambient, lights, n2, depth+1, glossDepth+1);
+          }
+        } else {
+            color += glossyMultiplier * 0.5 * RT.second * ks * trace(nodes, point, refrDirection, ambient, lights, n2, depth+1, glossDepth);
         }
+
       }
     }
     return color;
@@ -195,7 +209,7 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
       if ((y + x*ny + thread_num) % num_threads != 0) continue;
       dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
       dvec4 ray_dir = proj_point(nx, ny, w, h, d, x-1, y-1, eye, view, up, eye_offset_multiplier) - ray_origin;
-      dvec3 pixelColor = trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0);
+      dvec3 pixelColor = trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0, 0);
       vertexColors[(nx + 2) * y + x] = pixelColor;
 
       counterLock.lock();
@@ -257,7 +271,7 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
             for (int b = 0; b < MACRO_SUPERSAMPLE_SCALE; b++) {
               dvec4 ray_origin = dvec4(eye, 1.0) + (double)eye_offset_multiplier*dvec4(eye[2]*MACRO_3D_PARALLAX,0,0,0);
               dvec4 ray_dir = proj_point(nx, ny, w, h, d, x - 0.5 + (double)a/MACRO_SUPERSAMPLE_SCALE + Utils::randbtwn(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE), y - 0.5 + (double)b/MACRO_SUPERSAMPLE_SCALE + Utils::randbtwn(0.0, 1.0/MACRO_SUPERSAMPLE_SCALE), eye, view, up, eye_offset_multiplier) - ray_origin;
-              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0);
+              pixelColor += (1.0/(MACRO_SUPERSAMPLE_SCALE * MACRO_SUPERSAMPLE_SCALE)) * trace(nodes, ray_origin, ray_dir, ambient, lights, 1.0, 0, 0);
             }
           }
         }
