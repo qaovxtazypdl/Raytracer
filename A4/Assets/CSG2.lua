@@ -34,19 +34,20 @@ plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 plane:set_material(stone)
 plane:scale(50,50,100)
 plane:rotate('x', 15)
-plane:translate(0,-1,0)
+plane:translate(-1,-1,0)
+plane:rotate('y', 45)
 scene:add_child(plane)
 
 central_cylinder = gr.cylinder('central_cylinder')
 central_cylinder:scale(1/50,1/50,1/100)
-central_cylinder:scale(5,5,10)
+central_cylinder:scale(5,5,5)
 central_cylinder:translate(0,0.13,-0.1)
 central_cylinder:translate(0.08,0.2,.5)
 central_cylinder:set_material(obsidian)
 
 central_cone = gr.cone('central_cone')
 central_cone:scale(1/50,1/50,1/100)
-central_cone:scale(5,5,10)
+central_cone:scale(5,5,5)
 central_cone:translate(0,0.13,-0.1)
 central_cone:translate(0.05,0.23,0.55)
 central_cone:set_material(polgold)
@@ -69,14 +70,14 @@ plane:add_child(coneDcylinder)
 
 central_torus = gr.torus('central_torus', 0.25)
 central_torus:scale(1/50,1/50,1/100)
-central_torus:scale(4,4,8)
+central_torus:scale(4,4,4)
 central_torus:translate(0,0.13,-0.1)
 central_torus:translate(-0.4,0.2,.5)
 central_torus:set_material(turquoise)
 
 central_hyperboloid = gr.hyperboloid('central_hyperboloid', 0.25)
 central_hyperboloid:scale(1/50,1/50,1/100)
-central_hyperboloid:scale(4,4,8)
+central_hyperboloid:scale(4,4,4)
 central_hyperboloid:translate(0,0.13,-0.1)
 central_hyperboloid:translate(-0.4,0.23,0.5)
 central_hyperboloid:set_material(hide)
@@ -128,7 +129,7 @@ central_cubeDsphere:translate(0,0.25,0)
 plane:add_child(central_cubeDsphere)
 
 
-gr.render(scene, 'csg.png', 700, 500,
+gr.render(scene, 'csg2.png', 700, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 
