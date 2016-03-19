@@ -11,10 +11,8 @@ Cylinders, Cones, Torus                    DONE*
 Constructive Solid Geometry                DONE*
 Glossy reflection                          DONE-A
 Anaglyph 3D                                DONE*
-Soft Shadows                               DONE
-  -vary distances of area lights from objects.
-Refraction                                 DONE
-  -vary refractive index, opacity. show fresnel explicity
+Soft Shadows                               DONE*
+Refraction                                 DONE*
 Texture Map                                DONE
   -texture map basic image w/ diffuse color. map around cube sides continuously. texture map and csg. texture map and opacity. texture map and glossy refl.
 Bump Map                                   DONE

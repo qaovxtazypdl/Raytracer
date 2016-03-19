@@ -1,10 +1,10 @@
 hide = gr.material({0.84, 0.6, 0.53}, {0.3, 0.3, 0.3}, 20)
 stone = gr.material({0.5, 0.40, 0.01}, {0.25, 0.15, 0.15}, 20)
 carpet = gr.material({0.6, 0.02, 0.1}, {0,0,0}, 0)
-mirror_water = gr.material_extended({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120, 1.333, 0, 0, 0)
-chrome_glass = gr.material_extended({0.4, 0.4, 0.4}, {1.4, 1.4, 1.4}, 76.8, 1.5, 0, 0, 0)
-ruby_crystal = gr.material_extended({0.61424, 0.04136, 0.04136}, {1.527811, 1.326959, 1.326959}, 76.8, 1.7, 0, 0, 0)
-perfect_crystal = gr.material_extended({0.0, 0.0, 0.0}, {2.0, 2.0, 2.0}, 1000, 1.333, 0, 0, 0)
+mirror_water = gr.material_extended({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120, 2.4, 0, 0, 0)
+chrome_glass = gr.material_extended({0.4, 0.4, 0.4}, {1.4, 1.4, 1.4}, 76.8, 4, 0, 0, 0)
+ruby_crystal = gr.material_extended({0.61424, 0.04136, 0.04136}, {1.527811, 1.326959, 1.326959}, 76.8, 4.4, 0, 0, 0)
+perfect_crystal = gr.material_extended({0.0, 0.0, 0.0}, {2.0, 2.0, 2.0}, 1000, 3.7, 0, 0, 0)
 
 --obtained from https://www.student.cs.uwaterloo.ca/~cs488/mat.txt
 copper = gr.material({0.7038, 0.27048, 0.0828}, {0.25677, 0.13762, 0.086014}, 12.8)
@@ -92,7 +92,7 @@ really_near_sphere:translate(-0.17,0.0,0.75)
 really_near_sphere:set_material(perfect_crystal)
 plane:add_child(really_near_sphere)
 
-gr.render(scene, 'refraction.png', 800, 700,
+gr.render(scene, 'refraction3.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {planar_light_pt, spherical_light_pt})
 
