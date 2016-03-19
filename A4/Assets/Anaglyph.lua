@@ -43,15 +43,15 @@ central_cylinder:scale(1/50,1/50,1/100)
 central_cylinder:scale(5,5,5)
 central_cylinder:translate(0,0.13,0)
 central_cylinder:translate(-0.12,0,0.5)
-central_cylinder:set_material(obsidian)
+central_cylinder:set_material(gold)
 plane:add_child(central_cylinder)
 
 near_cone = gr.cone('near_cone')
 near_cone:scale(1/50,1/50,1/100)
 near_cone:scale(5,5,5)
 near_cone:translate(0,0.13,0)
-near_cone:translate(0.12,0.3,0.63)
-near_cone:set_material(obsidian)
+near_cone:translate(0.18,0.3,0.63)
+near_cone:set_material(pearl)
 plane:add_child(near_cone)
 
 middle_torus = gr.torus('middle_torus', 0.4)
@@ -67,10 +67,10 @@ far_cube:scale(1/50,1/50,1/100)
 far_cube:scale(12,12,12)
 far_cube:translate(0,0.13,0)
 far_cube:translate(0.12,0,-0.3)
-far_cube:set_material(obsidian)
+far_cube:set_material(pewter)
 plane:add_child(far_cube)
 
-gr.render(scene, 'anaglyph.png', 800, 700,
+gr.render(scene, 'anaglyph1-hi.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {planar_light_pt, spherical_light_pt})
 
