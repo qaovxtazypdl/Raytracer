@@ -12,11 +12,9 @@ Constructive Solid Geometry                DONE*
 Glossy reflection                          DONE*
 Anaglyph 3D                                DONE*
 Soft Shadows                               DONE*
-Refraction                                 DONE*csg
-
-Bump Map                                   DONE
-  cube, globe, ground
-Texture Map                                DONE
+Refraction                                 DONE*
+Texture Map                                DONE*AA
+Bump Map                                   DONE*AA
 
 
 E.Uniform Space Partitioning                                  1d
