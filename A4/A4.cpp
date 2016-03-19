@@ -254,6 +254,7 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
 
       bool adaptiveSS = false;
       double adaptiveThreshold = 0.03;
+
       if (MACRO_USE_SUPERSAMPLE) {
         if (length(vertexColors[(nx + 2) * (y) + (x+1)] - pixelColor) > adaptiveThreshold) {
           adaptiveSS = true;

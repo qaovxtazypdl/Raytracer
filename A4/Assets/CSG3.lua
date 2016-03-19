@@ -106,7 +106,7 @@ bottom_hyperboloid:scale(3,10,6)
 bottom_hyperboloid:rotate('x', 180)
 bottom_hyperboloid:translate(0.3,0,-0.1)
 bottom_hyperboloid:translate(0.08,0.18,.5)
-bottom_hyperboloid:set_material(obsidian)
+bottom_hyperboloid:set_material(jade)
 
 center_rod = gr.cylinder('center_rod')
 center_rod:scale(1/50,1/50,1/100)
