@@ -115,40 +115,40 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
 
     dvec4 normalmin;
     dvec4 intersectionmin = tmin*ray_dir + ray_origin;
-    pt = (dvec3(intersectionmin) - m_pos) / m_size / 3;
+    pt = (dvec3(intersectionmin) - m_pos) / m_size;
     if (tmin == tx_first) {
       //left face
-      u1=pt[2]; v1=pt[1]+1.0/3;
+      u1=pt[2]/4.0; v1=pt[1]/3.0+1.0/3;
       normalmin = dvec4(-1,0,0,0);
       Ou1 = dvec4(0,0,1,0);
       Ov1 = dvec4(0,1,0,0);
     } else if (tmin == tx_second) {
       //right face
-      u1=-pt[2]+1.0/2; v1=pt[1]+1.0/3;
+      u1=1.0/4-pt[2]/4.0+1.0/2; v1=pt[1]/3.0+1.0/3;
       normalmin = dvec4(1,0,0,0);
       Ou1 = dvec4(0,0,-1,0);
       Ov1 = dvec4(0,1,0,0);
     } else if (tmin == ty_first) {
       //bottom face
-      u1=pt[0]+1.0/4; v1=pt[2];
+      u1=pt[0]/4.0+1.0/4; v1=pt[2]/3.0;
       normalmin = dvec4(0,-1,0,0);
       Ou1 = dvec4(1,0,0,0);
       Ov1 = dvec4(0,0,1,0);
     } else if (tmin == ty_second) {
       //top face
-      u1=pt[0]+1.0/4; v1=-pt[2]+2.0/3;
+      u1=pt[0]/4.0+1.0/4; v1=1.0/3-pt[2]/3.0+2.0/3;
       normalmin = dvec4(0,1,0,0);
       Ou1 = dvec4(1,0,0,0);
       Ov1 = dvec4(0,0,-1,0);
     } else if (tmin == tz_first) {
       //back face
-      u1=-pt[0]+3.0/4; v1=pt[1]+1.0/3;
+      u1=1.0/4-pt[0]/4.0+3.0/4; v1=pt[1]/3.0+1.0/3;
       normalmin = dvec4(0,0,-1,0);
       Ou1 = dvec4(-1,0,0,0);
       Ov1 = dvec4(0,1,0,0);
     } else if (tmin == tz_second) {
       //front face
-      u1=pt[0]+1.0/4; v1=pt[1]+1.0/3;
+      u1=pt[0]/4.0+1.0/4; v1=pt[1]/3.0+1.0/3;
       normalmin = dvec4(0,0,1,0);
       Ou1 = dvec4(1,0,0,0);
       Ov1 = dvec4(0,1,0,0);
@@ -156,47 +156,47 @@ IntersectionInfo NonhierBox::checkRayIntersection(const glm::dvec4 &ray_origin, 
 
     dvec4 normalmax;
     dvec4 intersectionmax = tmax*ray_dir + ray_origin;
-    pt = (dvec3(intersectionmax) - m_pos) / m_size / 3.0;
+    pt = (dvec3(intersectionmax) - m_pos) / m_size;
     if (tmax == tx_first) {
       //left face
-      u2=pt[2]; v2=pt[1]+1.0/3;
+      u2=pt[2]/4.0; v2=pt[1]/3.0+1.0/3;
       normalmax = dvec4(-1,0,0,0);
       Ou2 = dvec4(0,0,1,0);
       Ov2 = dvec4(0,1,0,0);
     } else if (tmax == tx_second) {
       //right face
-      u2=-pt[2]+1.0/2; v2=pt[1]+1.0/3;
+      u2=1.0/4-pt[2]/4.0+1.0/2; v2=pt[1]/3.0+1.0/3;
       normalmax = dvec4(1,0,0,0);
       Ou2 = dvec4(0,0,-1,0);
       Ov2 = dvec4(0,1,0,0);
     } else if (tmax == ty_first) {
       //bottom face
-      u2=pt[0]+1.0/4; v2=pt[2];
+      u2=pt[0]/4.0+1.0/4; v2=pt[2]/3.0;
       normalmax = dvec4(0,-1,0,0);
       Ou2 = dvec4(1,0,0,0);
       Ov2 = dvec4(0,0,1,0);
     } else if (tmax == ty_second) {
       //top face
-      u2=pt[0]+1.0/4; v2=-pt[2]+2.0/3;
+      u2=pt[0]/4.0+1.0/4; v2=1.0/3-pt[2]/3.0+2.0/3;
       normalmax = dvec4(0,1,0,0);
       Ou2 = dvec4(1,0,0,0);
       Ov2 = dvec4(0,0,-1,0);
     } else if (tmax == tz_first) {
       //back face
-      u2=-pt[0]+3.0/4; v2=pt[1]+1.0/3;
+      u2=1.0/4-pt[0]/4.0+3.0/4; v2=pt[1]/3.0+1.0/3;
       normalmax = dvec4(0,0,-1,0);
       Ou2 = dvec4(-1,0,0,0);
       Ov2 = dvec4(0,1,0,0);
     } else if (tmax == tz_second) {
       //front face
-      u2=pt[0]+1.0/4; v2=pt[1]+1.0/3;
+      u2=pt[0]/4.0+1.0/4; v2=pt[1]/3.0+1.0/3;
       normalmax = dvec4(0,0,1,0);
       Ou2 = dvec4(1,0,0,0);
       Ov2 = dvec4(0,1,0,0);
     }
 
-    UVPackage uvp_1 = UVPackage({u1,v1}, Ou1, Ov1);
-    UVPackage uvp_2 = UVPackage({u2,v2}, Ou2, Ov2);
+    UVPackage uvp_1 = UVPackage({u1,1-v1}, Ou1, Ov1);
+    UVPackage uvp_2 = UVPackage({u2,1-v2}, Ou2, Ov2);
 
     return IntersectionInfo({IntersectionPoint(
       tmin, intersectionmin, normalmin, matpack, this,
