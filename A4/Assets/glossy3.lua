@@ -76,15 +76,15 @@ near_cube:translate(-0.3,-0.13,0.4)
 near_cube:set_material(mirror_opaque_2)
 plane:add_child(near_cube)
 
-left_sphere = gr.sphere('left_sphere')
+left_sphere = gr.cylinder('left_cylinder')
 left_sphere:scale(1/50,1/50,1/100)
 left_sphere:scale(6,6,6)
 left_sphere:translate(0,0.13,0)
 left_sphere:translate(-0.45,0.1,0.3)
-left_sphere:set_material(mirror_opaque_1)
+left_sphere:set_material(mirror_opaque_3)
 plane:add_child(left_sphere)
 
-center_sphere = gr.sphere('center_sphere')
+center_sphere = gr.torus('center_torus', 0.3)
 center_sphere:scale(1/50,1/50,1/100)
 center_sphere:scale(6,6,6)
 center_sphere:translate(0,0.13,0)
@@ -92,7 +92,7 @@ center_sphere:translate(0,0.1,0.3)
 center_sphere:set_material(mirror_opaque_3)
 plane:add_child(center_sphere)
 
-right_sphere = gr.sphere('right_sphere')
+right_sphere = gr.hyperboloid('right_hyperboloid', 0.3)
 right_sphere:scale(1/50,1/50,1/100)
 right_sphere:scale(6,6,6)
 right_sphere:translate(0,0.13,0)
@@ -107,7 +107,7 @@ ground_cylinder:set_material(stone)
 ground_cylinder:set_texture(texture_checkerboard)
 plane:add_child(ground_cylinder)
 
-gr.render(scene, 'glossy.png', 800, 700,
+gr.render(scene, 'glossy3.png', 800, 700,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {planar_light_pt, spherical_light_pt})
 

@@ -100,6 +100,16 @@ top_cone:translate(0.3,0.13,-0.1)
 top_cone:translate(0.08,0.2,.5)
 top_cone:set_material(obsidian)
 
+top_cone_2 = gr.cone('top_cone_2')
+top_cone_2:scale(1/50,1/50,1/100)
+top_cone_2:scale(3,13,6)
+top_cone_2:rotate('x', 180)
+top_cone_2:translate(0.3,0.06,-0.1)
+top_cone_2:translate(0.08,0.2,.5)
+top_cone_2:set_texture(texture_checkerboard)
+top_cone_2:set_material(perfectCanvas)
+
+
 bottom_hyperboloid = gr.hyperboloid('bottom_hyperboloid', 0.1)
 bottom_hyperboloid:scale(1/50,1/50,1/100)
 bottom_hyperboloid:scale(3,10,6)
@@ -123,7 +133,10 @@ conicsg:set_csg_children(top_cone, bottom_hyperboloid, 'INTERSECT')
 rodsg = gr.csg('rodsg')
 rodsg:set_csg_children(conicsg, center_rod, 'UNION')
 
-plane:add_child(rodsg)
+spikesg = gr.csg('spikesg')
+spikesg:set_csg_children(rodsg, top_cone_2, 'DIFFERENCE')
+
+plane:add_child(spikesg)
 
 
 gr.render(scene, 'csg3.png', 700, 500,

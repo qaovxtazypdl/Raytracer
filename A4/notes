@@ -9,12 +9,16 @@ E.Fog/Light rays: GR black holes
 Adaptive Stochastic Jitter Supersampling   DONE*
 Cylinders, Cones, Torus                    DONE*
 Constructive Solid Geometry                DONE*
+Glossy reflection                          DONE-A
+Anaglyph 3D                                DONE*
 Soft Shadows                               DONE
+  -vary distances of area lights from objects.
 Refraction                                 DONE
+  -vary refractive index, opacity. show fresnel explicity
 Texture Map                                DONE
+  -texture map basic image w/ diffuse color. map around cube sides continuously. texture map and csg. texture map and opacity. texture map and glossy refl.
 Bump Map                                   DONE
-Anaglyph 3D                                DONE
-Glossy reflection                          DONE
+  -bump map of globe. on plane. same image but with texture overlay. x2 [vary light direction] basic scene.
 
 E.Uniform Space Partitioning                                  1d
 Demo scenes                                FRI                1d
