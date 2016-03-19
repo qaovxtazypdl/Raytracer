@@ -128,7 +128,7 @@ central_cubeDsphere:translate(0,0.25,0)
 plane:add_child(central_cubeDsphere)
 
 
-gr.render(scene, 'AntiAlias1-OUTLINE.png', 700, 500,
+gr.render(scene, 'AntiAlias1.png', 700, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 

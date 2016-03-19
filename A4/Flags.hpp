@@ -1,8 +1,8 @@
 #pragma once
 
 //anti-aliasing
-#define MACRO_USE_SUPERSAMPLE_TEST true
-#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || false)
+#define MACRO_USE_SUPERSAMPLE_TEST false
+#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || true)
 #define MACRO_SUPERSAMPLE_SCALE 3
 
 //refl and refr

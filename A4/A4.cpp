@@ -238,7 +238,8 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
   const dvec3 & up,
   const dvec3 & ambient,
   const std::list<Light *> & lights,
-  vector<dvec3> &vertexColors,
+  const vector<dvec3> &vertexColors,
+  vector<dvec3> &colorBuffer,
   int &count,
   mutex &counterLock,
   int thread_num,
@@ -287,7 +288,7 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
       }
 
       for (int i = 0; i < 3; i++) {
-        vertexColors[(nx + 2) * (y+1) + (x+1)][i] = pixelColor[i];
+        colorBuffer[(nx + 2) * (y+1) + (x+1)][i] = pixelColor[i];
       }
 
       counterLock.lock();
@@ -493,8 +494,11 @@ void A4_Render(
 
   FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
 
-  vector<dvec3> leftColors((nx+2) * (ny+2));
-  vector<dvec3> rightColors((nx+2) * (ny+2));
+  int bufsize = (nx+2) * (ny+2);
+  vector<dvec3> leftColors(bufsize);
+  vector<dvec3> leftColorsBuffer(bufsize);
+  vector<dvec3> rightColors(bufsize);
+  vector<dvec3> rightColorsBuffer(bufsize);
   mutex counterLock;
   int trace_count = 0, aa_count = 0;
 
@@ -513,13 +517,19 @@ void A4_Render(
     vector<thread> aa_threads;
     for (int i = 0; i < MACRO_NUM_THREADS; i++) {
       if (MACRO_USE_ANAGLYPH) {
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), -1, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 1, ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), -1, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(leftColorsBuffer), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 1, ref(view), ref(up), ref(ambient), ref(lights), ref(rightColors), ref(rightColorsBuffer), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
       } else {
-        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 0, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
+        aa_threads.push_back(thread(t_aa, nx, ny, w, h, d, ref(nodes), ref(eye), 0, ref(view), ref(up), ref(ambient), ref(lights), ref(leftColors), ref(leftColorsBuffer), ref(aa_count), ref(counterLock), i, MACRO_NUM_THREADS));
       }
     }
     for (thread &t : aa_threads) t.join();
+    for (int j = 0; j < bufsize; j++) {
+      leftColors[j] = leftColorsBuffer[j];
+      if (MACRO_USE_ANAGLYPH) {
+        rightColors[j] = rightColorsBuffer[j];
+      }
+    }
   }
 
   cout << "Writing to image..." << endl;

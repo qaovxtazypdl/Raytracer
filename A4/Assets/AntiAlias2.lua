@@ -74,7 +74,7 @@ central_torus:translate(0,0.2,0.2)
 central_torus:set_material(chrome)
 plane:add_child(central_torus)
 
-gr.render(scene, 'AntiAlias2-OUTLINE.png', 500, 500,
+gr.render(scene, 'AntiAlias2.png', 500, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.3, 0.3, 0.3}, {primary_light, secondary_light, frontal_light})
 
