@@ -57,7 +57,7 @@ double brightness(const dvec3 &color, int bump_channel) {
 
 dvec4 Texture::getNormPerturbance(const glm::dvec4 &norm, const UVPackage &uvp, int bump_channel) {
   dvec3 norm3 = dvec3(norm);
-  double epsilon = 1.0/512;
+  double epsilon = 1.0/1024;
 
 /*
 if (!(dot(norm, uvp.Ov) < 1E-6 && dot(norm, uvp.Ou) < 1E-6 && dot(uvp.Ou, uvp.Ov) < 1E-6)) {
@@ -72,10 +72,10 @@ if (!(dot(norm, uvp.Ov) < 1E-6 && dot(norm, uvp.Ou) < 1E-6 && dot(uvp.Ou, uvp.Ov
 
   //cout << cross(dvec3(uvp.Ou), dvec3(uvp.Ov)) / dvec3(norm) << endl;
 
-  double Bu = (brightness(getColorAt({uvp.uv.first+epsilon, uvp.uv.second}), bump_channel) - brightness(getColorAt({uvp.uv.first-epsilon, uvp.uv.second}), bump_channel)) / 2.0 / epsilon / 32;
-  double Bv = (brightness(getColorAt({uvp.uv.first, uvp.uv.second+epsilon}), bump_channel) - brightness(getColorAt({uvp.uv.first, uvp.uv.second-epsilon}), bump_channel)) / 2.0 / epsilon / 32;
+  double Bu = (brightness(getColorAt({uvp.uv.first+epsilon, uvp.uv.second}), bump_channel) - brightness(getColorAt({uvp.uv.first-epsilon, uvp.uv.second}), bump_channel)) / 2.0 / epsilon / 64;
+  double Bv = (brightness(getColorAt({uvp.uv.first, uvp.uv.second+epsilon}), bump_channel) - brightness(getColorAt({uvp.uv.first, uvp.uv.second-epsilon}), bump_channel)) / 2.0 / epsilon / 64;
  // cout << Bu << " " << Bv << endl;
-  return dvec4(-Bu * cross(norm3, dvec3(uvp.Ov)) + Bv * cross(norm3, dvec3(uvp.Ou)), 0.0);
+  return dvec4(Bu * cross(norm3, dvec3(uvp.Ov)) - Bv * cross(norm3, dvec3(uvp.Ou)), 0.0);
 }
 
 
