@@ -12,11 +12,12 @@ Constructive Solid Geometry                DONE*
 Glossy reflection                          DONE*
 Anaglyph 3D                                DONE*
 Soft Shadows                               DONE*
-Refraction                                 DONE*
-Texture Map                                DONE
-  -texture map basic image w/ diffuse color. map around cube sides continuously. texture map and csg. texture map and opacity. texture map and glossy refl.
+Refraction                                 DONE*csg
+
 Bump Map                                   DONE
-  -bump map of globe. on plane. same image but with texture overlay. x2 [vary light direction] basic scene.
+  cube, globe, ground
+Texture Map                                DONE
+
 
 E.Uniform Space Partitioning                                  1d
 Demo scenes                                FRI                1d
