@@ -7,9 +7,9 @@ perfect_crystal = gr.material_extended({0.0, 0.0, 0.0}, {2.0, 2.0, 2.0}, 1000, 1
 mirror_water = gr.material_extended({0.1, 0.16, 0.15}, {1.5,1.5,1.5}, 120, 1.333, 0, 0, 0)
 mirror_opaque_1 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 120, 1.333, 1, 0, 0)
 mirror_opaque_2 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 60, 1.333, 1, 0.3, 0)
-mirror_opaque_3 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 16, 1.333, 1, 1.5, 0)
-mirror_opaque_4 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 12, 1.333, 1, 2.0, 0)
-mirror_opaque_5 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 6, 1.333, 1, 4, 0)
+mirror_opaque_3 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 30, 1.333, 1, 1.5, 0)
+mirror_opaque_4 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 24, 1.333, 1, 2.0, 0)
+mirror_opaque_5 = gr.material_extended({0.5, 0.56, 0.55}, {0.75,0.75,0.75}, 18, 1.333, 1, 4, 0)
 chrome_glass = gr.material_extended({0.4, 0.4, 0.4}, {1.4, 1.4, 1.4}, 76.8, 1.5, 0, 0, 0)
 ruby_crystal = gr.material_extended({0.61424, 0.04136, 0.04136}, {1.527811, 1.326959, 1.326959}, 76.8, 1.7, 0, 0.3, 0)
 
