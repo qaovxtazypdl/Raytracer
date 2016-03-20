@@ -711,8 +711,9 @@ outside = gr.node('outside')
 
 plane = gr.mesh( 'plane', 'Assets/plane.obj' )
 plane:set_material(hide)
+plane:rotate('x', 5)
 plane:scale(5500,5500,5500)
-plane:translate(0,-100,0)
+plane:translate(0,-115,0)
 
 background = gr.cube('background')
 background:translate(-0.5,-0.5,-0.5)
