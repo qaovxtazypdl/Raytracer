@@ -7,15 +7,15 @@ E.Gravity: GR black holes
 E.Fog/Light rays: GR black holes
 
 
-Adaptive Stochastic Jitter Supersampling   DONE*
+Adaptive Stochastic Jitter Supersampling   DONE*+
 Cylinders, Cones, Torus                    DONE*
-Constructive Solid Geometry                DONE*
-Glossy reflection                          DONE*
-Anaglyph 3D                                DONE*
-Soft Shadows                               DONE*
+Constructive Solid Geometry                DONE*+
+Glossy reflection                          DONE*+
+Anaglyph 3D                                DONE*+
+Soft Shadows                               DONE*+
 Refraction                                 DONE*
-Texture Map                                DONE*
-Bump Map                                   DONE*
+Texture Map                                DONE*+
+Bump Map                                   DONE*+
 SCENE                                      SOMEDAY            2d
 
 
@@ -24,12 +24,7 @@ cite images/textures
 
 
 
-walls and window
-pillars
-
-
 suit of armor
 crates
-doors
-ceiling details
-torches
+torches/light
+ceiling braces
