@@ -38,10 +38,7 @@ walls = gr.node('walls')
 pillars = gr.node('pillars')
 altar = gr.node('altar')
 statues = gr.node('statues')
---scene:add_child(walls)
---scene:add_child(pillars)
---scene:add_child(altar)
-scene:add_child(statues)
+
 
 
 ------------------------------- WINDOW
@@ -67,12 +64,11 @@ ground = gr.cube('ground')
 ground:translate(-0.5, -35, -0.6)
 ground:scale(300,2,750)
 ground:set_material(stone)
-walls:add_child(ground)
+
 roof = gr.cube('roof')
 roof:translate(-0.5, 74, -0.6)
 roof:scale(300,2,750)
 roof:set_material(stone)
-walls:add_child(roof)
 
 --left
 leftwall = gr.cube('leftwall')
@@ -102,9 +98,15 @@ leftwindow_3:translate(-141,-10,-280)
 leftwindow_3:add_child(i_window)
 leftwindows:add_child(leftwindow_3)
 
+leftwindow_4 = gr.node('leftwindow_4')
+leftwindow_4:scale(50,80,40)
+leftwindow_4:rotate('y', 90)
+leftwindow_4:translate(-141,-10,-10)
+leftwindow_4:add_child(i_window)
+leftwindows:add_child(leftwindow_4)
+
 leftwallcsg = gr.csg('leftwallcsg')
 leftwallcsg:set_csg_children(leftwall, leftwindows, 'DIFFERENCE')
-walls:add_child(leftwallcsg)
 
 --right
 rightwall = gr.cube('rightwall')
@@ -134,9 +136,15 @@ rightwindow_3:translate(137,-10,-280)
 rightwindow_3:add_child(i_window)
 rightwindows:add_child(rightwindow_3)
 
+rightwindow_4 = gr.node('rightwindow_4')
+rightwindow_4:scale(50,80,40)
+rightwindow_4:rotate('y', 90)
+rightwindow_4:translate(137,-10,-10)
+rightwindow_4:add_child(i_window)
+rightwindows:add_child(rightwindow_4)
+
 rightwallcsg = gr.csg('rightwallcsg')
 rightwallcsg:set_csg_children(rightwall, rightwindows, 'DIFFERENCE')
-walls:add_child(rightwallcsg)
 
 
 --back wall
@@ -152,7 +160,6 @@ backwindow:add_child(i_window)
 
 backwallcsg = gr.csg('backwallcsg')
 backwallcsg:set_csg_children(backwall, backwindow, 'DIFFERENCE')
-walls:add_child(backwallcsg)
 --===========================================================================wall and boundaries
 
 --==============pillar======================
@@ -226,34 +233,28 @@ left_pillar_1 = gr.node('left_pillar_1')
 left_pillar_1:rotate('y', 180)
 left_pillar_1:translate(-66,15.5,-235)
 left_pillar_1:add_child(i_pillar)
-pillars:add_child(left_pillar_1)
 
 left_pillar_2 = gr.node('left_pillar_2')
 left_pillar_2:rotate('y', 180)
 left_pillar_2:translate(-66,15.5,-145)
 left_pillar_2:add_child(i_pillar)
-pillars:add_child(left_pillar_2)
 
 left_pillar_3 = gr.node('left_pillar_3')
 left_pillar_3:rotate('y', 180)
 left_pillar_3:translate(-66,15.5,-55)
 left_pillar_3:add_child(i_pillar)
-pillars:add_child(left_pillar_3)
 
 right_pillar_1 = gr.node('right_pillar_1')
 right_pillar_1:translate(73,15.5,-235)
 right_pillar_1:add_child(i_pillar)
-pillars:add_child(right_pillar_1)
 
 right_pillar_2 = gr.node('right_pillar_2')
 right_pillar_2:translate(73,15.5,-145)
 right_pillar_2:add_child(i_pillar)
-pillars:add_child(right_pillar_2)
 
 right_pillar_3 = gr.node('right_pillar_3')
 right_pillar_3:translate(73,15.5,-55)
 right_pillar_3:add_child(i_pillar)
-pillars:add_child(right_pillar_3)
 --==================================================
 
 --=====altar==================================
@@ -358,8 +359,6 @@ artifact:add_child(carvedring)
 
 --===========================================STATUES
 i_statue = gr.node('i_statue')
-i_statue:translate(0,0,-100)
-statues:add_child(i_statue)
 
 --helmet
 s_helmet = gr.cylinder('s_helmet')
@@ -485,11 +484,6 @@ right_leg:add_child(leg)
 i_statue:add_child(right_leg)
 
 
---s_body_frame = gr.hyperboloid('s_body_frame', 8)
---s_body_frame:scale(6,18,6)
---s_body_frame:set_material(chrome)
---i_statue:add_child(s_body_frame)
-
 --------arms
 left_arm = gr.node('left_arm')
 i_statue:add_child(left_arm)
@@ -550,35 +544,172 @@ i_statue:add_child(hands)
 --sword
 handle = gr.cylinder('handle')
 handle:scale(1/5,1/5,1/5)
-handle:scale(1,7,1)
-handle:translate(0,0,0)
+handle:scale(1.3,8.5,1.3)
+handle:translate(0,1,0)
 handle:set_material(ruby)
 hands:add_child(handle)
 
+handle_cap = gr.cylinder('handle_cap')
+handle_cap:scale(1/1.3,1/8.5,1/1.3)
+handle_cap:scale(1.8,0.5,1.8)
+handle_cap:translate(0,1,0)
+handle_cap:set_material(emerald)
+handle:add_child(handle_cap)
+
 hilt = gr.cylinder('hilt')
 hilt:scale(1/5,1/5,1/5)
-hilt:scale(1.6,8.8,1.6)
+hilt:scale(1.6,10,1.6)
 hilt:rotate('z', 90)
 hilt:translate(0,-1.2,0)
 hilt:set_material(ruby)
 hands:add_child(hilt)
 
+hilt_left = gr.cylinder('hilt_left')
+hilt_left:scale(1/1.6,1/10,1/1.6)
+hilt_left:scale(2,0.5,2)
+hilt_left:translate(0,-1,0)
+hilt_left:set_material(emerald)
+hilt:add_child(hilt_left)
+
+hilt_right = gr.cylinder('hilt_right')
+hilt_right:scale(1/1.6,1/10,1/1.6)
+hilt_right:scale(2,0.5,2)
+hilt_right:translate(0,1,0)
+hilt_right:set_material(emerald)
+hilt:add_child(hilt_right)
+
 blade = gr.cube('blade')
 blade:translate(-0.5,-0.5,-0.5)
 blade:scale(1/5,1/5,1/5)
-blade:scale(12,70,4)
+blade:scale(13,70,2)
 blade:translate(0,-8,0)
 blade:set_material(turquoise)
-hands:add_child(blade)
+
+blade_edge_carver = gr.cube('blade_edge_carver')
+blade_edge_carver:translate(-0.5,-0.5,-0.5)
+blade_edge_carver:scale(1/5,1/5,1/5)
+blade_edge_carver:rotate('y', 45)
+blade_edge_carver:scale(13/1.41421,70,3.2)
+blade_edge_carver:translate(0,-8,0)
+blade_edge_carver:set_material(ruby)
+
+blade_csg = gr.csg('blade_csg')
+blade_csg:set_csg_children(blade, blade_edge_carver, 'INTERSECT')
+
+blade_differ = gr.node('blade_differ')
+
+blade_csg_all = gr.csg('blade_csg_all')
+blade_csg_all:set_csg_children(blade_csg, blade_differ, 'DIFFERENCE')
+hands:add_child(blade_csg_all)
+
+diag_left = gr.cube('diag_left')
+diag_left:translate(-0.5,-0.5,-0.5)
+diag_left:scale(1/5,1/5,1/5)
+diag_left:scale(10,10,10)
+diag_left:rotate('z', 45)
+diag_left:translate(-1.4,-14.5,0)
+diag_left:set_material(emerald)
+blade_differ:add_child(diag_left)
+
+diag_right = gr.cube('diag_right')
+diag_right:translate(-0.5,-0.5,-0.5)
+diag_right:scale(1/5,1/5,1/5)
+diag_right:scale(10,10,10)
+diag_right:rotate('z', 45)
+diag_right:translate(1.4,-14.5,0)
+diag_right:set_material(emerald)
+blade_differ:add_child(diag_right)
+
+diag_front = gr.cube('diag_front')
+diag_front:translate(-0.5,-0.5,-0.5)
+diag_front:scale(1/5,1/5,1/5)
+diag_front:scale(10,10,1.5)
+diag_front:rotate('z', 45)
+diag_front:rotate('x', 15)
+diag_front:translate(0,-14,0.3)
+diag_front:set_material(emerald)
+blade_differ:add_child(diag_front)
+
+diag_back = gr.cube('diag_back')
+diag_back:translate(-0.5,-0.5,-0.5)
+diag_back:scale(1/5,1/5,1/5)
+diag_back:scale(10,10,1.5)
+diag_back:rotate('z', 45)
+diag_back:rotate('x', -15)
+diag_back:translate(0,-14,-0.3)
+diag_back:set_material(emerald)
+blade_differ:add_child(diag_back)
 -------
 
 statue_base = gr.cylinder('statue_base')
 statue_base:scale(36,1.5,36)
-statue_base:translate(0,-79,0)
+statue_base:translate(0,-78.3,0)
 statue_base:set_material(chrome)
 i_statue:add_child(statue_base)
---====================================================
 
-gr.render(scene, 'FinalScene.png', 700, 500,
+statue_1 = gr.node('statue_1')
+statue_1:rotate('y', 90)
+statue_1:scale(0.48,0.48,0.48)
+statue_1:translate(-66,-30,-190)
+statue_1:add_child(i_statue)
+
+statue_2 = gr.node('statue_2')
+statue_2:rotate('y', 90)
+statue_2:scale(0.48,0.48,0.48)
+statue_2:translate(-66,-30,-100)
+statue_2:add_child(i_statue)
+
+statue_3 = gr.node('statue_3')
+statue_3:rotate('y', 90)
+statue_3:scale(0.48,0.48,0.48)
+statue_3:translate(-66,-30,-10)
+statue_3:add_child(i_statue)
+
+statue_r1 = gr.node('statue_r1')
+statue_r1:rotate('y', 90)
+statue_r1:scale(0.48,0.48,0.48)
+statue_r1:translate(73,-30,-190)
+statue_r1:add_child(i_statue)
+
+statue_r2 = gr.node('statue_r2')
+statue_r2:rotate('y', 90)
+statue_r2:scale(0.48,0.48,0.48)
+statue_r2:translate(73,-30,-100)
+statue_r2:add_child(i_statue)
+
+statue_r3 = gr.node('statue_r3')
+statue_r3:rotate('y', 90)
+statue_r3:scale(0.48,0.48,0.48)
+statue_r3:translate(73,-30,-10)
+statue_r3:add_child(i_statue)
+--====================================================
+scene:add_child(walls)
+scene:add_child(pillars)
+scene:add_child(altar)
+scene:add_child(statues)
+
+statues:add_child(statue_1)
+statues:add_child(statue_2)
+statues:add_child(statue_3)
+statues:add_child(statue_r1)
+statues:add_child(statue_r2)
+statues:add_child(statue_r3)
+
+pillars:add_child(left_pillar_1)
+pillars:add_child(left_pillar_2)
+pillars:add_child(left_pillar_3)
+pillars:add_child(right_pillar_1)
+pillars:add_child(right_pillar_2)
+pillars:add_child(right_pillar_3)
+
+walls:add_child(ground)
+walls:add_child(roof)
+walls:add_child(leftwallcsg)
+walls:add_child(rightwallcsg)
+walls:add_child(backwallcsg)
+
+
+
+gr.render(scene, 'FinalScene.png', 888, 500,
     {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50,
     {0.5, 0.5, 0.5}, {primary_light, test_inner_light})
