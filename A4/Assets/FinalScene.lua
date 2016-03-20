@@ -57,6 +57,19 @@ window_round:set_material(chrome)
 windowcsg = gr.csg('windowcsg')
 windowcsg:set_csg_children(window_round, window_flat, 'UNION')
 i_window:add_child(windowcsg)
+
+
+
+
+i_window_pane = gr.cube('i_window_pane')
+i_window_pane:translate(-0.5, -0.5, -0.5)
+i_window_pane:scale(1, 2, 0.05)
+i_window_pane:set_material(brass)
+
+i_window_pane_large = gr.cube('i_window_pane_large')
+i_window_pane_large:translate(-0.5, -0.5, -0.5)
+i_window_pane_large:scale(1, 2, 0.05)
+i_window_pane_large:set_material(turquoise)
 -----------------------------------------
 
 --walls and boundaries=============================================
@@ -105,6 +118,7 @@ leftwindow_4:translate(-141,-10,-10)
 leftwindow_4:add_child(i_window)
 leftwindows:add_child(leftwindow_4)
 
+
 leftwallcsg = gr.csg('leftwallcsg')
 leftwallcsg:set_csg_children(leftwall, leftwindows, 'DIFFERENCE')
 
@@ -143,6 +157,7 @@ rightwindow_4:translate(137,-10,-10)
 rightwindow_4:add_child(i_window)
 rightwindows:add_child(rightwindow_4)
 
+
 rightwallcsg = gr.csg('rightwallcsg')
 rightwallcsg:set_csg_children(rightwall, rightwindows, 'DIFFERENCE')
 
@@ -158,8 +173,14 @@ backwindow:scale(160,120,20)
 backwindow:translate(5,22,-440)
 backwindow:add_child(i_window)
 
+backwindowpane = gr.node('backwindowpane')
+backwindowpane:scale(160,120,20)
+backwindowpane:translate(5,22,-440)
+backwindowpane:add_child(i_window_pane_large)
+
 backwallcsg = gr.csg('backwallcsg')
 backwallcsg:set_csg_children(backwall, backwindow, 'DIFFERENCE')
+backwallcsg:add_child(backwindowpane)
 --===========================================================================wall and boundaries
 
 --==============pillar======================
@@ -684,9 +705,9 @@ statue_r3:translate(73,-30,-10)
 statue_r3:add_child(i_statue)
 --====================================================
 scene:add_child(walls)
-scene:add_child(pillars)
-scene:add_child(altar)
-scene:add_child(statues)
+--scene:add_child(pillars)
+--scene:add_child(altar)
+--scene:add_child(statues)
 
 statues:add_child(statue_1)
 statues:add_child(statue_2)
