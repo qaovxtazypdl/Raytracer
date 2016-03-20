@@ -704,7 +704,30 @@ statue_r3:scale(0.48,0.48,0.48)
 statue_r3:translate(73,-30,-10)
 statue_r3:add_child(i_statue)
 --====================================================
+
+
+--outside================
+outside = gr.node('outside')
+
+plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+plane:set_material(hide)
+plane:scale(5500,5500,5500)
+plane:translate(0,-100,0)
+
+background = gr.cube('background')
+background:translate(-0.5,-0.5,-0.5)
+background:scale(2500,500,1)
+background:translate(0,0,-600)
+background:set_material(stone)
+
+outside:add_child(plane)
+outside:add_child(background)
+--==========================
+
+
+
 scene:add_child(walls)
+scene:add_child(outside)
 --scene:add_child(pillars)
 --scene:add_child(altar)
 --scene:add_child(statues)

@@ -21,6 +21,10 @@ Cube::~Cube()
 {
 }
 
+OneSidedCube::~OneSidedCube()
+{
+}
+
 NonhierSphere::~NonhierSphere()
 {
 }
@@ -83,6 +87,123 @@ IntersectionInfo NonhierSphere::checkRayIntersection(const glm::dvec4 &ray_origi
     return IntersectionInfo({IntersectionPoint(
       t, pt1, normalize(pt1-c), matpack, this,
       t_2, pt2, normalize(pt2-c), matpack, this,
+      uvp_1, uvp_2
+    )});
+  }
+}
+
+IntersectionInfo OneSidedCube::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &matpack) {
+  glm::dvec4 inv_ray_dir = 1.0/ray_dir;
+
+  double tx_first = (m_pos[0] - ray_origin[0]) * inv_ray_dir[0];
+  double ty_first = (m_pos[1] - ray_origin[1]) * inv_ray_dir[1];
+  double tz_first = (m_pos[2] - ray_origin[2]) * inv_ray_dir[2];
+
+  double tx_second = (m_pos[0] + m_size[0] - ray_origin[0]) * inv_ray_dir[0];
+  double ty_second = (m_pos[1] + m_size[1] - ray_origin[1]) * inv_ray_dir[1];
+  double tz_second = (m_pos[2] + m_size[2] - ray_origin[2]) * inv_ray_dir[2];
+
+  double tmin = std::max(std::max(std::min(tx_first,tx_second), std::min(ty_first,ty_second)), std::min(tz_first,tz_second));
+  double tmax = std::min(std::min(std::max(tx_first,tx_second), std::max(ty_first,ty_second)), std::max(tz_first,tz_second));
+
+  //TODO: check
+  if (tmin > tmax || (tmin < EPSILON && tmax < EPSILON)) {
+    return IntersectionInfo();
+  } else {
+    vector<IntersectionPoint> result;
+
+    double u1=0, u2=0, v1=0, v2=0;
+    dvec4 Ou1, Ou2, Ov1, Ov2;
+    dvec3 pt;
+
+    dvec4 normalmin;
+    dvec4 intersectionmin = tmin*ray_dir + ray_origin;
+    pt = (dvec3(intersectionmin) - m_pos) / m_size;
+    if (tmin == tx_first) {
+      //left face
+      u1=pt[2]; v1=pt[1];
+      normalmin = dvec4(-1,0,0,0);
+      Ou1 = dvec4(0,0,1,0);
+      Ov1 = dvec4(0,1,0,0);
+    } else if (tmin == tx_second) {
+      //right face
+      u1=1-pt[2]; v1=pt[1];
+      normalmin = dvec4(1,0,0,0);
+      Ou1 = dvec4(0,0,-1,0);
+      Ov1 = dvec4(0,1,0,0);
+    } else if (tmin == ty_first) {
+      //bottom face
+      u1=pt[0]; v1=pt[2];
+      normalmin = dvec4(0,-1,0,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,0,1,0);
+    } else if (tmin == ty_second) {
+      //top face
+      u1=pt[0]; v1=1-pt[2];
+      normalmin = dvec4(0,1,0,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,0,-1,0);
+    } else if (tmin == tz_first) {
+      //back face
+      u1=1-pt[0]; v1=pt[1];
+      normalmin = dvec4(0,0,-1,0);
+      Ou1 = dvec4(-1,0,0,0);
+      Ov1 = dvec4(0,1,0,0);
+    } else if (tmin == tz_second) {
+      //front face
+      u1=pt[0]; v1=pt[1];
+      normalmin = dvec4(0,0,1,0);
+      Ou1 = dvec4(1,0,0,0);
+      Ov1 = dvec4(0,1,0,0);
+    }
+
+    dvec4 normalmax;
+    dvec4 intersectionmax = tmax*ray_dir + ray_origin;
+    pt = (dvec3(intersectionmax) - m_pos) / m_size;
+    if (tmax == tx_first) {
+      //left face
+      u2=pt[2]; v2=pt[1];
+      normalmax = dvec4(-1,0,0,0);
+      Ou2 = dvec4(0,0,1,0);
+      Ov2 = dvec4(0,1,0,0);
+    } else if (tmax == tx_second) {
+      //right face
+      u2=1-pt[2]; v2=pt[1];
+      normalmax = dvec4(1,0,0,0);
+      Ou2 = dvec4(0,0,-1,0);
+      Ov2 = dvec4(0,1,0,0);
+    } else if (tmax == ty_first) {
+      //bottom face
+      u2=pt[0]; v2=pt[2];
+      normalmax = dvec4(0,-1,0,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,0,1,0);
+    } else if (tmax == ty_second) {
+      //top face
+      u2=pt[0]; v2=1-pt[2];
+      normalmax = dvec4(0,1,0,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,0,-1,0);
+    } else if (tmax == tz_first) {
+      //back face
+      u2=1-pt[0]; v2=pt[1];
+      normalmax = dvec4(0,0,-1,0);
+      Ou2 = dvec4(-1,0,0,0);
+      Ov2 = dvec4(0,1,0,0);
+    } else if (tmax == tz_second) {
+      //front face
+      u2=pt[0]; v2=pt[1];
+      normalmax = dvec4(0,0,1,0);
+      Ou2 = dvec4(1,0,0,0);
+      Ov2 = dvec4(0,1,0,0);
+    }
+
+    UVPackage uvp_1 = UVPackage({u1,1-v1}, Ou1, Ov1);
+    UVPackage uvp_2 = UVPackage({u2,1-v2}, Ou2, Ov2);
+
+    return IntersectionInfo({IntersectionPoint(
+      tmin, intersectionmin, normalmin, matpack, this,
+      tmax, intersectionmax, normalmax, matpack, this,
       uvp_1, uvp_2
     )});
   }

@@ -42,7 +42,7 @@ public:
   virtual ~NonhierSphere();
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
 
-private:
+protected:
   glm::dvec3 m_pos;
   double m_radius;
 };
@@ -60,7 +60,7 @@ public:
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~NonhierBox();
 
-private:
+protected:
   glm::dvec3 m_pos;
   glm::dvec3 m_size;
 };
@@ -83,6 +83,16 @@ public:
   virtual ~Cube();
 };
 
+class OneSidedCube : public NonhierBox {
+public:
+  OneSidedCube()
+    : NonhierBox(glm::dvec3(0,0,0), 1.0)
+  {
+  }
+  virtual ~OneSidedCube();
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
+};
+
 
 class Cone : public Primitive {
 public:
@@ -93,7 +103,7 @@ public:
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Cone();
 
-private:
+protected:
   glm::dvec3 m_pos;
   glm::dvec3 m_size;
 };
@@ -117,7 +127,7 @@ public:
   }
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Torus();
-private:
+protected:
   double m_inner;
 };
 
@@ -129,6 +139,6 @@ public:
   virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
   virtual ~Hyperboloid();
 
-private:
+protected:
   double m_inner;
 };

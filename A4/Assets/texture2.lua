@@ -106,7 +106,7 @@ central_torus:set_material(reflectorCanvas)
 central_torus:set_texture(texture_planks)
 plane:add_child(central_torus)
 
-central_cube = gr.cube('central_cube')
+central_cube = gr.cube6('central_cube')
 central_cube:scale(1/50,1/50,1/100)
 central_cube:scale(8,8,8)
 central_cube:rotate('z', 15)
