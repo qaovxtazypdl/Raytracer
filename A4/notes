@@ -1,5 +1,6 @@
 E.Threading/Flatten                                           DONE
 E.Uniform Space Partitioning                                  acceleration
+E.Index of Refraction FUNCTION                                  acceleration
 E.Perlin Noise for texture/bump   --  function defined textures.
 E.Caustics + texture map to conic caps
 E.Gravity: GR black holes
@@ -15,9 +16,20 @@ Soft Shadows                               DONE*
 Refraction                                 DONE*
 Texture Map                                DONE*
 Bump Map                                   DONE*
-
-
-E.Uniform Space Partitioning                                  1d
 SCENE                                      SOMEDAY            2d
+
+
 PDF and Report                             SOMEDAY            1d
-cite images
+cite images/textures
+
+
+
+walls and window
+pillars
+
+
+suit of armor
+crates
+doors
+ceiling details
+torches
