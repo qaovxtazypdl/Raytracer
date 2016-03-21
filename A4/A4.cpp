@@ -42,6 +42,10 @@ dvec3 directLight(const FlatPrimitives &nodes, bool isLight, const dvec3 &kd, co
 }
 
 dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int depth) {
+  if (!MACRO_USE_BG) {
+    return dvec3(0,0,0);
+  }
+
   dvec3 color;
 
   double r = 100000.0;
@@ -131,7 +135,7 @@ vector<dvec4> glossyRays(const dvec4 &ray_origin, const dvec4 &ray_dir, double g
 //origin is point
 //direction is vector
 dvec3 trace(const FlatPrimitives &nodes, const dvec4 &ray_origin, const dvec4 &ray_dir, const dvec3 &ambient, const std::list<Light *> &lights, double ior, int depth, int glossDepth) {
-  if (depth >= 6) return getBackgroundColor(ray_origin, ray_dir, depth);
+  if (depth >= 4) return getBackgroundColor(ray_origin, ray_dir, depth);
   IntersectionPoint pt = nodes.firstHitInNodeList(ray_origin, ray_dir, std::numeric_limits<double>::infinity());
 
   if (pt.valid) {

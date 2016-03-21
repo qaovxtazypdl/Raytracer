@@ -18,12 +18,16 @@ Soft Shadows                               DONE*+
 Refraction                                 DONE*+
 Texture Map                                DONE*+
 Bump Map                                   DONE*+
-SCENE                                      SUN
+SCENE                                      MON(R)
 
 
 PDF and Report                             SOMEDAY            1d
 cite images/textures
 
+refl-check armor
+refr*
+gloss*
+soft-check 8 samples enough
 
 http://bgfons.com/upload/pattern_texture1174.jpg
 http://14textures.com/wp-content/uploads/2015/06/White-Marble-2-Texture.jpg
