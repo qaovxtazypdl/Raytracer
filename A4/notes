@@ -22,9 +22,12 @@ SCENE                                      SUN
 PDF and Report                             SOMEDAY            1d
 cite images/textures
 
+texturing:
+background, walls, window
+lighting, pillars.
+shrine
+suits of armor
 
 
-suit of armor
 crates
-torches/light
 ceiling braces

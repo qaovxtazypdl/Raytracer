@@ -25,7 +25,7 @@ public:
   void setCSGChildren(SceneNode *left, SceneNode *right, const std::string &action);
 
   ~CSGNode() {}
-private:
+public:
   SceneNode *m_left, *m_right;
   CSGAction m_action;
 };

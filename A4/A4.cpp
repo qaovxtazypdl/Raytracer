@@ -351,6 +351,21 @@ void t_write_stereo(size_t nx, size_t ny, Image &image, const vector<dvec3> &lef
   }
 }
 
+int countGeometryNodes(const SceneNode *root) {
+  int count = 0;
+  if (root->m_nodeType == NodeType::GeometryNode) {
+    count += 1;
+  } else if (root->m_nodeType == NodeType::CSGNode) {
+    const CSGNode * csgnode = static_cast<const CSGNode *>(root);
+    count += countGeometryNodes(csgnode->m_left) + countGeometryNodes(csgnode->m_right);
+  }
+
+  for (SceneNode * node : root->children) {
+    count += countGeometryNodes(node);
+  }
+  return count;
+}
+
 void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<HierarchicalNodeInfo> &result) {
   accumulatedTrans = accumulatedTrans * root->get_transform();
   if (root->m_nodeType == NodeType::GeometryNode || root->m_nodeType == NodeType::CSGNode) {
@@ -493,6 +508,7 @@ void A4_Render(
   double w = (double)nx/ny * h;
 
   FlatPrimitives nodes = buildTreeCache(root, dmat4(1.0));
+  cout << countGeometryNodes(root) << " geometry nodes to render"<< endl;
 
   int bufsize = (nx+2) * (ny+2);
   vector<dvec3> leftColors(bufsize);
