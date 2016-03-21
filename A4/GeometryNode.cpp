@@ -38,6 +38,13 @@ IntersectionInfo GeometryNode::testHit(const dvec4 &ray_origin, const dvec4 &ray
   dmat4 T_inv = invtrans;
   dmat3 T_invtrans = invtrans_transpose;
 
+  if (m_boundingObject != NULL) {
+    IntersectionPoint bounding = m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir).getFirstValidIntersection(std::numeric_limits<double>::infinity());
+    if (!bounding.valid) {
+      return intersectionInfo;
+    }
+  }
+
   for (SceneNode * node : children) {
     intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }

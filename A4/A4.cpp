@@ -368,8 +368,12 @@ int countGeometryNodes(const SceneNode *root) {
 
 void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<HierarchicalNodeInfo> &result) {
   accumulatedTrans = accumulatedTrans * root->get_transform();
-  if (root->m_nodeType == NodeType::GeometryNode || root->m_nodeType == NodeType::CSGNode) {
+  if (root->m_nodeType == NodeType::SceneNode && root->m_boundingObject != NULL) {
     result.push_back(HierarchicalNodeInfo(root, accumulatedTrans));
+    return;
+  } else if (root->m_nodeType == NodeType::GeometryNode || root->m_nodeType == NodeType::CSGNode) {
+    result.push_back(HierarchicalNodeInfo(root, accumulatedTrans));
+    return;
   } else if (root->m_nodeType == NodeType::JointNode) {
     const JointNode * jointNode = static_cast<const JointNode *>(root);
     accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();

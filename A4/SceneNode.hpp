@@ -34,6 +34,7 @@ public:
     void set_transform(const glm::dmat4& m);
 
     void add_child(SceneNode* child);
+    void set_bounding_object(SceneNode* bound);
 
     void remove_child(SceneNode* child);
 
@@ -53,6 +54,7 @@ public:
     glm::dmat3 invtrans_transpose;
 
     std::list<SceneNode*> children;
+    SceneNode * m_boundingObject;
 
 	NodeType m_nodeType;
 	std::string m_name;
@@ -60,5 +62,5 @@ public:
 
 private:
 	// The number of SceneNode instances.
-	static unsigned int nodeInstanceCount;
+  static unsigned int nodeInstanceCount;
 };

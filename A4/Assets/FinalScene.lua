@@ -186,6 +186,13 @@ backwallcsg:add_child(backwindowpane)
 --==============pillar======================
 i_pillar = gr.node('i_pillar')
 
+pillar_bound = gr.cube('pillar_bound')
+pillar_bound:translate(-0.5,-0.5,-0.5)
+pillar_bound:scale(32,300,32)
+pillar_bound:translate(0,50,0)
+pillar_bound:set_material(perfectCanvas)
+i_pillar:add_bound(pillar_bound)
+
 pillar_core = gr.cylinder('pillar_center')
 pillar_core:scale(6.6,100,6.6)
 pillar_core:translate(0,20,0)
@@ -279,6 +286,13 @@ right_pillar_3:add_child(i_pillar)
 --==================================================
 
 --=====altar==================================
+altar_bound = gr.cube('altar_bound')
+altar_bound:translate(-0.5,-0.5,-0.5)
+altar_bound:scale(210,180,130)
+altar_bound:translate(5,-40,-330)
+altar_bound:set_material(perfectCanvas)
+altar:add_bound(altar_bound)
+
 altar_base_1 = gr.cube('altar_base_1')
 altar_base_1:translate(-0.5, -0.5, -0.5)
 altar_base_1:scale(200,11,100)
@@ -380,6 +394,12 @@ artifact:add_child(carvedring)
 
 --===========================================STATUES
 i_statue = gr.node('i_statue')
+
+statue_bound = gr.cube('statue_bound')
+statue_bound:translate(-0.5,-0.5,-0.5)
+statue_bound:scale(90,160,72)
+statue_bound:set_material(perfectCanvas)
+i_statue:add_bound(statue_bound)
 
 --helmet
 s_helmet = gr.cylinder('s_helmet')
@@ -729,9 +749,9 @@ outside:add_child(background)
 
 scene:add_child(walls)
 scene:add_child(outside)
---scene:add_child(pillars)
---scene:add_child(altar)
---scene:add_child(statues)
+scene:add_child(pillars)
+scene:add_child(altar)
+scene:add_child(statues)
 
 statues:add_child(statue_1)
 statues:add_child(statue_2)

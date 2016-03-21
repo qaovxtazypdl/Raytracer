@@ -1,6 +1,7 @@
 E.Threading/Flatten                                           DONE
 E.Uniform Space Partitioning                                  acceleration
-E.Index of Refraction FUNCTION                                  acceleration
+
+E.Index of Refraction FUNCTION
 E.Perlin Noise for texture/bump   --  function defined textures.
 E.Caustics + texture map to conic caps
 E.Gravity: GR black holes

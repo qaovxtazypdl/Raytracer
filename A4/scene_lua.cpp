@@ -634,6 +634,27 @@ int gr_node_add_child_cmd(lua_State* L)
   return 0;
 }
 
+// Add a child to a node
+extern "C"
+int gr_node_add_bound_cmd(lua_State* L)
+{
+  GRLUA_DEBUG_CALL;
+
+  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+
+  SceneNode* self = selfdata->node;
+
+  gr_node_ud* childdata = (gr_node_ud*)luaL_checkudata(L, 2, "gr.node");
+  luaL_argcheck(L, childdata != 0, 2, "Node expected");
+
+  SceneNode* child = childdata->node;
+
+  self->set_bounding_object(child);
+
+  return 0;
+}
+
 // Add children to a csg node
 extern "C"
 int gr_node_set_csg_children_cmd(lua_State* L)
@@ -867,6 +888,7 @@ static const luaL_Reg grlib_functions[] = {
 static const luaL_Reg grlib_node_methods[] = {
   {"__gc", gr_node_gc_cmd},
   {"add_child", gr_node_add_child_cmd},
+  {"add_bound", gr_node_add_bound_cmd},
   {"set_csg_children", gr_node_set_csg_children_cmd},
   {"set_material", gr_node_set_material_cmd},
   {"set_bumps", gr_node_set_bumps_cmd},

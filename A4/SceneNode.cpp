@@ -22,7 +22,8 @@ SceneNode::SceneNode(const std::string& name)
 	m_nodeType(NodeType::SceneNode),
 	trans(dmat4()),
 	invtrans(dmat4()),
-	m_nodeId(nodeInstanceCount++)
+	m_nodeId(nodeInstanceCount++),
+  m_boundingObject(NULL)
 {
 
 }
@@ -33,7 +34,8 @@ SceneNode::SceneNode(const SceneNode & other)
 	: m_nodeType(other.m_nodeType),
 	  m_name(other.m_name),
 	  trans(other.trans),
-	  invtrans(other.invtrans)
+	  invtrans(other.invtrans),
+    m_boundingObject(NULL)
 {
 	for(SceneNode * child : other.children) {
 		this->children.push_front(new SceneNode(*child));
@@ -139,7 +141,7 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 }
 
 IntersectionInfo SceneNode::testNode(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
-  return IntersectionInfo();
+  return testHit(ray_origin, ray_dir);
 }
 
 IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
@@ -148,6 +150,13 @@ IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_di
   dmat4 T_inv = invtrans;
   dmat3 T_invtrans = invtrans_transpose;
 
+  if (m_boundingObject != NULL) {
+    IntersectionPoint bounding = m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir).getFirstValidIntersection(std::numeric_limits<double>::infinity());
+    if (!bounding.valid) {
+      return intersectionInfo;
+    }
+  }
+
   for (SceneNode * node : children) {
     intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
   }
@@ -155,5 +164,9 @@ IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_di
   intersectionInfo.TRANSFORM_UP(T, T_invtrans);
 
   return intersectionInfo;
+}
+
+void SceneNode::set_bounding_object(SceneNode* bound) {
+  m_boundingObject = bound;
 }
 
