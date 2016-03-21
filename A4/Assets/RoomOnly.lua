@@ -863,24 +863,6 @@ outside:add_child(background2)
 
 
 scene:add_child(walls)
-scene:add_child(outside)
-scene:add_child(pillars)
-scene:add_child(altar)
-scene:add_child(statues)
-
-statues:add_child(statue_1)
-statues:add_child(statue_2)
-statues:add_child(statue_3)
-statues:add_child(statue_r1)
-statues:add_child(statue_r2)
-statues:add_child(statue_r3)
-
-pillars:add_child(left_pillar_1)
-pillars:add_child(left_pillar_2)
-pillars:add_child(left_pillar_3)
-pillars:add_child(right_pillar_1)
-pillars:add_child(right_pillar_2)
-pillars:add_child(right_pillar_3)
 
 walls:add_child(ground)
 walls:add_child(roof)
@@ -890,8 +872,7 @@ walls:add_child(backwallcsg)
 walls:add_child(frontwall)
 
 
-
-gr.render(scene, 'FinalScene.png', 480, 270, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light,flame1,flame2,flame3,flame4,flame5,flame6, backlight})
+gr.render(scene, 'RoomOnly.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light,flame1,flame2,flame3,flame4,flame5,flame6,backlight})
 --gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light, flame1s, backlight})
---gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, testlight, backlight})
+--gr.render(scene, 'RoomOnly.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, testlight, backlight})
 --gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, flame1, backlight})

@@ -325,150 +325,10 @@ lightholder_left:add_child(light_left)
 --=========================pillar========================
 
 --===========================pillars
-left_pillar_1 = gr.node('left_pillar_1')
-left_pillar_1:rotate('y', 180)
-left_pillar_1:translate(-66,15.5,-235)
-left_pillar_1:add_child(i_pillar)
-
-left_pillar_2 = gr.node('left_pillar_2')
-left_pillar_2:rotate('y', 180)
-left_pillar_2:translate(-66,15.5,-145)
-left_pillar_2:add_child(i_pillar)
-
-left_pillar_3 = gr.node('left_pillar_3')
-left_pillar_3:rotate('y', 180)
-left_pillar_3:translate(-66,15.5,-55)
-left_pillar_3:add_child(i_pillar)
-
 right_pillar_1 = gr.node('right_pillar_1')
-right_pillar_1:translate(73,15.5,-235)
+right_pillar_1:translate(73,-40,-200)
 right_pillar_1:add_child(i_pillar)
-
-right_pillar_2 = gr.node('right_pillar_2')
-right_pillar_2:translate(73,15.5,-145)
-right_pillar_2:add_child(i_pillar)
-
-right_pillar_3 = gr.node('right_pillar_3')
-right_pillar_3:translate(73,15.5,-55)
-right_pillar_3:add_child(i_pillar)
 --==================================================
-
---=====altar==================================
-altar_bound = gr.cube('altar_bound')
-altar_bound:translate(-0.5,-0.5,-0.5)
-altar_bound:scale(210,180,130)
-altar_bound:translate(5,-40,-330)
-altar_bound:set_material(perfectCanvas)
-altar:add_bound(altar_bound)
-
-altar_base_1 = gr.cube('altar_base_1')
-altar_base_1:translate(-0.5, -0.5, -0.5)
-altar_base_1:scale(200,11,100)
-altar_base_1:translate(5,-65,-320)
-altar_base_1:set_material(woodCanvas)
-altar_base_1:set_texture(t_wood)
-altar_base_1:set_bumps(t_wood, 'rgb')
-altar:add_child(altar_base_1)
-
-altar_base_2 = gr.cube('altar_base_2')
-altar_base_2:translate(-0.5, -0.5, -0.5)
-altar_base_2:scale(188,11,100)
-altar_base_2:translate(5,-59,-326)
-altar_base_2:set_material(woodCanvas)
-altar_base_2:set_texture(t_woodplanks)
-altar_base_2:set_bumps(t_woodplanks, 'rgb')
-altar:add_child(altar_base_2)
-
-altar_base_3 = gr.cube('altar_base_3')
-altar_base_3:translate(-0.5, -0.5, -0.5)
-altar_base_3:scale(172,11,100)
-altar_base_3:translate(5,-53,-334)
-altar_base_3:set_material(woodCanvas)
-altar_base_3:set_texture(t_wood)
-altar_base_3:set_bumps(t_wood, 'rgb')
-altar:add_child(altar_base_3)
-
-artifact = gr.node('artifact')
-artifact:translate(5,-47,-350)
-altar:add_child(artifact)
-
-artifact_base = gr.cylinder('artifact_base')
-artifact_base:scale(50,6,50)
-artifact_base:set_material(chrome)
-artifact:add_child(artifact_base)
-
-artifact_block = gr.cube('artifact_block')
-artifact_block:translate(-0.5,-0.5,-0.5)
-artifact_block:scale(50,50,50)
-artifact_block:translate(0,40,0)
-artifact_block:set_material(pearl)
-
-artifact_face = gr.cube('artifact_face')
-artifact_face:translate(-0.5, -0.5, -0.5)
-artifact_face:rotate('x', 45)
-artifact_face:scale(50,70,50)
-artifact_face:translate(0,10.35+40,25)
-artifact_face:set_material(turquoise)
-
-framecsg = gr.csg('framecsg')
-framecsg:rotate('y', 90)
-framecsg:set_csg_children(artifact_block, artifact_face, 'DIFFERENCE')
-framecsg2 = gr.csg('framecsg2')
-framecsg2:rotate('y', 90)
-framecsg2:set_csg_children(framecsg, artifact_face, 'DIFFERENCE')
-framecsg3 = gr.csg('framecsg3')
-framecsg3:rotate('y', 90)
-framecsg3:set_csg_children(framecsg2, artifact_face, 'DIFFERENCE')
-pyramid = gr.csg('pyramid')
-pyramid:rotate('y', 30)
-pyramid:scale(2,2,2)
-pyramid:set_csg_children(framecsg3, artifact_face, 'DIFFERENCE')
-
-sphericalcarver = gr.sphere('sphericalcarver')
-sphericalcarver:scale(28,28,28)
-sphericalcarver:translate(0,30,0)
-sphericalcarver:set_material(ruby)
-sphericalcarver:set_texture(t_checkerboard)
-sphericalcarver:set_bumps(t_checkerboard, 'rgb')
-
-carvedpyramid = gr.csg('carvedpyramid')
-carvedpyramid:rotate('x', 90)
-carvedpyramid:rotate('y', -90)
-carvedpyramid:translate(-32,90,0)
-carvedpyramid:scale(0.55,0.55,0.55)
-carvedpyramid:set_csg_children(pyramid, sphericalcarver, 'DIFFERENCE')
-artifact:add_child(carvedpyramid)
-
-carvedpyramid_2 = gr.csg('carvedpyramid_2')
-carvedpyramid_2:rotate('x', -90)
-carvedpyramid_2:rotate('y', -90)
-carvedpyramid_2:translate(32,90,0)
-carvedpyramid_2:scale(0.55,0.55,0.55)
-carvedpyramid_2:set_csg_children(pyramid, sphericalcarver, 'DIFFERENCE')
-artifact:add_child(carvedpyramid_2)
-
-artifact_sphere = gr.sphere('artifact_sphere')
-artifact_sphere:scale(24,24,24)
-artifact_sphere:translate(0,50,0)
-artifact_sphere:set_material(ball_crystal)
-artifact:add_child(artifact_sphere)
-
-artifact_cylinder = gr.cylinder('artifact_cylinder')
-artifact_cylinder:scale(35,0.5,35)
-artifact_cylinder:rotate('z', 61)
-artifact_cylinder:rotate('y', 20)
-artifact_cylinder:translate(0,50,0)
-artifact_cylinder:set_material(ringCanvas)
-artifact_cylinder:set_texture(t_rings)
-artifact_cylinder:set_bumps(t_rings, 'rgb')
-
-carvedring = gr.csg('carvedring')
-carvedring:scale(1.3,1.3,1.3)
-carvedring:translate(0,-15,0)
-carvedring:set_csg_children(artifact_cylinder, artifact_sphere, 'DIFFERENCE')
-artifact:add_child(carvedring)
---===========================================
-
 
 --===========================================STATUES
 i_statue = gr.node('i_statue')
@@ -803,40 +663,8 @@ statue_base:set_material(chrome)
 i_statue:add_child(statue_base)
 
 statue_1 = gr.node('statue_1')
-statue_1:rotate('y', 90)
-statue_1:scale(0.48,0.48,0.48)
-statue_1:translate(-66,-30,-190)
+statue_1:translate(-66,0,-120)
 statue_1:add_child(i_statue)
-
-statue_2 = gr.node('statue_2')
-statue_2:rotate('y', 90)
-statue_2:scale(0.48,0.48,0.48)
-statue_2:translate(-66,-30,-100)
-statue_2:add_child(i_statue)
-
-statue_3 = gr.node('statue_3')
-statue_3:rotate('y', 90)
-statue_3:scale(0.48,0.48,0.48)
-statue_3:translate(-66,-30,-10)
-statue_3:add_child(i_statue)
-
-statue_r1 = gr.node('statue_r1')
-statue_r1:rotate('y', -90)
-statue_r1:scale(0.48,0.48,0.48)
-statue_r1:translate(73,-30,-190)
-statue_r1:add_child(i_statue)
-
-statue_r2 = gr.node('statue_r2')
-statue_r2:rotate('y', -90)
-statue_r2:scale(0.48,0.48,0.48)
-statue_r2:translate(73,-30,-100)
-statue_r2:add_child(i_statue)
-
-statue_r3 = gr.node('statue_r3')
-statue_r3:rotate('y', -90)
-statue_r3:scale(0.48,0.48,0.48)
-statue_r3:translate(73,-30,-10)
-statue_r3:add_child(i_statue)
 --====================================================
 
 
@@ -862,36 +690,15 @@ outside:add_child(background2)
 --==========================
 
 
-scene:add_child(walls)
-scene:add_child(outside)
 scene:add_child(pillars)
-scene:add_child(altar)
 scene:add_child(statues)
 
 statues:add_child(statue_1)
-statues:add_child(statue_2)
-statues:add_child(statue_3)
-statues:add_child(statue_r1)
-statues:add_child(statue_r2)
-statues:add_child(statue_r3)
-
-pillars:add_child(left_pillar_1)
-pillars:add_child(left_pillar_2)
-pillars:add_child(left_pillar_3)
 pillars:add_child(right_pillar_1)
-pillars:add_child(right_pillar_2)
-pillars:add_child(right_pillar_3)
-
-walls:add_child(ground)
-walls:add_child(roof)
-walls:add_child(leftwallcsg)
-walls:add_child(rightwallcsg)
-walls:add_child(backwallcsg)
-walls:add_child(frontwall)
 
 
 
-gr.render(scene, 'FinalScene.png', 480, 270, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light,flame1,flame2,flame3,flame4,flame5,flame6, backlight})
+--gr.render(scene, 'FinalScene.png', 480, 270, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light,flame1,flame2,flame3,flame4,flame5,flame6, backlight})
 --gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light, flame1s, backlight})
---gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, testlight, backlight})
+gr.render(scene, 'PillarKnight.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, testlight})
 --gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.2, 0.2, 0.2}, {primary_light_pt, flame1, backlight})
