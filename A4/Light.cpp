@@ -15,11 +15,16 @@ Light::Light(const dvec3 &colour, const dvec3 &position, const dvec3 &falloff)
 dvec3 Light::lightColor(const FlatPrimitives &nodes, const dvec3 &kd, const dvec3 &ks, double shininess, const dvec4 &v_eye, const dvec4 &point, const dvec4 &normal) {
   dvec3 color;
   dvec4 l_dir = dvec4(position, 1.0) - point;
+
+  double d = length(l_dir);
+  double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
+  if (attenuation < 0.01) {
+    return dvec3(0,0,0);
+  }
+
   IntersectionPoint pt = nodes.firstHitInNodeList(point, l_dir, 1.0);
 
   if (!pt.valid) {
-    double d = length(l_dir);
-    double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
     dvec4 reflDirection = Utils::ggReflection(l_dir, normal);
     double l_dot_n = dot(normal, normalize(l_dir));
     double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
@@ -56,11 +61,15 @@ glm::dvec3 PlanarLight::lightColor(const FlatPrimitives &nodes, const dvec3 &kd,
       );
 
       dvec4 l_dir = lightPoint - point;
+      double d = length(l_dir);
+      double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
+
+      if (attenuation < 0.01) {
+        continue;
+      }
       IntersectionPoint pt = nodes.firstHitInNodeList(point, l_dir, 1.0);
 
       if (!pt.valid) {
-        double d = length(l_dir);
-        double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
         dvec4 reflDirection = Utils::ggReflection(l_dir, normal);
         double l_dot_n = dot(normal, normalize(l_dir));
         double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));
@@ -101,11 +110,17 @@ glm::dvec3 SphericalLight::lightColor(const FlatPrimitives &nodes, const dvec3 &
         r * sin(theta) * axes.second;
 
       dvec4 l_dir = lightPoint - point;
+
+      double d = length(l_dir);
+      double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
+
+      if (attenuation < 0.01) {
+        continue;
+      }
+
       IntersectionPoint pt = nodes.firstHitInNodeList(point, l_dir, 1.0);
 
       if (!pt.valid) {
-        double d = length(l_dir);
-        double attenuation = 1.0/(falloff[0] + falloff[1]*d + falloff[2]*d*d);
         dvec4 reflDirection = Utils::ggReflection(l_dir, normal);
         double l_dot_n = dot(normal, normalize(l_dir));
         double r_dot_v = dot(normalize(v_eye), normalize(reflDirection));

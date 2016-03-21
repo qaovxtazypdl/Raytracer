@@ -577,7 +577,8 @@ IntersectionInfo Torus::checkRayIntersection(const glm::dvec4 &ray_origin, const
 
   if (numRoots == 1 || numRoots == 3) {
     cout << "TORUS ROOT ASSUMPTION" << endl;
-    throw "TORUS ROOT ASSUMPTION";
+    //throw "TORUS ROOT ASSUMPTION";
+    return IntersectionInfo();
   } else if (numRoots != 0) {
     vector<double> ts;
     for (int i = 0; i < numRoots; i++) {
