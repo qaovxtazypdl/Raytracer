@@ -7,7 +7,7 @@
 
 //refl and refr
 #define MACRO_REFLECTION_ON true
-#define MACRO_REFRACTION_ON false
+#define MACRO_REFRACTION_ON true
 #define MACRO_GLOSSY_ON false
 
 //threading
