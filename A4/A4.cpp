@@ -226,8 +226,8 @@ void t_trace(size_t nx, size_t ny, double w, double h, double d,
 
       counterLock.lock();
         count++;
-        if (count*100/maxCount > (count-1)*100/maxCount) {
-          cout << "Trace - Progress: " << count*100/maxCount << endl;
+        if (count*1000/maxCount > (count-1)*1000/maxCount) {
+          cout << "Trace - Progress: " << count*1000/maxCount << endl;
         }
       counterLock.unlock();
     }
@@ -297,8 +297,8 @@ void t_aa(size_t nx, size_t ny, double w, double h, double d,
 
       counterLock.lock();
         count++;
-        if (count*10/maxCount > (count-1)*10/maxCount) {
-          cout << "AA - Progress: " << count*100/maxCount << endl;
+        if (count*1000/maxCount > (count-1)*1000/maxCount) {
+          cout << "AA - Progress: " << count*1000/maxCount << endl;
         }
       counterLock.unlock();
     }
