@@ -1,9 +1,11 @@
 #include "Texture.hpp"
+#include <iostream>
 
 using namespace glm;
 using namespace std;
 
 Texture::Texture(string filename) {
+  cout << "loading texture: " << filename << endl;
   std::vector<unsigned char> image;
   unsigned error = lodepng::decode(image, nx, ny, filename);
   if(error) {
