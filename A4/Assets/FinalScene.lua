@@ -30,7 +30,7 @@ pewter = gr.material({0.427451, 0.470588, 0.541176}, {0.33333, 0.33333, 0.521569
 polsilver = gr.material({0.50754, 0.50754, 0.50754}, {0.508273, 0.508273, 0.508273}, 51.2)
 
 primary_light = gr.light({-8000, 8000, 0}, {1.0, 1.0, 1.0}, {1, 0, 0})
-test_inner_light = gr.light({0,50,50}, {0.4, 0.4, 0.4}, {1,0,0})
+test_inner_light = gr.light({0,50,50}, {0.4, 0.4, 0.4}, {1,0.0001,0})
 
 scene = gr.node('root')
 
@@ -739,7 +739,7 @@ background = gr.cube('background')
 background:translate(-0.5,-0.5,-0.5)
 background:scale(2500,500,1)
 background:translate(0,0,-600)
-background:set_material(stone)
+background:set_material(perfectCanvas)
 
 outside:add_child(plane)
 outside:add_child(background)
@@ -749,9 +749,9 @@ outside:add_child(background)
 
 scene:add_child(walls)
 scene:add_child(outside)
-scene:add_child(pillars)
-scene:add_child(altar)
-scene:add_child(statues)
+--scene:add_child(pillars)
+--scene:add_child(altar)
+--scene:add_child(statues)
 
 statues:add_child(statue_1)
 statues:add_child(statue_2)

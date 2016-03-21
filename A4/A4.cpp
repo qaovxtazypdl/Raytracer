@@ -373,7 +373,6 @@ void buildTreeCache(const SceneNode *root, dmat4 accumulatedTrans, vector<Hierar
     return;
   } else if (root->m_nodeType == NodeType::GeometryNode || root->m_nodeType == NodeType::CSGNode) {
     result.push_back(HierarchicalNodeInfo(root, accumulatedTrans));
-    return;
   } else if (root->m_nodeType == NodeType::JointNode) {
     const JointNode * jointNode = static_cast<const JointNode *>(root);
     accumulatedTrans = accumulatedTrans * jointNode->get_joint_transform();
