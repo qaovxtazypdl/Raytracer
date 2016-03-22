@@ -6,12 +6,12 @@
 #define MACRO_SUPERSAMPLE_SCALE 2
 
 //refl and refr
-#define MACRO_REFLECTION_ON true
+#define MACRO_REFLECTION_ON false
 #define MACRO_REFRACTION_ON false
 #define MACRO_GLOSSY_ON false
 
 //threading
-#define MACRO_NUM_THREADS 20
+#define MACRO_NUM_THREADS 16
 
 //sampling
 #define MACRO_NUM_GLOSSY_SAMPLES_RADIAL 2
@@ -22,10 +22,10 @@
 
 
 //Miscellaneous
-#define MACRO_STARFIELD_BACKGROUND_ON false
+#define MACRO_STARFIELD_BACKGROUND_ON true
 #define MACRO_RENDER_BOUNDING_BOX false
 #define PI 3.1415926535897932384
-#define MACRO_USE_BG false
+#define MACRO_USE_BG true
 
 //parallax and 3D
 #define MACRO_USE_ANAGLYPH false
