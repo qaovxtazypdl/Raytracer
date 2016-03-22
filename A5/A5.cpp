@@ -411,7 +411,7 @@ void A5_Render(
 		const std::list<Light *> & lights
 ) {
 
-  /**********************************************
+  /******************************UNIT TESTS****************
   dvec3 pt(0,0.7,0);
   double r = 0.3, R = 1.0;
   double u = asin(pt[2]/r)/PI + 0.5;

@@ -6,12 +6,12 @@
 #define MACRO_SUPERSAMPLE_SCALE 2
 
 //refl and refr
-#define MACRO_REFLECTION_ON false
+#define MACRO_REFLECTION_ON true
 #define MACRO_REFRACTION_ON false
 #define MACRO_GLOSSY_ON false
 
 //threading
-#define MACRO_NUM_THREADS 16
+#define MACRO_NUM_THREADS 20
 
 //sampling
 #define MACRO_NUM_GLOSSY_SAMPLES_RADIAL 2
@@ -32,3 +32,4 @@
 #define MACRO_3D_SIDE_BY_SIDE (MACRO_USE_ANAGLYPH && false)
 #define MACRO_3D_GREYSCALE (MACRO_USE_ANAGLYPH && false)
 #define MACRO_3D_PARALLAX 0.015
+

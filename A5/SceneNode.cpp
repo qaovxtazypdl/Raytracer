@@ -151,9 +151,13 @@ IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_di
   dmat3 T_invtrans = invtrans_transpose;
 
   if (m_boundingObject != NULL) {
-    IntersectionPoint bounding = m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir).getFirstValidIntersection(std::numeric_limits<double>::infinity());
-    if (!bounding.valid) {
-      return intersectionInfo;
+    if (MACRO_RENDER_BOUNDING_BOX) {
+      return m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir);
+    } else {
+      IntersectionPoint bounding = m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir).getFirstValidIntersection(std::numeric_limits<double>::infinity());
+      if (!bounding.valid) {
+        return intersectionInfo;
+      }
     }
   }
 

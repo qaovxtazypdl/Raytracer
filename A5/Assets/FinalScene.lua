@@ -891,4 +891,5 @@ walls:add_child(frontwall)
 
 
 
-gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.23, 0.2, 0.14}, {primary_light, flame1s, flame2s, flame3s, flame4s, flame5s, flame6s, backlight})
+--gr.render(scene, 'FinalScene.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.23, 0.2, 0.14}, {primary_light, flame1s, flame2s, flame3s, flame4s, flame5s, flame6s, backlight})
+gr.render(scene, 'FinalSceneTest.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.23, 0.2, 0.14}, {primary_light, testlight, backlight})
