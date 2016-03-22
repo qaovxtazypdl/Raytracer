@@ -18,46 +18,15 @@ Soft Shadows                               DONE*+
 Refraction                                 DONE*+
 Texture Map                                DONE*+
 Bump Map                                   DONE*+
-SCENE                                      MON(R)
+SCENE                                      DONE*+
 
-gl16
-
-
-Manual/README                           0.5h
-  copy manual to readme
-PDF showcase                            1h
-Threading and BB testing
 
 
 SECURITY - 2 days - due FRIDAY APR 1
   +TUE +WED
-GRAPHICS - 1 day - due WEDNESDAY MAR 30
+BIGDATA 1 day - due THURSDAY MAR 31
   TUE
-BIGDATA 2 days - due THURSDAY MAR 31
-  THU SAT
 STARS PROJECT 3 days - due WEDNESDAY MAR 30 / STARS REPORT WED APR 6th
   TUE FRI SUN MON
 STARS ASSIGNMENT 2 days - due MONDAY MAR 28
   WED THU
-
-
-
-
-
-
-BB: 375 GeometryNodes
-================
-bb only: 162 seconds
-with: 225 seconds
-without: 1233 seconds
-
-Threading: sample scene rendering
-=================
-Mac (duo core):
-1 thread: 116 seconds
-2 thread: 62 seconds
-6 thread: 56 seconds
-20 thread: 54 seconds
-
-
-

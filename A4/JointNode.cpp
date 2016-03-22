@@ -66,4 +66,3 @@ const glm::dmat4 JointNode::get_joint_transform() const {
   glm::dmat4 rot_matrix_z = glm::rotate(degreesToRadians((float)current_z_rot), glm::vec3(0,0,1));
   return rot_matrix_x * rot_matrix_y * rot_matrix_z;
 }
-

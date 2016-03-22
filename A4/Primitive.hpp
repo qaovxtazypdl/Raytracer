@@ -5,13 +5,8 @@
 #include <iostream>
 #include <vector>
 #include "polyroots.hpp"
-#include "Flags.hpp"
-#include "PhongMaterial.hpp"
-#include "PhongMaterial.hpp"
 #include <glm/gtx/io.hpp>
-#include "Intersection.hpp"
 
-class Primitive;
 struct Triangle
 {
   size_t v1;
@@ -25,50 +20,62 @@ struct Triangle
   {}
 };
 
+class IntersectionInfo {
+public:
+  bool didIntersect;
+  double intersect_t;
+  glm::dvec4 normal;
+  glm::dvec4 point;
 
+  IntersectionInfo(double intersect_t, const glm::dvec4 &point, const glm::dvec4 &normal) :
+    intersect_t(intersect_t), normal(normal), didIntersect(true), point(point)
+  {}
+
+  IntersectionInfo() : didIntersect(false), intersect_t(0) {}
+};
 
 class Primitive {
 public:
   virtual ~Primitive();
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material) {return IntersectionInfo();}
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {return IntersectionInfo();}
 };
 
 class NonhierSphere : public Primitive {
 public:
-  NonhierSphere(const glm::dvec3& pos, double radius)
+  NonhierSphere(const glm::vec3& pos, double radius)
     : m_pos(pos), m_radius(radius)
   {
   }
   virtual ~NonhierSphere();
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
 
-protected:
-  glm::dvec3 m_pos;
+private:
+  glm::vec3 m_pos;
   double m_radius;
 };
 
 class NonhierBox : public Primitive {
 public:
-  NonhierBox(const glm::dvec3& pos, double size)
+  NonhierBox(const glm::vec3& pos, double size)
     : m_pos(pos), m_size(size)
   {
   }
-  NonhierBox(const glm::dvec3& pos, glm::dvec3 size)
+  NonhierBox(const glm::vec3& pos, glm::vec3 size)
     : m_pos(pos), m_size(size)
   {
   }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
+  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t);
   virtual ~NonhierBox();
 
-protected:
-  glm::dvec3 m_pos;
-  glm::dvec3 m_size;
+private:
+  glm::vec3 m_pos;
+  glm::vec3 m_size;
 };
 
 class Sphere : public NonhierSphere {
 public:
   Sphere()
-    : NonhierSphere(glm::dvec3(0,0,0), 1.0)
+    : NonhierSphere(glm::vec3(0,0,0), 1.0)
   {
   }
   virtual ~Sphere();
@@ -77,68 +84,8 @@ public:
 class Cube : public NonhierBox {
 public:
   Cube()
-    : NonhierBox(glm::dvec3(0,0,0), 1.0)
+    : NonhierBox(glm::vec3(0,0,0), 1.0)
   {
   }
   virtual ~Cube();
-};
-
-class OneSidedCube : public NonhierBox {
-public:
-  OneSidedCube()
-    : NonhierBox(glm::dvec3(0,0,0), 1.0)
-  {
-  }
-  virtual ~OneSidedCube();
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
-};
-
-
-class Cone : public Primitive {
-public:
-  Cone()
-  {
-  }
-
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
-  virtual ~Cone();
-
-protected:
-  glm::dvec3 m_pos;
-  glm::dvec3 m_size;
-};
-
-
-class Cylinder : public Primitive {
-public:
-  Cylinder()
-  {
-  }
-
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
-  virtual ~Cylinder();
-};
-
-
-class Torus : public Primitive {
-public:
-  Torus(double inner) : m_inner(inner)
-  {
-  }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
-  virtual ~Torus();
-protected:
-  double m_inner;
-};
-
-class Hyperboloid : public Primitive {
-public:
-  Hyperboloid(double inner) : m_inner(inner)
-  {
-  }
-  virtual IntersectionInfo checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material);
-  virtual ~Hyperboloid();
-
-protected:
-  double m_inner;
 };

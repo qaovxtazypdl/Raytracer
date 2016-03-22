@@ -6,7 +6,6 @@
 
 // #include "cs488-framework/ObjFileDecoder.hpp"
 #include "Mesh.hpp"
-#include "Material.hpp"
 
 using namespace glm;
 using namespace std;
@@ -107,19 +106,19 @@ bool Mesh::computeBGT(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, T
   return true;
 }
 
-IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, const MaterialPackage &m_material) {
+IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir, double max_t) {
   if (MACRO_RENDER_BOUNDING_BOX) {
-    return boundingBox->checkRayIntersection(ray_origin, ray_dir, m_material);
+    return boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t);
   }
 
-  if (!boundingBox->checkRayIntersection(ray_origin, ray_dir, m_material).getFirstValidIntersection(std::numeric_limits<double>::infinity()).valid) {
+  if (!boundingBox->checkRayIntersection(ray_origin, ray_dir, max_t).didIntersect) {
     return IntersectionInfo();
   }
 
   const double EPSILON = 1E-11;
+  double min_t = std::numeric_limits<double>::infinity();
+  bool foundOne = false;
   dvec4 intersect_normal;
-
-  IntersectionInfo result;
 
   int i = 0;
   //return maximum intersection z
@@ -133,22 +132,19 @@ IntersectionInfo Mesh::checkRayIntersection(const glm::dvec4 &ray_origin, const 
     //check for intersection
     if (t >= EPSILON) {
       //found! update if t value of intersection is less. (find minimum t)
-      intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0));
-      if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
-
-      result.intersections.push_back(IntersectionPoint(
-        t, t*ray_dir + ray_origin, intersect_normal, m_material, this,
-        t, t*ray_dir + ray_origin, intersect_normal, m_material, this,
-        UVPackage({0,0}, dvec4(0.0), dvec4(0.0)), UVPackage({0,0}, dvec4(0.0), dvec4(0.0))
-      ));
-
-      std::sort(result.intersections.begin(), result.intersections.end(), [](const IntersectionPoint &pt1, const IntersectionPoint &pt2) {
-        return pt1.intersect_t_1 < pt2.intersect_t_1;
-      });
+      if (min_t > t) {
+        foundOne = true;
+        min_t = t;
+        intersect_normal = normalize(dvec4(cross(v2-v1, v3-v1), 0.0));
+      }
     }
   }
 
-  return result;
+  if (foundOne) {
+    if (dot(intersect_normal, ray_dir) > 0) intersect_normal *= -1;
+    return IntersectionInfo(min_t, min_t*ray_dir + ray_origin, intersect_normal);
+  } else {
+    return IntersectionInfo();
+  }
 }
-
 

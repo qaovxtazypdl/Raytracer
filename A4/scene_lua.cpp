@@ -41,18 +41,14 @@
 #include <cctype>
 #include <cstring>
 #include <cstdio>
-#include <string>
 #include <vector>
 #include <map>
 
 #include "lua488.hpp"
 
-#include "Texture.hpp"
 #include "Light.hpp"
-#include "Flags.hpp"
 #include "Mesh.hpp"
 #include "GeometryNode.hpp"
-#include "CSGNode.hpp"
 #include "JointNode.hpp"
 #include "Primitive.hpp"
 #include "Material.hpp"
@@ -98,10 +94,6 @@ struct gr_material_ud {
   Material* material;
 };
 
-// texture
-struct gr_texture_ud {
-  Texture* texture;
-};
 // The "userdata" type for a light. Objects of this type will be
 // allocated by Lua to represent lights.
 struct gr_light_ud {
@@ -132,24 +124,6 @@ int gr_node_cmd(lua_State* L)
 
   const char* name = luaL_checkstring(L, 1);
   data->node = new SceneNode(name);
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Create a CSG node
-extern "C"
-int gr_csg_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  data->node = new CSGNode(name);
 
   luaL_getmetatable(L, "gr.node");
   lua_setmetatable(L, -2);
@@ -212,103 +186,7 @@ int gr_cube_cmd(lua_State* L)
   data->node = 0;
 
   const char* name = luaL_checkstring(L, 1);
-  data->node = new GeometryNode(name, new OneSidedCube());
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-
-// Create a cube node
-extern "C"
-int gr_cube6_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
   data->node = new GeometryNode(name, new Cube());
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Create a cube node
-extern "C"
-int gr_cylinder_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  data->node = new GeometryNode(name, new Cylinder());
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-
-// Create a cube node
-extern "C"
-int gr_cone_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  data->node = new GeometryNode(name, new Cone());
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-
-// Create a cube node
-extern "C"
-int gr_torus_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  double innerWidth = luaL_checknumber(L, 2);
-  data->node = new GeometryNode(name, new Torus(innerWidth));
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Create a cube node
-extern "C"
-int gr_hyperboloid_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  double squeeze = luaL_checknumber(L, 2);
-
-  data->node = new GeometryNode(name, new Hyperboloid(squeeze));
 
   luaL_getmetatable(L, "gr.node");
   lua_setmetatable(L, -2);
@@ -406,82 +284,16 @@ int gr_light_cmd(lua_State* L)
   gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
   data->light = 0;
 
-  double colour[3];
-  double position[3];
-  double falloff[3];
-  get_tuple(L, 1, position, 3);
-  get_tuple(L, 2, colour, 3);
-  get_tuple(L, 3, falloff, 3);
+  Light l;
 
-  data->light = new Light(
-    glm::vec3(colour[0], colour[1], colour[2]),
-    glm::vec3(position[0], position[1], position[2]),
-    glm::vec3(falloff[0], falloff[1], falloff[2])
-  );
+  double col[3];
+  get_tuple(L, 1, &l.position[0], 3);
+  get_tuple(L, 2, col, 3);
+  get_tuple(L, 3, l.falloff, 3);
 
-  luaL_newmetatable(L, "gr.light");
-  lua_setmetatable(L, -2);
+  l.colour = glm::vec3(col[0], col[1], col[2]);
 
-  return 1;
-}
-
-// Make a planar light
-extern "C"
-int gr_planar_light_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
-  data->light = 0;
-
-  double colour[3];
-  double position[3];
-  double falloff[3];
-  double plane_vector_1[3];
-  double plane_vector_2[3];
-  get_tuple(L, 1, position, 3);
-  get_tuple(L, 2, colour, 3);
-  get_tuple(L, 3, falloff, 3);
-  get_tuple(L, 3, plane_vector_1, 3);
-  get_tuple(L, 3, plane_vector_2, 3);
-
-  data->light = new PlanarLight(
-    glm::vec3(colour[0], colour[1], colour[2]),
-    glm::vec3(position[0], position[1], position[2]),
-    glm::vec3(falloff[0], falloff[1], falloff[2]),
-    glm::vec3(plane_vector_1[0], plane_vector_1[1], plane_vector_1[2]),
-    glm::vec3(plane_vector_2[0], plane_vector_2[1], plane_vector_2[2])
-  );
-
-  luaL_newmetatable(L, "gr.light");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Make a spherical light
-extern "C"
-int gr_spherical_light_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
-  data->light = 0;
-
-  double colour[3];
-  double position[3];
-  double falloff[3];
-  get_tuple(L, 1, position, 3);
-  get_tuple(L, 2, colour, 3);
-  get_tuple(L, 3, falloff, 3);
-  double radius = luaL_checknumber(L, 4);
-
-  data->light = new SphericalLight(
-    glm::vec3(colour[0], colour[1], colour[2]),
-    glm::vec3(position[0], position[1], position[2]),
-    glm::vec3(falloff[0], falloff[1], falloff[2]),
-    radius
-  );
+  data->light = new Light(l);
 
   luaL_newmetatable(L, "gr.light");
   lua_setmetatable(L, -2);
@@ -529,36 +341,12 @@ int gr_render_cmd(lua_State* L)
     lights.push_back(ldata->light);
     lua_pop(L, 1);
   }
-  if (MACRO_3D_SIDE_BY_SIDE) {
-    Image im(2*width, height);
-    A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
-      im.savePng( filename );
-  } else {
-    Image im( width, height);
-    A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
-      im.savePng( filename );
-  }
 
+	Image im( width, height);
+	A4_Render(root->node, im, eye, view, up, fov, ambient, lights);
+    im.savePng( filename );
 
 	return 0;
-}
-
-// Create a texture
-extern "C"
-int gr_texture_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_texture_ud* data = (gr_texture_ud*)lua_newuserdata(L, sizeof(gr_texture_ud));
-  data->texture = 0;
-
-  std::string filename = std::string(luaL_checkstring(L, 1));
-  data->texture = new Texture(filename);
-
-  luaL_newmetatable(L, "gr.texture");
-  lua_setmetatable(L, -2);
-
-  return 1;
 }
 
 // Create a material
@@ -578,34 +366,6 @@ int gr_material_cmd(lua_State* L)
   data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
                                      glm::vec3(ks[0], ks[1], ks[2]),
                                      shininess);
-
-  luaL_newmetatable(L, "gr.material");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
-// Create a material
-extern "C"
-int gr_material_extended_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_material_ud* data = (gr_material_ud*)lua_newuserdata(L, sizeof(gr_material_ud));
-  data->material = 0;
-
-  double kd[3], ks[3];
-  get_tuple(L, 1, kd, 3);
-  get_tuple(L, 2, ks, 3);
-  double shininess = luaL_checknumber(L, 3);
-  double indexOfRefraction = luaL_checknumber(L, 4);
-  double opacity = luaL_checknumber(L, 5);
-  double glossiness = luaL_checknumber(L, 6);
-  bool isLight = luaL_checknumber(L, 7) > 0;
-
-  data->material = new PhongMaterial(glm::vec3(kd[0], kd[1], kd[2]),
-                                     glm::vec3(ks[0], ks[1], ks[2]),
-                                     shininess, indexOfRefraction, opacity, glossiness, isLight);
 
   luaL_newmetatable(L, "gr.material");
   lua_setmetatable(L, -2);
@@ -634,103 +394,6 @@ int gr_node_add_child_cmd(lua_State* L)
   return 0;
 }
 
-// Add a child to a node
-extern "C"
-int gr_node_add_bound_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
-  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
-
-  SceneNode* self = selfdata->node;
-
-  gr_node_ud* childdata = (gr_node_ud*)luaL_checkudata(L, 2, "gr.node");
-  luaL_argcheck(L, childdata != 0, 2, "Node expected");
-
-  SceneNode* child = childdata->node;
-
-  self->set_bounding_object(child);
-
-  return 0;
-}
-
-// Add children to a csg node
-extern "C"
-int gr_node_set_csg_children_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
-  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
-  CSGNode* self = dynamic_cast<CSGNode*>(selfdata->node);
-
-  gr_node_ud* childdataLeft = (gr_node_ud*)luaL_checkudata(L, 2, "gr.node");
-  luaL_argcheck(L, childdataLeft != 0, 2, "Node expected");
-  SceneNode* childLeft = childdataLeft->node;
-
-  gr_node_ud* childdataRight = (gr_node_ud*)luaL_checkudata(L, 3, "gr.node");
-  luaL_argcheck(L, childdataRight != 0, 3, "Node expected");
-  SceneNode* childRight = childdataRight->node;
-
-  const char* action_string = luaL_checkstring(L, 4);
-
-  self->setCSGChildren(childLeft, childRight, std::string(action_string));
-
-  return 0;
-}
-
-// Set a node's bump map.
-extern "C"
-int gr_node_set_texture_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
-  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
-
-  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
-
-  gr_texture_ud* textdata = (gr_texture_ud*)luaL_checkudata(L, 2, "gr.texture");
-  luaL_argcheck(L, textdata != 0, 2, "Texture expected");
-
-  Texture* texture = textdata->texture;
-
-  self->setTextureMap(texture);
-
-  return 0;
-}
-
-// Set a node's bump map.
-extern "C"
-int gr_node_set_bumps_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-
-  gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
-  luaL_argcheck(L, selfdata != 0, 1, "Node expected");
-
-  GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
-
-  gr_texture_ud* textdata = (gr_texture_ud*)luaL_checkudata(L, 2, "gr.texture");
-  luaL_argcheck(L, textdata != 0, 2, "Texture expected");
-
-  std::string channels = std::string(luaL_checkstring(L, 3));
-  Texture* texture = textdata->texture;
-
-  int mask = 0;
-  for (int i = 0; i < channels.length(); i++) {
-    if (channels[i] == 'R' || channels[i] == 'r') mask |= 0x1;
-    else if (channels[i] == 'G' || channels[i] == 'g') mask |= 0x2;
-    else if (channels[i] == 'B' || channels[i] == 'b') mask |= 0x4;
-  }
-
-  self->setBumpMap(texture, mask);
-
-  return 0;
-}
-
-
 // Set a node's material
 extern "C"
 int gr_node_set_material_cmd(lua_State* L)
@@ -747,7 +410,7 @@ int gr_node_set_material_cmd(lua_State* L)
   gr_material_ud* matdata = (gr_material_ud*)luaL_checkudata(L, 2, "gr.material");
   luaL_argcheck(L, matdata != 0, 2, "Material expected");
 
-  PhongMaterial* material = dynamic_cast<PhongMaterial *>(matdata->material);
+  Material* material = matdata->material;
 
   self->setMaterial(material);
 
@@ -853,22 +516,12 @@ static const luaL_Reg grlib_functions[] = {
   {"sphere", gr_sphere_cmd},
   {"joint", gr_joint_cmd},
   {"material", gr_material_cmd},
-  {"texture", gr_texture_cmd},
-  {"material_extended", gr_material_extended_cmd},
   // New for assignment 4
-  {"csg", gr_csg_cmd},
   {"cube", gr_cube_cmd},
-  {"cube6", gr_cube6_cmd},
-  {"cylinder", gr_cylinder_cmd},
-  {"cone", gr_cone_cmd},
-  {"torus", gr_torus_cmd},
-  {"hyperboloid", gr_hyperboloid_cmd},
   {"nh_sphere", gr_nh_sphere_cmd},
   {"nh_box", gr_nh_box_cmd},
   {"mesh", gr_mesh_cmd},
   {"light", gr_light_cmd},
-  {"planar_light", gr_planar_light_cmd},
-  {"spherical_light", gr_spherical_light_cmd},
   {"render", gr_render_cmd},
   {0, 0}
 };
@@ -888,11 +541,7 @@ static const luaL_Reg grlib_functions[] = {
 static const luaL_Reg grlib_node_methods[] = {
   {"__gc", gr_node_gc_cmd},
   {"add_child", gr_node_add_child_cmd},
-  {"add_bound", gr_node_add_bound_cmd},
-  {"set_csg_children", gr_node_set_csg_children_cmd},
   {"set_material", gr_node_set_material_cmd},
-  {"set_bumps", gr_node_set_bumps_cmd},
-  {"set_texture", gr_node_set_texture_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},
   {"translate", gr_node_translate_cmd},

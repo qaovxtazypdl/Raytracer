@@ -1,26 +1,22 @@
 #pragma once
 
 #include "Material.hpp"
-#include "Texture.hpp"
-#include "Primitive.hpp"
 
 #include <glm/glm.hpp>
 
 #include <list>
 #include <string>
 #include <iostream>
-#include <limits>
 
 enum class NodeType {
 	SceneNode,
 	GeometryNode,
-  JointNode,
-	CSGNode
+	JointNode
 };
 
 class SceneNode {
 public:
-  SceneNode(const std::string & name);
+    SceneNode(const std::string & name);
 
 	SceneNode(const SceneNode & other);
 
@@ -34,7 +30,6 @@ public:
     void set_transform(const glm::dmat4& m);
 
     void add_child(SceneNode* child);
-    void set_bounding_object(SceneNode* bound);
 
     void remove_child(SceneNode* child);
 
@@ -43,18 +38,14 @@ public:
     void scale(const glm::vec3& amount);
     void translate(const glm::vec3& amount);
 
-  virtual IntersectionInfo testNode(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
-  virtual IntersectionInfo testHit(const glm::dvec4 &ray_origin, const glm::dvec4 &ray_dir) const;
 
 	friend std::ostream & operator << (std::ostream & os, const SceneNode & node);
 
     // Transformations
     glm::dmat4 trans;
     glm::dmat4 invtrans;
-    glm::dmat3 invtrans_transpose;
 
     std::list<SceneNode*> children;
-    SceneNode * m_boundingObject;
 
 	NodeType m_nodeType;
 	std::string m_name;
@@ -62,5 +53,5 @@ public:
 
 private:
 	// The number of SceneNode instances.
-  static unsigned int nodeInstanceCount;
+	static unsigned int nodeInstanceCount;
 };

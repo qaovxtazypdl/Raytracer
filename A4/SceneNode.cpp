@@ -1,5 +1,6 @@
 #include "SceneNode.hpp"
 
+#include "cs488-framework/MathUtils.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -22,8 +23,7 @@ SceneNode::SceneNode(const std::string& name)
 	m_nodeType(NodeType::SceneNode),
 	trans(dmat4()),
 	invtrans(dmat4()),
-	m_nodeId(nodeInstanceCount++),
-  m_boundingObject(NULL)
+	m_nodeId(nodeInstanceCount++)
 {
 
 }
@@ -34,8 +34,7 @@ SceneNode::SceneNode(const SceneNode & other)
 	: m_nodeType(other.m_nodeType),
 	  m_name(other.m_name),
 	  trans(other.trans),
-	  invtrans(other.invtrans),
-    m_boundingObject(NULL)
+	  invtrans(other.invtrans)
 {
 	for(SceneNode * child : other.children) {
 		this->children.push_front(new SceneNode(*child));
@@ -53,7 +52,6 @@ SceneNode::~SceneNode() {
 void SceneNode::set_transform(const glm::dmat4& m) {
 	trans = m;
 	invtrans = glm::inverse(m);
-  invtrans_transpose = glm::transpose(glm::inverse(glm::dmat3(m)));
 }
 
 //---------------------------------------------------------------------------------------
@@ -93,7 +91,7 @@ void SceneNode::rotate(char axis, float angle) {
 		default:
 			break;
 	}
-	dmat4 rot_matrix = glm::rotate((float)(angle / 180.0 * PI), rot_axis);
+	dmat4 rot_matrix = glm::rotate(degreesToRadians(angle), rot_axis);
 	set_transform( rot_matrix * trans );
 }
 
@@ -127,9 +125,6 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 		case NodeType::JointNode:
 			os << "JointNode";
 			break;
-    case NodeType::CSGNode:
-      os << "CSGNode";
-      break;
 	}
 	os << ":[";
 
@@ -139,34 +134,3 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 	os << "]\n";
 	return os;
 }
-
-IntersectionInfo SceneNode::testNode(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
-  return testHit(ray_origin, ray_dir);
-}
-
-IntersectionInfo SceneNode::testHit(const dvec4 &ray_origin, const dvec4 &ray_dir) const {
-  IntersectionInfo intersectionInfo;
-  dmat4 T = trans;
-  dmat4 T_inv = invtrans;
-  dmat3 T_invtrans = invtrans_transpose;
-
-  if (m_boundingObject != NULL) {
-    IntersectionPoint bounding = m_boundingObject->testHit(T_inv * ray_origin, T_inv * ray_dir).getFirstValidIntersection(std::numeric_limits<double>::infinity());
-    if (!bounding.valid) {
-      return intersectionInfo;
-    }
-  }
-
-  for (SceneNode * node : children) {
-    intersectionInfo = intersectionInfo.UNION(node->testHit(T_inv * ray_origin, T_inv * ray_dir));
-  }
-
-  intersectionInfo.TRANSFORM_UP(T, T_invtrans);
-
-  return intersectionInfo;
-}
-
-void SceneNode::set_bounding_object(SceneNode* bound) {
-  m_boundingObject = bound;
-}
-

@@ -1,20 +1,68 @@
 Compilation
 =====================================
-extract A5/ info the same environment as the cs488 folders of the past
-in A5/:
+How to run:
+First, extract the zip file to any directory. Then run:
 
 premake4 gmake
 make
+cd A5
+premake4 gmake
+make
+
+to build the A5 executable.
 
 tested on gl16.student.cs
 
+
+
+
+
+
+
 Manual
 =====================================
-To Invoke: ./A5 scenefile
-where scenefile is a lua file defining a scene, as usual. e.g. ./A5 Assets/FinalScene.lua
-A full list of available predefined test scenes can be viewed under the Assets/ directory.
+To run the raytracer,
+./A5 path_to_lua_script
+Where path_to_lua_script is the path to a Lua file defining a scene as seen in A4. The Lua file contains a series of commands which construct the scene.
+I am supporting all operations supported in A4 as-is.
+I have also added a few new Lua bindings to help render more complex scenes.
+Below is a comprehensive list of commands available in the Lua scripts.
 
-A full list of lua commands is available in the project report file report.pdf under Manual if you wish to define a new scene.
+
+Lua commands supported across A3 and A4
+---------------------
+  gr.node(name): Return a node with the given name, with the identity as its transformation matrix and no children.
+  pnode:add_child(cnode): Add cnode as a child of pnode.
+  gr.material({dr, dg, db}, {sr, sg, sb}, p): Return a material with diffuse reflection coefficients dr, dg, db, specular reflection coefficients sr, sg, sb, and Phong coefficient p.
+  node:set_material(mat): Assign the given material to the given node. Node materials can be changed at any time.
+  node:rotate(axis, angle): Rotate node about a local coordinate axis ('x', 'y' or 'z') by angle (in degrees).
+  node:translate(dx, dy, dz): Translate the given node by (dx, dy, dz).
+  node:scale(sx, sy, sz): Scale node by (sx, sy, sz).
+  gr.mesh(name, objfilepath): Load a mesh from an external OBJ file. Returns a reference to a newly created GeometryNode that points to the mesh. Internally, meshes are cached so that multiple invocations of gr.mesh() with the same file name will share the same underlying Mesh instance.
+  gr.nh_box( name, {x,y,z}, r ): Create a non-hierarchical box of the given name. The box should be aligned with the axes of its Model coordinates, with one corner at (x, y, z) and the diagonally opposite corner at (x + r, y + r, z + r).
+  gr.nh_sphere( name, {x,y,z}, r ): Create a non-hierarchical sphere of the given name, with centre (x, y, z) and radius r.
+  gr.cube( name ): Create an axis-aligned cube with one corner at (0,0,0) and the other at (1,1,1). (It's expected that this cube would be placed under transformations in a tree.)
+  gr.sphere( name ): Create a sphere with centre (0,0,0) and radius 1.
+  gr.light( {x,y,z}, {r,g,b}, {c0,c1,c2} ): Create a point light source located at (x, y, z) with intensity (r, g, b) and quadratic attenuation parameters c0, c1 and c2).
+  gr.render( node, filename, w, h, eye, view, up, fov, ambient, lights ): Raytrace an image of size w×h and store the image in a PNG file with the given filename. The parameters eye, view, up and fov control the camera. The last two parameters are the global ambient lighting and a list of point light sources in the scene.
+
+New Lua commands:
+----------------------
+Primitives, Materials, Lights:
+  gr.torus(name, outer_radius) – creates a torus GeometryNode with inner radius 1, and outer radius as specified, centered on the origin.
+  gr.cone(name) – creates a cone GeometryNode with radius 1, centered on the origin, with y clamped between -1 and 0.
+  gr.cylinder(name) - creates a cylinder GeometryNode with radius 1, centered on the origin, with y clamped between -1 and 1.
+  gr.hyperboloid(name, k) - creates a hyperboloid GeometryNode with equation x2+y2-z2=k, centered on the origin, with y clamped between -1 and 1.
+  gr.material_extended(({dr, dg, db}, {sr, sg, sb}, p, indexOfRefraction, opacity, glossiness, isLight) – Return a material with diffuse reflection coefficients dr, dg, db, specular reflection coefficients sr, sg, sb, and Phong coefficient p. The material is extended with index of refraction, opacity and glossiness, and isLight properties. In particular, isLight specifies whether material is a light (it is a light if isLight != 0), and therefore is invisible to shadow rays, in order to render lights as a physical object.
+  gr.material({dr, dg, db}, {sr, sg, sb}, p): Return a material with diffuse reflection coefficients dr, dg, db, specular reflection coefficients sr, sg, sb, and Phong coefficient p.
+  gr.planar_light({x,y,z}, {r,g,b}, {c0,c1,c2}, {u1,u2,u3}, {v1,v2,v3}) – creates an area light at specified position with color and attenuation (c0,c1,c2). Area is a plane whose opposing corners are defined as position-u-v, and position+u+v.
+  gr.spherical_light({x,y,z}, {r,g,b}, {c0,c1,c2}, radius) – creates an area light at specified position with color and attenuation (c0,c1,c2). Volume is a sphere of specified radius.
+Node Manipulations:
+  gr.csg(name) – creates an empty CSG node with specified name.
+  gr.set_csg_children(left_child, right_child, type) – populates a CSG node such that the CSG node represents an operation of specified type as a string, acting on the left child and right child.
+  gr.set_bumps(bumpMap) – sets the bump map of the GeometryNode to the bump map object passed in.
+  gr.set_texture(textureMap) – sets the texture map of the GeometryNode to the texture map object passed in
+  gr.add_bound(boundingNode) – sets a bounding box at the current SceneNode. The bounding node should be made sure to cover the entire object, and will be used as a sanity check on whether to proceed in doing a full comparison down the tree at the caller node to determine intersection.
 
 --Screenshot saved as screenshot.jpg (final scene)
 --Sample renderings saved under this directory (.png files)
