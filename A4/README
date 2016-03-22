@@ -1,33 +1,35 @@
 Compilation
 =====================================
+extract A5/ info the same environment as the cs488 folders of the past
+in A5/:
+
 premake4 gmake
 make
 
-(same as before)
-
-tested on gl07.student.cs
+tested on gl16.student.cs
 
 Manual
 =====================================
-NOTE: I prepended Assets/ to all objects loaded inside the lua scripts, so that running ./A4 in the A4 directory, pointing
-  to a lua file inside Assets/ will load the objects correctly. PLEASE RUN IN A4 DIRECTORY, not A4/Assets. (eg. ./A4 Assets/sample.lua)
-  I assumed that we could use dvec, dmat4, double ... etc to help reduce numerical error.
+To Invoke: ./A5 scenefile
+where scenefile is a lua file defining a scene, as usual. e.g. ./A5 Assets/FinalScene.lua
+A full list of available predefined test scenes can be viewed under the Assets/ directory.
 
-Extra feature: recursive reflection.
-  Sends out secondary rays from specular surfaces and recursively raytraces the scene down to a depth of at max 10.
-  This provides a decent rendering of reflective surfaces.
-  Scene: It's a ground plane with small reflectivity, and two mirror plane instances perpendicular to the plane.
-    The mirror instances consist of a highly reflective plane, and a cylinder mesh at the edge.
-    The mirror instances are set up at an angle so that rays entering will reflect multiple times between them.
-    In between is a shrine of some sort, containing a metallic sphere in the middle, surrounded by four smaller
-    spheres of varying material, and a statue/trophy in the middle. A cow on a red carpet is staring at the trophy.
-    On the lower side of the image, there is a nonhierarchical sphere and box on the ground beside the carpet.
-    The scene has three light sources. One directly on top, one directly behind eye, and the strongest one on a light angle from the top.
+A full list of lua commands is available in the project report file report.pdf under Manual if you wish to define a new scene.
 
---Screenshot saved as screenshot.jpg (sample scene)
---Sample renderings saved under Assets/ (.png files)
-  -hier, instance, macho-cows, nonhier, simple, simple-cows, sample (original scene)
-  -also included are versions of the above files with the -nref prefix, which are rendered without reflection (except sample)
-  -also included are versions of the above files with the -nostars prefix, which are rendered without starfield, for
-    easier time distinguishing between a star and a glitched fleck (not that there are any).
-  -macho-cows-bb (bounding box special render)
+--Screenshot saved as screenshot.jpg (final scene)
+--Sample renderings saved under this directory (.png files)
+--Sample renderings of final scene saved under A5/finalscenes/ (.png files)
+
+
+Objectives
+=========================================
+1. Additional Primitives (Cone, Hyperboloid, Torus, Cylinder)
+2. Constructive Solid Geometry
+3. Adaptive Anti-Aliasing
+4. Soft Shadows
+5. Glossy Reflection/Refraction
+6. Bump Mapping
+7. Texture Mapping
+8. Refraction
+9. Anaglyph 3D
+10. Final Scene
