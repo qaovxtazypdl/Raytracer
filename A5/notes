@@ -1,0 +1,53 @@
+E.Threading/Flatten                                           DONE
+E.Bounding Boxes                                              DONE
+
+E.Uniform Space Partitioning                                  acceleration
+E.Index of Refraction FUNCTION
+E.Perlin Noise for texture/bump   --  function defined textures.
+E.Caustics + texture map to conic caps
+E.Gravity: GR black holes
+E.Fog/Light rays: GR black holes
+
+
+Adaptive Stochastic Jitter Supersampling   DONE*+
+Cylinders, Cones, Torus                    DONE*+
+Constructive Solid Geometry                DONE*+
+Glossy reflection                          DONE*+
+Anaglyph 3D                                DONE*+
+Soft Shadows                               DONE*+
+Refraction                                 DONE*+
+Texture Map                                DONE*+
+Bump Map                                   DONE*+
+SCENE                                      MON(R)
+
+gl16
+
+
+a5-ify                                  0.5h
+Manual/README                           0.5h
+  copy manual to readme
+PDF showcase                            1h
+
+
+SECURITY - 2 days - due FRIDAY APR 1
+  +TUE +WED
+GRAPHICS - 1 day - due WEDNESDAY MAR 30
+  TUE
+BIGDATA 2 days - due THURSDAY MAR 31
+  THU SAT
+STARS PROJECT 3 days - due WEDNESDAY MAR 30 / STARS REPORT WED APR 6th
+  TUE FRI SUN MON
+STARS ASSIGNMENT 2 days - due MONDAY MAR 28
+  WED THU
+
+
+
+
+
+
+
+
+
+
+
+

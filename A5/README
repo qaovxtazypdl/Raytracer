@@ -1,0 +1,35 @@
+Compilation
+=====================================
+extract A5/ info the same environment as the cs488 folders of the past
+in A5/:
+
+premake4 gmake
+make
+
+tested on gl16.student.cs
+
+Manual
+=====================================
+To Invoke: ./A5 scenefile
+where scenefile is a lua file defining a scene, as usual. e.g. ./A5 Assets/FinalScene.lua
+A full list of available predefined test scenes can be viewed under the Assets/ directory.
+
+A full list of lua commands is available in the project report file report.pdf under Manual if you wish to define a new scene.
+
+--Screenshot saved as screenshot.jpg (final scene)
+--Sample renderings saved under this directory (.png files)
+--Sample renderings of final scene saved under A5/finalscenes/ (.png files)
+
+
+Objectives
+=========================================
+1. Additional Primitives (Cone, Hyperboloid, Torus, Cylinder)
+2. Constructive Solid Geometry
+3. Adaptive Anti-Aliasing
+4. Soft Shadows
+5. Glossy Reflection/Refraction
+6. Bump Mapping
+7. Texture Mapping
+8. Refraction
+9. Anaglyph 3D
+10. Final Scene
