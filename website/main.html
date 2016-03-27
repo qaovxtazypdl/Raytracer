@@ -1,0 +1,165 @@
+<html>
+<head>
+	<title>CS488 - Extended Raytracer</title>
+</head>
+<body>
+
+<h1>CS488 - Winter 2016 Project</h1>
+
+For this project, I have implemented the following:
+
+<ol>
+  <li>Additional Primitives (Cone, Hyperboloid, Torus, Cylinder)</li>
+  <li>Constructive Solid Geometry</li>
+  <li>Adaptive Anti-Aliasing</li>
+  <li>Soft Shadows</li>
+  <li>Glossy Reflection/Refraction</li>
+  <li>Texture Mapping</li>
+  <li>Bump Mapping</li>
+  <li>Refraction</li>
+  <li>Anaglyph 3D</li>
+  <li>Final Scene</li>
+  <li>Threading</li>
+  <li>Generalized Bounding Boxes</li>
+</ol>
+And in A4, Mirror Reflection.
+<h3>A4 - Mirror Reflection</h3>
+<img src="sample.png" />
+<br><br><br><br><br><br>
+
+
+<h3>Objective 1 - Additional Primitives</h3>
+Head on view of primitives, and rotated view to demonstrate the truncated caps of the quadric surfaces<br>
+<img src="shapes.png" /><img src="shapes2.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 2 - Constructive Solid Geometry</h3>
+The bottom row of objects represent unions of two primitives. The middle row of objects represent intersections. The top row represent the differences of two objects.<br>
+<img src="csg.png" /><br><br>
+Works with textures and bumps.<br>
+<img src="csg3.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 3 - Adaptive Anti-Aliasing</h3>
+Left scene without AA, right scene with AA. 3 by 3 jitter.<br>
+<img src="AntiAlias1.png" /><img src="AntiAlias1-ON.png" /><br><br>
+This is the same scene, with only the supersampled pixels drawn.<br>
+<img src="AntiAlias1-OUTLINE.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 4 - Soft Shadows</h3>
+Simple soft shadow test with both planar and spherical lights.<br>
+<img src="area_light.png" /><br><br>
+Spherical light source near and far from the object.<br>
+<img src="area_light2.png" /><img src="area_light3.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 5 - Glossy Reflection/Refraction</h3>
+Examples of glossy reflection with varying glossiness parameters.<br>
+<img src="glossy.png" /><br><br>
+Glossy refraction with varying glossiness parameters.<br>
+<img src="glossy2.png" /><br><br>
+Glossy reflection with other primitives.<br>
+<img src="glossy3.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 6 - Texture Mapping</h3>
+A simple checkerboard texture to check the mapping.<br>
+<img src="texture.png" /><img src="Assets/checkerboard.png" /><br><br>
+Some more complex textures and combinations with other features.<br>
+<img src="texture2.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 7 - Bump Mapping</h3>
+Bumps only, light source from the left and right.<br>
+<img src="bumpLeft.png" /><img src="bumpRight.png" /><br><br>
+Light source from the left and right. Textures mapped on top as well.<br>
+<img src="bumptextureLeft.png" /><img src="bumptextureRight.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 8 - Refraction</h3>
+Varying indices of refraction and opacity. Fresnel effect visible.<br>
+<img src="refraction.png" /><br><br>
+Transparency<br>
+<img src="refraction2.png" /><br><br>
+With CSG<br>
+<img src="refraction4.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 9 - Anaglyph 3D</h3>
+Anaglyph 3D - low and high parallax.<br>
+<img src="anaglyph1.png" /><img src="anaglyph1-hi.png" /><br><br>
+Anaglyph 3D - b/w and color.<br>
+<img src="Anaglyph2.png" /><img src="Anaglyph2-color.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 11 - Threading</h3>
+<table border="1">
+<tr>
+	<td>Number of Threads</td>
+	<td>Mac (duo core) render time (sec)</td>
+	<td>gl16 (6 core) render time (sec)</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>116</td>
+	<td>97</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>62</td>
+	<td>52</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>56</td>
+	<td>21</td>
+</tr>
+<tr>
+	<td>20</td>
+	<td>55</td>
+	<td>21</td>
+</tr>
+</table>
+For reference, this is the scene rendered.<br>
+<img src="sample-threading.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 12 - Bounding Boxes</h3>
+Rendering the final scene, without reflections, refractions and soft shadows, totalling 375 GeometryNodes<br>
+<table border="1">
+<tr>
+	<td></td>
+	<td>Time to render (sec)</td>
+</tr>
+<tr>
+	<td>With bounding boxes</td>
+	<td>1233</td>
+</tr>
+<tr>
+	<td>Without bounding boxes</td>
+	<td>225</td>
+</tr>
+<tr>
+	<td>Rendering BB only</td>
+	<td>162</td>
+</tr>
+</table>
+This is the same scene as the final scene, but rendered with bounding boxes.<br>
+<img src="BoundingBox.png" /><br><br>
+<br><br><br><br><br><br>
+
+<h3>Objective 10 - Final Scene</h3>
+Models of component objects. Pillar, Statue, Altar, Room.<br>
+<img src="finalscenes/altar.png" /><br><br>
+<img src="finalscenes/PillarKnight.png" /><br><br>
+<img src="finalscenes/RoomOnly.png" /><br><br>
+The final scene.<br>
+<img src="finalscenes/FinalScene.png" /><br><br>
+and of course, in 3D.<br>
+<img src="finalscenes/FinalScene-3dfc.png" /><img src="finalscenes/FinalScene-3dbw.png" /><br><br>
+<br><br><br><br><br><br>
+
+
+</body>
+</html>
