@@ -45,6 +45,9 @@ dvec3 getBackgroundColor(const dvec4 &ray_origin, const dvec4 &ray_dir, int dept
   if (!MACRO_USE_BG) {
     return dvec3(0,0,0);
   }
+  if (MACRO_USE_SUNSET_BG_COLOR) {
+    return dvec3(0.45,0.2,0.4);
+  }
 
   dvec3 color;
 

@@ -2,13 +2,13 @@
 
 //anti-aliasing
 #define MACRO_USE_SUPERSAMPLE_TEST false
-#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || false)
+#define MACRO_USE_SUPERSAMPLE (MACRO_USE_SUPERSAMPLE_TEST || true)
 #define MACRO_SUPERSAMPLE_SCALE 2
 
 //refl and refr
-#define MACRO_REFLECTION_ON false
-#define MACRO_REFRACTION_ON false
-#define MACRO_GLOSSY_ON false
+#define MACRO_REFLECTION_ON true
+#define MACRO_REFRACTION_ON true
+#define MACRO_GLOSSY_ON true
 
 //threading
 #define MACRO_NUM_THREADS 16
@@ -22,10 +22,11 @@
 
 
 //Miscellaneous
-#define MACRO_STARFIELD_BACKGROUND_ON true
+#define MACRO_STARFIELD_BACKGROUND_ON false
 #define MACRO_RENDER_BOUNDING_BOX false
 #define PI 3.1415926535897932384
 #define MACRO_USE_BG true
+#define MACRO_USE_SUNSET_BG_COLOR true
 
 //parallax and 3D
 #define MACRO_USE_ANAGLYPH false
