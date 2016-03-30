@@ -63,14 +63,14 @@ flame1 = gr.light({-54,-25,-55}, {0.35, 0.138, 0.03}, {1,0,0.00010})
 flame1s = gr.spherical_light({-54,-25,-55}, {0.35, 0.138, 0.03}, {1,0,0.00010}, 2.0)
 flame2 = gr.light({-54,-25,-145}, {0.35, 0.138, 0.03}, {1,0,0.00010})
 flame2s = gr.spherical_light({-54,-25,-145}, {0.35, 0.138, 0.03}, {1,0,0.00010}, 2.0)
-flame3 = gr.light({-54,-25,-235}, {0.35, 0.138, 0.03}, {1,0,0.000065})
-flame3s = gr.spherical_light({-54,-25,-235}, {0.35, 0.138, 0.03}, {1,0,0.000065}, 2.0)
+flame3 = gr.light({-54,-25,-235}, {0.3, 0.13, 0.03}, {1,0,0.00003})
+flame3s = gr.spherical_light({-54,-25,-235}, {0.3, 0.13, 0.03}, {1,0,0.00003}, 2.0)
 flame4 = gr.light({61,-25,-55}, {0.35, 0.138, 0.03}, {1,0,0.00010})
 flame4s = gr.spherical_light({61,-25,-55}, {0.35, 0.138, 0.03}, {1,0,0.00010}, 2.0)
 flame5 = gr.light({61,-25,-145}, {0.35, 0.138, 0.03}, {1,0,0.00010})
 flame5s = gr.spherical_light({61,-25,-145}, {0.35, 0.138, 0.03}, {1,0,0.00010}, 2.0)
-flame6 = gr.light({61,-25,-235}, {0.35, 0.138, 0.03}, {1,0,0.000065})
-flame6s = gr.spherical_light({61,-25,-235}, {0.35, 0.138, 0.03}, {1,0,0.000065}, 2.0)
+flame6 = gr.light({61,-25,-235}, {0.3, 0.13, 0.03}, {1,0,0.00003})
+flame6s = gr.spherical_light({61,-25,-235}, {0.3, 0.13, 0.03}, {1,0,0.00003}, 2.0)
 
 testlight = gr.light({0,0,0}, {0.46, 0.23, 0.1}, {1,0,0})
 
@@ -889,7 +889,7 @@ walls:add_child(frontwall)
 
 
 
-gr.render(scene, 'FinalScene.png', 1280, 720, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1s, flame2s, flame3s, flame4s, flame5s, flame6s, backlight})
+--gr.render(scene, 'FinalScene.png', 1280, 720, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1s, flame2s, flame3s, flame4s, flame5s, flame6s, backlight})
 --gr.render(scene, 'FinalSceneTest.png', 640, 360, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1,flame2,flame3,flame4,flame5,flame6, backlight})
---gr.render(scene, 'FinalSceneTest.png', 320, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1,flame2,flame3,flame4,flame5,flame6, backlight})
+gr.render(scene, 'FinalSceneTest.png', 320, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1,flame2,flame3,flame4,flame5,flame6, backlight})
 --gr.render(scene, 'FinalSceneTest.png', 320, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, backlight})
