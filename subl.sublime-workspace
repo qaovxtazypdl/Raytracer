@@ -521,18 +521,21 @@
 	"expanded_folders":
 	[
 		"/Users/qaovxtazypdl/cs488",
-		"/Users/qaovxtazypdl/cs488/A5",
-		"/Users/qaovxtazypdl/cs488/A5/Assets",
-		"/Users/qaovxtazypdl/cs489"
+		"/Users/qaovxtazypdl/cs488/A5"
 	],
 	"file_history":
 	[
+		"/Users/qaovxtazypdl/cs488/A5/notes",
 		"/Users/qaovxtazypdl/cs488/A5/Flags.hpp",
 		"/Users/qaovxtazypdl/cs488/A5/Assets/FinalScene.lua",
+		"/Users/qaovxtazypdl/cs488/A5/A5.cpp",
+		"/Users/qaovxtazypdl/cs488/A4/A4.cpp",
+		"/Users/qaovxtazypdl/cs488/A5/README",
+		"/Users/qaovxtazypdl/Downloads/stars-orig.d",
+		"/Users/qaovxtazypdl/cs488/.gitignore",
+		"/Users/qaovxtazypdl/cs488/website/main.html",
 		"/Users/qaovxtazypdl/Downloads/check_assignment7_public (1).py",
 		"/Users/qaovxtazypdl/cs488/A4/Flags.hpp",
-		"/Users/qaovxtazypdl/cs488/A5/README",
-		"/Users/qaovxtazypdl/cs488/A5/notes",
 		"/Users/qaovxtazypdl/cs375/lsodeAttempt.m",
 		"/Users/qaovxtazypdl/Downloads/check_assignment7_public.py",
 		"/Users/qaovxtazypdl/cs489/bigdata2016w/src/main/java/ca/uwaterloo/cs/bigdata2016w/qaovxtazypdl/assignment7/BooleanRetrievalHBase.java",
@@ -550,7 +553,6 @@
 		"/Users/qaovxtazypdl/cs489/bespin/src/main/java/io/bespin/java/mapreduce/wordcount/HBaseWordCount.java",
 		"/Users/qaovxtazypdl/cs489/bigdata2016w/pom.xml",
 		"/Users/qaovxtazypdl/cs488/README.md",
-		"/Users/qaovxtazypdl/cs488/A5/A5.cpp",
 		"/Users/qaovxtazypdl/cs488/A4/Assets/sample.lua",
 		"/Users/qaovxtazypdl/cs488/A5/SceneNode.cpp",
 		"/Users/qaovxtazypdl/cs488/A5/premake4.lua",
@@ -561,7 +563,6 @@
 		"/Users/qaovxtazypdl/cs488/A4/notes",
 		"/Users/qaovxtazypdl/cs488/A4/README_A4",
 		"/Users/qaovxtazypdl/cs488/A4/Utils.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/A4.cpp",
 		"/Users/qaovxtazypdl/cs488/A4/A4.hpp",
 		"/Users/qaovxtazypdl/cs489/bigdata2016w/assignment6.md",
 		"/Users/qaovxtazypdl/Downloads/FinalScene.lua",
@@ -651,10 +652,7 @@
 		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier.lua",
 		"/Users/qaovxtazypdl/cs488/A4/Mesh.hpp",
 		"/Users/qaovxtazypdl/cs488/A4/GeometryNode.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Image.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Image.cpp",
-		"/Users/qaovxtazypdl/cs488/Texture.cpp",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/simple.lua"
+		"/Users/qaovxtazypdl/cs488/A4/Image.hpp"
 	],
 	"find":
 	{
@@ -685,6 +683,22 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"0.36, 0.155, 0.04",
+			"00007",
+			"false",
+			"MACRO_USE_BG",
+			", 40",
+			"40",
+			"true",
+			"backlight",
+			"{0.4, 0.2, 0.04}",
+			"i_window_pane_large",
+			"roof",
+			"0.34, 0.15, 0.04",
+			"0.00015",
+			"i_window_pane_large",
+			"0.0002",
+			"0.0004",
 			"i_window_pane_large",
 			"stained",
 			"0.0004",
@@ -796,23 +810,7 @@
 			"elbow",
 			"shoulder",
 			"heel",
-			"thigh",
-			"shin",
-			"kneecap",
-			"heel",
-			"kneecap",
-			"thigh_socket",
-			"t_checkerboard",
-			"artifact_face",
-			"artifact_cylinder",
-			"t_stripes",
-			"t_wood",
-			"altar_base_1",
-			"t_woodplanks",
-			"perfectCanvas",
-			"chrome",
-			"pillar_base",
-			"pillar_base_ring_2"
+			"thigh"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -889,16 +887,40 @@
 		"selected_items":
 		[
 			[
+				"a5.c",
+				"cs488/A5/A5.cpp"
+			],
+			[
+				"a4",
+				"cs488/A4/A4.cpp"
+			],
+			[
+				"flag",
+				"cs488/A5/Flags.hpp"
+			],
+			[
+				"finalsce",
+				"cs488/A5/Assets/FinalScene.lua"
+			],
+			[
+				"gitig",
+				"cs488/.gitignore"
+			],
+			[
+				"main.html",
+				"cs488/website/main.html"
+			],
+			[
+				"readme",
+				"cs488/A5/README"
+			],
+			[
 				"flags",
 				"cs488/A5/Flags.hpp"
 			],
 			[
 				"final",
 				"cs488/A5/Assets/FinalScene.lua"
-			],
-			[
-				"readme",
-				"cs488/A5/README"
 			],
 			[
 				"note",
@@ -929,20 +951,8 @@
 				"cs488/A5/Flags.hpp"
 			],
 			[
-				"finalsce",
-				"cs488/A5/Assets/FinalScene.lua"
-			],
-			[
-				"flag",
-				"cs488/A5/Flags.hpp"
-			],
-			[
 				"finalsc",
 				"cs488/A4/Assets/FinalScene.lua"
-			],
-			[
-				"a4",
-				"cs488/A4/A4.cpp"
 			],
 			[
 				"a4.h",
@@ -1163,10 +1173,6 @@
 			[
 				"anag",
 				"cs488/A4/Assets/Anaglyph.lua"
-			],
-			[
-				"gitig",
-				"cs489/bigdata2016w/.gitignore"
 			],
 			[
 				"bumpal",
@@ -1391,14 +1397,6 @@
 			[
 				"scenelu",
 				"cs488/A3/scene_lua.cpp"
-			],
-			[
-				"intersection.h",
-				"cs488/A4/Intersection.hpp"
-			],
-			[
-				"makefile",
-				"cs488/A4/Makefile"
 			]
 		],
 		"width": 0.0
