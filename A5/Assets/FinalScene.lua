@@ -889,7 +889,7 @@ walls:add_child(frontwall)
 
 
 
-gr.render(scene, 'FinalSceneBW.png', 1120, 630, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light_pt, flame1, flame2, flame3, flame4, flame5, flame6, backlight})
+gr.render(scene, 'FinalSceneCOL.png', 888, 500, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light_pt, flame1, flame2, flame3, flame4, flame5, flame6, backlight})
 --gr.render(scene, 'FinalSceneTest.png', 1120, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light_pt, flame1,flame2,flame3,flame4,flame5,flame6, backlight})
 --gr.render(scene, 'FinalSceneTest.png', 320, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, flame1,flame2,flame3,flame4,flame5,flame6, backlight})
 --gr.render(scene, 'FinalSceneTest.png', 320, 180, {0, 0, 100}, {0, 0, -100}, {0, 1, 0}, 50, {0.08, 0.05, 0}, {primary_light, backlight})
