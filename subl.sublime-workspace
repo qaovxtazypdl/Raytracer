@@ -521,16 +521,20 @@
 	"expanded_folders":
 	[
 		"/Users/qaovxtazypdl/cs488",
-		"/Users/qaovxtazypdl/cs488/A5"
+		"/Users/qaovxtazypdl/cs488/A5",
+		"/Users/qaovxtazypdl/cs488/A5/Assets"
 	],
 	"file_history":
 	[
-		"/Users/qaovxtazypdl/cs488/A5/notes",
+		"/Users/qaovxtazypdl/cs488/A5/README",
+		"/Users/qaovxtazypdl/cs488/A5/Assets/AreaLight.lua",
+		"/Users/qaovxtazypdl/cs488/A5/Assets/arealight2.lua",
 		"/Users/qaovxtazypdl/cs488/A5/Flags.hpp",
+		"/Users/qaovxtazypdl/cs375/notes",
 		"/Users/qaovxtazypdl/cs488/A5/Assets/FinalScene.lua",
+		"/Users/qaovxtazypdl/cs488/A5/notes",
 		"/Users/qaovxtazypdl/cs488/A5/A5.cpp",
 		"/Users/qaovxtazypdl/cs488/A4/A4.cpp",
-		"/Users/qaovxtazypdl/cs488/A5/README",
 		"/Users/qaovxtazypdl/Downloads/stars-orig.d",
 		"/Users/qaovxtazypdl/cs488/.gitignore",
 		"/Users/qaovxtazypdl/cs488/website/main.html",
@@ -649,10 +653,7 @@
 		"/Users/qaovxtazypdl/cs488/shared/include/glm/gtc/noise.hpp",
 		"/Users/qaovxtazypdl/cs488/A4/Assets/texturebump.lua",
 		"/Users/qaovxtazypdl/cs488/shared/cs488-framework/MathUtils.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier.lua",
-		"/Users/qaovxtazypdl/cs488/A4/Mesh.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/GeometryNode.hpp",
-		"/Users/qaovxtazypdl/cs488/A4/Image.hpp"
+		"/Users/qaovxtazypdl/cs488/A4/Assets/nonhier.lua"
 	],
 	"find":
 	{
@@ -683,6 +684,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"1,0,0.00003",
+			"1,0,0.00010",
+			"false",
+			"true",
+			"000065",
 			"0.36, 0.155, 0.04",
 			"00007",
 			"false",
@@ -805,12 +811,7 @@
 			"arm",
 			"emerald",
 			"arm_top",
-			"t_platesteel",
-			"arm_top_bounds",
-			"elbow",
-			"shoulder",
-			"heel",
-			"thigh"
+			"t_platesteel"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -887,16 +888,36 @@
 		"selected_items":
 		[
 			[
+				"areali",
+				"cs488/A5/Assets/arealight2.lua"
+			],
+			[
+				"flags",
+				"cs488/A5/Flags.hpp"
+			],
+			[
+				"readme",
+				"cs488/A5/README"
+			],
+			[
+				"notes",
+				"cs375/notes"
+			],
+			[
+				"flag",
+				"cs488/A5/Flags.hpp"
+			],
+			[
+				"final",
+				"cs488/A5/Assets/FinalScene.lua"
+			],
+			[
 				"a5.c",
 				"cs488/A5/A5.cpp"
 			],
 			[
 				"a4",
 				"cs488/A4/A4.cpp"
-			],
-			[
-				"flag",
-				"cs488/A5/Flags.hpp"
 			],
 			[
 				"finalsce",
@@ -911,28 +932,12 @@
 				"cs488/website/main.html"
 			],
 			[
-				"readme",
-				"cs488/A5/README"
-			],
-			[
-				"flags",
-				"cs488/A5/Flags.hpp"
-			],
-			[
-				"final",
-				"cs488/A5/Assets/FinalScene.lua"
-			],
-			[
 				"note",
 				"cs488/A5/notes"
 			],
 			[
 				"assig",
 				"cs489/bigdata2016w/assignment3.md"
-			],
-			[
-				"notes",
-				"cs489/notes"
 			],
 			[
 				"pom.x",
@@ -1164,10 +1169,6 @@
 			],
 			[
 				"area",
-				"cs488/A4/Assets/AreaLight.lua"
-			],
-			[
-				"areali",
 				"cs488/A4/Assets/AreaLight.lua"
 			],
 			[
